@@ -13,7 +13,8 @@ Please try to add these fields to new publications and use the existing codes as
 ## Research field 
 
 The field is `research_field`.  Possible values:
-* 
+* `AU`:
+* ...
 
 ## Data type
 
