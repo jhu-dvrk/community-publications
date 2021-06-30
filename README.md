@@ -13,13 +13,18 @@ Please try to add these fields to new publications and use the existing codes as
 ## Research field 
 
 The field is `research_field`.  Possible values:
-* `AU`:
-* ...
+* `AU`: Automation
+* `TR`: Training, skill assessment and gesture recognition
+* `HW`: Hardware implementation and integration
+* `xx`: System simulation and modelling
+* `xx`: Imaging and vision
+* `xx`: Reviews
 
 ## Data type
 
 The field is `data_type`.  For example: `data_type={RI and KD and SD and ED}`.  Possible values:
-* `RI`: Raw Images
-* `KD`: Kinematic Data
-* `SD`: System Data
-* `ED`: External Data
+* `RI`: Raw Images, the left and right video stream from the da Vinci stereo endoscope or any other cameras
+* `KD`: Kinematic Data, information associated to the kinematics of the dVRK (including ECM, MTMs, PSMs and SUJ) 
+* `DD`: Dynamic Data, information associated to the dynamics of the dVRK (including ECM, MTMs, PSMs) 
+* `SD`: System Data, the data associated to the robot teleoperation states, as signals coming from foot pedals, head sensor for operator presence detection, etc.
+* `ED`: External Data, all the data associated with additional sensors that were used with the dVRK, such as eye trackers, force sensors, different imaging technologies, etc. 
