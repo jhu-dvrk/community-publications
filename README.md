@@ -43,8 +43,8 @@ Review papers that cite the dVRK platform.
 ## Data type
 
 The field is `data_type`.  For example: `data_type={RI and KD and SD and ED}`.  Possible values:
-* `RI`: Raw Images, the left and right video stream from the da Vinci stereo endoscope or any other cameras
-* `KD`: Kinematic Data, information associated to the kinematics of the dVRK (including ECM, MTMs, PSMs and SUJ) 
-* `DD`: Dynamic Data, information associated to the dynamics of the dVRK (including ECM, MTMs, PSMs) 
-* `SD`: System Data, the data associated to the robot teleoperation states, as signals coming from foot pedals, head sensor for operator presence detection, etc.
-* `ED`: External Data, all the data associated with additional technologies that were used along with the dVRK, such as eye trackers, force sensors, different imaging technologies, etc. 
+* `RI`: **Raw Images**, the left and right video stream from the da Vinci stereo endoscope or any other cameras
+* `KD`: **Kinematic Data**, information associated to the kinematics of the dVRK (including ECM, MTMs, PSMs and SUJ) 
+* `DD`: **Dynamic Data**, information associated to the dynamics of the dVRK (including ECM, MTMs, PSMs) 
+* `SD`: **System Data**, the data associated to the robot teleoperation states, as signals coming from foot pedals, head sensor for operator presence detection, etc.
+* `ED`: **External Data**, all the data associated with additional technologies that were used along with the dVRK, such as eye trackers, force sensors, different imaging technologies, etc. 
