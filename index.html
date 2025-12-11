@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dVRK Community Publications</title>
+    <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
+                    <h1>Community Publications</h1>
+                </div>
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications</p>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Search and Filter Section -->
+            <div class="controls">
+                <div class="search-box">
+                    <input v-model="searchQuery" type="text"
+                        placeholder="Search publications by title, author, or keywords..." class="search-input">
+                </div>
+
+                <div class="filters">
+                    <select v-model="selectedYear" class="filter-select">
+                        <option value="">All Years</option>
+                        <option v-for="year in availableYears" :key="year" :value="year">
+                            {{ year }}
+                        </option>
+                    </select>
+
+                    <select v-model="selectedType" class="filter-select">
+                        <option value="">All Types</option>
+                        <option value="article">Journal Articles</option>
+                        <option value="inproceedings">Conference Papers</option>
+                        <option value="incollection">Book Chapters</option>
+                        <option value="misc">Other</option>
+                    </select>
+
+                    <select v-model="selectedField" class="filter-select">
+                        <option value="">All Research Areas</option>
+                        <option v-for="field in availableFields" :key="field" :value="field">
+                            {{ field }}
+                        </option>
+                    </select>
+
+                    <select v-model="selectedDataType" class="filter-select">
+                        <option value="">All Data Types</option>
+                        <option v-for="dataType in availableDataTypes" :key="dataType" :value="dataType">
+                            {{ dataType }}
+                        </option>
+                    </select>
+
+                    <button @click="resetFilters" class="reset-btn">Reset Filters</button>
+                    <button @click="downloadBibtex" class="download-btn">⬇ Download BibTeX ({{
+                        filteredPublications.length }})</button>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">{{ filteredPublications.length }}</div>
+                    <div class="stat-label">Publications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ totalAuthors }}</div>
+                    <div class="stat-label">Authors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ yearRange }}</div>
+                    <div class="stat-label">Year Range</div>
+                </div>
+            </div>
+
+            <!-- Publications List -->
+            <div class="publications-list">
+                <div v-for="(pub, index) in paginatedPublications" :key="pub.id" class="publication-card">
+                    <h3 class="pub-title">{{ pub.title }}</h3>
+
+                    <p class="pub-authors" v-if="pub.author">
+                        {{ formatAuthors(pub.author) }}
+                    </p>
+
+                    <p class="pub-venue" v-if="pub.journal || pub.booktitle">
+                        <strong>{{ pub.journal || pub.booktitle }}</strong>
+                        <span v-if="pub.volume"> Vol. {{ pub.volume }}</span>
+                        <span v-if="pub.number">, No. {{ pub.number }}</span>
+                        <span class="pub-meta"> ({{ pub.year }}, {{ formatType(pub.type) }})</span>
+                    </p>
+
+                    <div class="pub-tags" v-if="pub.research_field">
+                        <span v-for="field in parseFields(pub.research_field)" :key="field"
+                            :title="getFieldDescription(field)" class="tag">
+                            {{ field }}
+                        </span>
+                    </div>
+
+                    <div class="pub-tags" v-if="pub.data_type">
+                        <span v-for="dataType in parseDataTypes(pub.data_type)" :key="dataType"
+                            :title="getDataTypeDescription(dataType)" class="tag tag-data">
+                            {{ dataType }}
+                        </span>
+                    </div>
+
+                    <div class="pub-footer">
+                        <a v-if="pub.url" :href="pub.url" target="_blank" class="pub-link">
+                            📄 View Paper
+                        </a>
+                        <a v-if="pub.doi" :href="'https://doi.org/' + pub.doi" target="_blank" class="pub-link">
+                            🔗 DOI
+                        </a>
+                        <button @click="toggleBibtex(pub)" class="bibtex-btn">
+                            {{ pub.showBibtex ? '✕ Hide' : '📋 BibTeX' }}
+                        </button>
+                    </div>
+
+                    <div v-if="pub.showBibtex" class="bibtex-container">
+                        <pre class="bibtex-text">{{ pub.bibtexText }}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" v-if="totalPages > 1">
+                <button @click="currentPage--" :disabled="currentPage === 1" class="page-btn">
+                    Previous
+                </button>
+                <span class="page-info">
+                    Page {{ currentPage }} of {{ totalPages }}
+                </span>
+                <button @click="currentPage++" :disabled="currentPage === totalPages" class="page-btn">
+                    Next
+                </button>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>dVRK Publications Database | {{ publications.length }} total publications</p>
+                <p>Data source: <a href="https://github.com/jhu-dvrk" target="_blank">dVRK
+                        Project</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
