@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dVRK Publications Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
+                    <h1>Publications Analytics</h1>
+                </div>
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications</p>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Navigation -->
+            <div class="analytics-nav">
+                <a href="index.html" class="nav-btn">← Back to Publications</a>
+            </div>
+
+            <!-- Loading State -->
+            <div v-if="loading" class="loading">
+                <p>Loading analytics data...</p>
+            </div>
+
+            <!-- Analytics Content -->
+            <div v-else class="analytics-content">
+                <!-- Summary Stats -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ publications.length }}</div>
+                        <div class="stat-label">Total Publications</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ yearRange }}</div>
+                        <div class="stat-label">Year Range</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ totalAuthors }}</div>
+                        <div class="stat-label">Unique Authors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ avgPerYear }}</div>
+                        <div class="stat-label">Avg. Per Year</div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <!-- Publications Per Year -->
+                    <div class="chart-container">
+                        <h2>Publications Per Year</h2>
+                        <canvas id="publicationsPerYearChart"></canvas>
+                    </div>
+
+                    <!-- Cumulative Publications -->
+                    <div class="chart-container">
+                        <h2>Cumulative Publications Over Time</h2>
+                        <canvas id="cumulativeChart"></canvas>
+                    </div>
+
+                    <!-- Publication Types -->
+                    <div class="chart-container">
+                        <h2>Publication Types Distribution</h2>
+                        <canvas id="publicationTypesChart"></canvas>
+                    </div>
+
+                    <!-- Research Fields -->
+                    <div class="chart-container">
+                        <h2>Research Fields Distribution</h2>
+                        <canvas id="researchFieldsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>dVRK Publications Database | {{ publications.length }} total publications</p>
+                <p>Data source: <a href="https://github.com/jhu-dvrk" target="_blank">dVRK Project</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="analytics.js"></script>
+</body>
+
+</html>

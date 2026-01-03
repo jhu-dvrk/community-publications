@@ -400,3 +400,92 @@ footer a:hover {
         font-size: 0.9rem;
     }
 }
+
+/* Analytics Page Styles */
+.header-nav {
+    margin-top: 0.5rem;
+}
+
+.nav-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.analytics-nav {
+    margin-bottom: 1rem;
+}
+
+.analytics-nav .nav-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.analytics-nav .nav-btn:hover {
+    background: var(--secondary-color);
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.analytics-content {
+    margin-top: 1rem;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.chart-container {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+}
+
+.chart-container h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.chart-container canvas {
+    max-height: 400px;
+}
+
+@media (max-width: 768px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-container {
+        padding: 1rem;
+    }
+    
+    .chart-container h2 {
+        font-size: 1rem;
+    }
+}
