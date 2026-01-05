@@ -148,7 +148,6 @@ createApp({
         createCharts() {
             this.createPublicationsPerYearChart();
             this.createCumulativeChart();
-            this.createPublicationTypesChart();
             this.createResearchFieldsChart();
         },
         createPublicationsPerYearChart() {
@@ -257,71 +256,7 @@ createApp({
                 }
             });
         },
-        createPublicationTypesChart() {
-            const typeMap = {
-                'article': 'Journal Articles',
-                'inproceedings': 'Conference Papers',
-                'incollection': 'Book Chapters',
-                'misc': 'Other'
-            };
 
-            const typeCounts = {};
-            this.publications.forEach(pub => {
-                const typeName = typeMap[pub.type] || pub.type || 'Unknown';
-                typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
-            });
-
-            const labels = Object.keys(typeCounts);
-            const data = Object.values(typeCounts);
-
-            const ctx = document.getElementById('publicationTypesChart');
-            if (!ctx) return;
-
-            this.charts.types = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)',
-                            'rgba(75, 192, 192, 0.6)',
-                            'rgba(153, 102, 255, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    const label = context.label || '';
-                                    const value = context.parsed || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ${value} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        },
         createResearchFieldsChart() {
             const fieldMap = {
                 'AU': 'Automation',
