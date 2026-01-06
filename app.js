@@ -361,6 +361,19 @@ createApp({
             this.selectedField = '';
             this.selectedDataType = '';
             this.currentPage = 1;
+        },
+        applyUrlFilters() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.has('year')) {
+                this.selectedYear = urlParams.get('year');
+            }
+            if (urlParams.has('field')) {
+                this.selectedField = decodeURIComponent(urlParams.get('field'));
+            }
+            if (urlParams.has('dataType')) {
+                this.selectedDataType = decodeURIComponent(urlParams.get('dataType'));
+            }
         }
     },
     watch: {
@@ -370,5 +383,7 @@ createApp({
     },
     mounted() {
         this.loadPublications();
+        this.applyUrlFilters();
     }
 }).mount('#app');
+

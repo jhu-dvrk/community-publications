@@ -128,7 +128,8 @@ createApp({
                             title: this.convertLatexToUnicode(tags.title ? tags.title.replace(/[{}]/g, '') : ''),
                             author: this.convertLatexToUnicode(tags.author || ''),
                             year: tags.year || '',
-                            research_field: tags.research_field || ''
+                            research_field: tags.research_field || '',
+                            data_type: tags.data_type || ''
                         };
                     })
                     .sort((a, b) => parseInt(a.year) - parseInt(b.year));
@@ -149,6 +150,7 @@ createApp({
             this.createPublicationsPerYearChart();
             this.createCumulativeChart();
             this.createResearchFieldsChart();
+            this.createDataTypesChart();
         },
         createPublicationsPerYearChart() {
             const yearCounts = {};
@@ -178,6 +180,13 @@ createApp({
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const year = years[index];
+                            window.location.href = `index.html?year=${year}`;
+                        }
+                    },
                     plugins: {
                         legend: {
                             display: false
@@ -236,6 +245,13 @@ createApp({
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const year = years[index];
+                            window.location.href = `index.html?year=${year}`;
+                        }
+                    },
                     plugins: {
                         legend: {
                             display: false
@@ -260,10 +276,10 @@ createApp({
         createResearchFieldsChart() {
             const fieldMap = {
                 'AU': 'Automation',
-                'TR': 'Training & Skill Assessment',
-                'HW': 'Hardware & Integration',
-                'SS': 'System Simulation',
-                'IM': 'Imaging & Vision',
+                'TR': 'Training, skill assessment and gesture recognition',
+                'HW': 'Hardware implementation and integration',
+                'SS': 'System simulation and modelling',
+                'IM': 'Imaging and vision',
                 'RE': 'Reviews'
             };
 
@@ -306,6 +322,92 @@ createApp({
                     responsive: true,
                     maintainAspectRatio: true,
                     indexAxis: 'y',
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const field = encodeURIComponent(labels[index]);
+                            window.location.href = `index.html?field=${field}`;
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `Publications: ${context.parsed.x}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        },
+
+        createDataTypesChart() {
+            const typeMap = {
+                'RI': 'Raw Images',
+                'KD': 'Kinematic Data',
+                'DD': 'Dynamic Data',
+                'SD': 'System Data',
+                'ED': 'External Data'
+            };
+
+            const typeCounts = {};
+            this.publications.forEach(pub => {
+                if (pub.data_type) {
+                    pub.data_type.split(' and ').forEach(code => {
+                        const trimmed = code.trim();
+                        const typeName = typeMap[trimmed] || trimmed;
+                        if (typeName) {
+                            typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
+                        }
+                    });
+                }
+            });
+
+            // Sort by count descending
+            const sortedTypes = Object.entries(typeCounts)
+                .sort((a, b) => b[1] - a[1]);
+
+            const labels = sortedTypes.map(([name]) => name);
+            const data = sortedTypes.map(([, count]) => count);
+
+            const ctx = document.getElementById('dataTypesChart');
+            if (!ctx) return;
+
+            this.charts.dataTypes = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Publications',
+                        data: data,
+                        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    indexAxis: 'y',
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const dataType = encodeURIComponent(labels[index]);
+                            window.location.href = `index.html?dataType=${dataType}`;
+                        }
+                    },
                     plugins: {
                         legend: {
                             display: false
