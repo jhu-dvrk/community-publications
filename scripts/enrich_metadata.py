@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+Script to enrich BibTeX metadata using Semantic Scholar API.
+Implements adaptive rate limiting.
+"""
 import re
 import time
 import json
@@ -6,38 +10,74 @@ import requests
 import shutil
 import sys
 
-# Reuse fetch logic
-def fetch_with_retry(url, params, retries=3, delay=5):
-    for i in range(retries):
+# Mutable container for delay state
+# [current_delay]
+delay_state = [1.5]
+
+def fetch_with_adaptive_delay(url, params, progress_prefix=""):
+    # Retry loop implementing 1.5 -> 3 -> 5 logic
+    # We loop as long as we get 429s, up to the max delay state (5s)
+    # Actually, we can loop indefinitely or cap attempts?
+    # User said: "start at 1.5s, then 3s and thereafter 5s"
+    # This implies if 5s fails, we keep trying at 5s? Or fail?
+    # Let's assume we retry a few times at 5s then give up, or just keep trying 5s (safe).
+    # But to avoid infinite loops, let's limit total attempts.
+    
+    max_attempts = 5 
+    
+    for attempt in range(max_attempts):
+        current_delay = delay_state[0]
+        
+        # Sleep *before* request to enforce rate limit
+        # This replaces the loop sleep
+        sys.stdout.write(f"\r{progress_prefix}Waiting {current_delay}s...{' '*10}")
+        sys.stdout.flush()
+        time.sleep(current_delay)
+        
         try:
             response = requests.get(url, params=params)
+            
             if response.status_code == 200:
+                # Success!
+                # "if 5s works, return to 1.5"
+                delay_state[0] = 1.5
                 return response.json()
+                
             elif response.status_code == 429:
-                sys.stdout.write(f"\rRate limited. Waiting {delay} seconds (Attempt {i+1}/{retries})...{' '*20}")
-                sys.stdout.flush()
-                time.sleep(delay)
-                delay *= 2
+                # Rate limited
+                print(f"\rRate limited (429).")
+                # Increase delay: 1.5 -> 3 -> 5
+                if delay_state[0] < 3:
+                    delay_state[0] = 3.0
+                elif delay_state[0] < 5:
+                    delay_state[0] = 5.0
+                # If already 5, stays 5.
+                
+                # Continue loop to retry with new delay
+                continue
+                
+            elif response.status_code == 404:
+                return None
+                
             else:
-                # 404 is fine, means not found
-                if response.status_code == 404:
-                    return None
-                print(f"Error {response.status_code}: {response.text}")
-                break
+                print(f"\rError {response.status_code}: {response.text}")
+                # Non-recoverable error?
+                return None
+                
         except Exception as e:
-            print(f"Request exception: {e}")
-            time.sleep(delay)
+            print(f"\rRequest exception: {e}")
+            time.sleep(current_delay) 
+            
     return None
 
-def get_semantic_scholar_data(title, doi=None):
+def get_semantic_scholar_data(title, doi=None, progress_prefix=""):
     base_url = "https://api.semanticscholar.org/graph/v1/paper"
     
     # Try searching by DOI first if available
     if doi:
-        # Semantic Scholar DOI lookup
         url = f"{base_url}/DOI:{doi}"
         params = {"fields": "url,externalIds,title,abstract,openAccessPdf"}
-        data = fetch_with_retry(url, params)
+        data = fetch_with_adaptive_delay(url, params, progress_prefix)
         if data:
             return data
 
@@ -49,10 +89,8 @@ def get_semantic_scholar_data(title, doi=None):
             "fields": "url,externalIds,title,year,abstract,openAccessPdf",
             "limit": 1
         }
-        data = fetch_with_retry(search_url, params)
+        data = fetch_with_adaptive_delay(search_url, params, progress_prefix)
         if data and data.get("data"):
-            # Simple check to ensure it's likely the same paper (compare title similarity?)
-            # For now, just take the top result if it exists
             return data["data"][0]
             
     return None
@@ -63,10 +101,6 @@ def enrich_bib(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Split into entries (using simple regex splitting on @ at start of line)
-    # This is a bit fragile but works for well-formatted bib files (which ours is, thanks to the sorter)
-    # We will reconstruct the file.
-    
     entries = re.split(r'(?m)^@', content)
     enriched_entries = []
     updated_count = 0
@@ -79,7 +113,10 @@ def enrich_bib(file_path):
             continue
             
         current_idx += 1
-        print(f"Processing {current_idx}/{total_entries}...", end="\r")
+        # Print progress, overwriting weight message
+        progress_msg = f"Processing {current_idx}/{total_entries}..."
+        sys.stdout.write(f"\r{progress_msg}{' '*20}")
+        sys.stdout.flush()
         
         full_entry = "@" + raw
         
@@ -94,79 +131,63 @@ def enrich_bib(file_path):
         doi = doi_match.group(1) if doi_match else None
         
         sem_match = re.search(r'semanticscholar\s*=\s*', raw, re.IGNORECASE)
-        
-        # Determine if we need to fetch
-        # We fetch if ANY interesting field is missing, but for now let's be conservative
-        # and fetch if we are modifying the entry or if specifically abstract is missing?
-        # The user wants to add them. Let's check if they exist.
+        url_match = re.search(r'url\s*=\s*', raw, re.IGNORECASE)
         
         abstract_match = re.search(r'abstract\s*=\s*', raw, re.IGNORECASE)
-        pdf_match = re.search(r'openaccesspdf\s*=\s*', raw, re.IGNORECASE)
         
         needs_sem = sem_match is None
         needs_doi = doi is None
         needs_abs = abstract_match is None
-        needs_pdf = pdf_match is None
+        needs_url = url_match is None
         
         changes = []
         
-        # We'll fetch if we are missing basic IDs OR if we are missing enriched metadata
-        if (needs_sem or needs_doi or needs_abs or needs_pdf) and title:
-            # Fetch data
-            data = get_semantic_scholar_data(title, doi)
+        if (needs_sem or needs_doi or needs_abs or (needs_url and not doi)) and title:
+            # Fetch data (Adaptive delay handled inside)
+            data = get_semantic_scholar_data(title, doi, progress_msg + " ")
             
             if data:
-                # Add Semantic Scholar URL
                 if needs_sem and data.get("url"):
-                    url = data.get("url")
-                    changes.append(f"  semanticscholar = {{{url}}}")
+                    sem_url = data.get("url")
+                    changes.append(f"  semanticscholar = {{{sem_url}}}")
                     
-                # Add DOI if missing and found
                 if needs_doi and data.get("externalIds") and data["externalIds"].get("DOI"):
                     new_doi = data["externalIds"]["DOI"]
                     changes.append(f"  doi = {{{new_doi}}}")
                     
-                # Add Abstract
                 if needs_abs and data.get("abstract"):
-                    # Escape braces in abstract to be safe? 
-                    # BibTeX abstracts can contain LaTeX. 
-                    # Minimal escaping for now:
                     abstract = data["abstract"].replace("{", "\\{").replace("}", "\\}")
                     changes.append(f"  abstract = {{{abstract}}}")
                     
-                # Add Open Access PDF
-                if needs_pdf and data.get("openAccessPdf") and data["openAccessPdf"].get("url"):
+                # Only add url if doi is missing (either originally or just fetched)
+                current_doi = doi or (data.get("externalIds") and data["externalIds"].get("DOI"))
+                if needs_url and not current_doi and data.get("openAccessPdf") and data["openAccessPdf"].get("url"):
                     pdf_url = data["openAccessPdf"]["url"]
-                    changes.append(f"  openaccesspdf = {{{pdf_url}}}")
+                    changes.append(f"  url = {{{pdf_url}}}")
         
         if changes:
              updated_count += 1
-             # Insert changes before the closing brace
-             # Find last closing brace
+             # Find the last closing brace and ensure we insert correctly
              last_brace_idx = full_entry.rfind('}')
              if last_brace_idx != -1:
-                 insertion = ",\n" + ",\n".join(changes) + "\n"
-                 full_entry = full_entry[:last_brace_idx] + insertion + full_entry[last_brace_idx:]
+                 # Check if the preceding character (ignoring whitespace) is already a comma
+                 prefix = full_entry[:last_brace_idx].rstrip()
+                 insertion = ""
+                 if not prefix.endswith(','):
+                     insertion += ","
+                 insertion += "\n" + ",\n".join(changes) + "\n"
+                 full_entry = prefix + insertion + full_entry[last_brace_idx:]
                  
         enriched_entries.append(full_entry)
         
-        # Be nice to API (Respect 1 RPS limit)
-        time.sleep(1.5)
+        # NOTE: Explicit time.sleep(1.5) loop removed here.
+        # It is now handled inside fetch_with_adaptive_delay before each request.
 
     print(f"\nUpdated {updated_count} entries.")
     
-    # Backup
     shutil.copy(file_path, file_path + ".enriched.bak")
     
     with open(file_path, 'w', encoding='utf-8') as f:
-        # Join with double newline for clean formatting
-        # Note: raw entries usually didn't have the preceding @, so we added it back.
-        # But split remove the delimiter.
-        # Wait, our loop added "@" back to `full_entry`.
-        # However, the split logic `re.split` usually consumes delimiter unless captured.
-        # Our raw entries do NOT start with @.
-        # So full_entry is correct.
-        
         for entry in enriched_entries:
             f.write(entry.strip())
             f.write("\n\n")
