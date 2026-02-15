@@ -45,9 +45,9 @@ const CONFIG = {
             "^A": 'Â', "^E": 'Ê', "^I": 'Î', "^O": 'Ô', "^U": 'Û',
 
             // Umlaut/diaeresis
-            '\\"a': 'ä', '\\"e': 'ë', '\\"i': 'ï', '\\"o': 'ö', '\\"u': 'ü',
-            '\\"A': 'Ä', '\\"E': 'Ë', '\\"I': 'Ï', '\\"O': 'Ö', '\\"U': 'Ü',
-            '\\"y': 'ÿ', '\\"Y': 'Ÿ',
+            '"a': 'ä', '"e': 'ë', '"i': 'ï', '"o': 'ö', '"u': 'ü',
+            '"A': 'Ä', '"E': 'Ë', '"I': 'Ï', '"O': 'Ö', '"U': 'Ü',
+            '"y': 'ÿ', '"Y': 'Ÿ',
 
             // Tilde
             "~a": 'ã', "~n": 'ñ', "~o": 'õ',
@@ -67,26 +67,41 @@ const CONFIG = {
             "ae": 'æ', "AE": 'Æ',
             "oe": 'œ', "OE": 'Œ',
             "ss": 'ß',
-            "l": 'ł', "L": 'Ł'
+            "l": 'ł', "L": 'Ł',
+
+            // Symbols
+            "textregistered": '®',
+            "textcopyright": '©',
+            "texttrademark": '™',
+            "textdegree": '°',
+            "pm": '±',
+
+            // More accents and symbols
+            "ua": 'ă', "uA": 'Ă', "ug": 'ğ', "uG": 'Ğ',
+            "va": 'ǎ', "vc": 'č', "vC": 'Č', "vd": 'ď', "vD": 'Ď', "ve": 'ě', "vE": 'Ě',
+            "vi": 'ǐ', "vl": 'ľ', "vL": 'Ľ', "vn": 'ň', "vN": 'Ň', "vr": 'ř', "vR": 'Ř',
+            "vs": 'š', "vS": 'Š', "vt": 'ť', "vT": 'Ť', "vu": 'ǔ', "vz": 'ž', "vZ": 'Ž',
+            ".I": 'İ', "Hi": 'ő', "Hu": 'ű', "i": 'ı'
         };
 
         let result = text;
 
         // Handle patterns like {\\'{a}} or {\\'a}
-        result = result.replace(/\{\\(['`^"~])(\{([a-zA-Z])\}|([a-zA-Z]))\}/g, (match, accent, group, letter1, letter2) => {
+        result = result.replace(/\{\\+(['`^"~.Hvuv])(\{([a-zA-Z])\}|([a-zA-Z]))\}/g, (match, accent, group, letter1, letter2) => {
             const letter = letter1 || letter2;
             const key = accent + letter;
             return latexMap[key] || match;
         });
 
         // Handle patterns like \\'{a} or \\'a
-        result = result.replace(/\\(['`^"~])\{?([a-zA-Z])\}?/g, (match, accent, letter) => {
+        result = result.replace(/\\+(['`^"~.Hvuv])\{?([a-zA-Z])\}?/g, (match, accent, letter) => {
             const key = accent + letter;
             return latexMap[key] || match;
         });
 
-        // Handle special commands like \\c{c}, \\aa, \\o, etc.
-        result = result.replace(/\\(c|aa|AA|o|O|ae|AE|oe|OE|ss|l|L)(\{([a-zA-Z])\}|\s([a-zA-Z])|(?![a-zA-Z]))/g, (match, cmd, group, letter1, letter2) => {
+        // Handle special commands like \\c{c}, \\aa, \\o, \\textregistered, etc.
+        // Handles \\cmd, \\cmd{}, \\cmd{x}
+        result = result.replace(/\\+(c|aa|AA|o|O|ae|AE|oe|OE|ss|l|L|textregistered|textcopyright|texttrademark|textdegree|pm|u|v|H|i)(\{([a-zA-Z])\}|\{\}|\s([a-zA-Z])|(?![a-zA-Z]))/g, (match, cmd, group, letter1, letter2) => {
             if (letter1 || letter2) {
                 const key = cmd + '{' + (letter1 || letter2) + '}';
                 return latexMap[key] || latexMap[cmd + ' ' + (letter1 || letter2)] || match;
@@ -94,8 +109,8 @@ const CONFIG = {
             return latexMap[cmd] || match;
         });
 
-        // Remove any remaining curly braces (used for capitalization preservation in BibTeX)
-        result = result.replace(/\{([^\\\}]+)\}/g, '$1');
+        // Final pass: remove any remaining curly braces
+        result = result.replace(/[{}]/g, '');
 
         return result;
     },

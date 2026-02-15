@@ -128,7 +128,7 @@ createApp({
                         return {
                             id: entry.citationKey,
                             type: entry.entryType,
-                            title: CONFIG.convertLatexToUnicode(tags.title ? tags.title.replace(/[{}]/g, '') : ''),
+                            title: CONFIG.convertLatexToUnicode(tags.title || ''),
                             author: CONFIG.convertLatexToUnicode(tags.author || ''),
                             year: tags.year || '',
                             journal: CONFIG.convertLatexToUnicode(tags.journal || ''),
