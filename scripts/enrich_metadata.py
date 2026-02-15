@@ -9,10 +9,51 @@ import json
 import requests
 import shutil
 import sys
+import argparse
+import hashlib
+import os
 
 # Mutable container for delay state
 # [current_delay]
 delay_state = [1.5]
+
+CACHE_DIR = "cache"
+
+def get_cache_path(identifier):
+    """Generate a stable filename for a given identifier."""
+    # Use MD5 for a reasonably short but unique filename
+    hash_obj = hashlib.md5(identifier.encode('utf-8'))
+    return os.path.join(CACHE_DIR, f"{hash_obj.hexdigest()}.json")
+
+def is_cache_valid(cache_path, max_days):
+    """Check if cache file exists and is within the expiration period."""
+    if max_days == 0:
+        return False
+    if not os.path.exists(cache_path):
+        return False
+    
+    file_mtime = os.path.getmtime(cache_path)
+    current_time = time.time()
+    age_days = (current_time - file_mtime) / (24 * 3600)
+    
+    return age_days <= max_days
+
+def load_cache(cache_path):
+    try:
+        with open(cache_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error reading cache {cache_path}: {e}")
+        return None
+
+def save_cache(cache_path, data):
+    if not os.path.exists(CACHE_DIR):
+        os.makedirs(CACHE_DIR)
+    try:
+        with open(cache_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Error writing cache {cache_path}: {e}")
 
 def fetch_with_adaptive_delay(url, params, progress_prefix=""):
     # Retry loop implementing 1.5 -> 3 -> 5 logic
@@ -70,19 +111,32 @@ def fetch_with_adaptive_delay(url, params, progress_prefix=""):
             
     return None
 
-def get_semantic_scholar_data(title, doi=None, progress_prefix=""):
+def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_days=180):
     base_url = "https://api.semanticscholar.org/graph/v1/paper"
     
     # Try searching by DOI first if available
     if doi:
+        cache_path = get_cache_path(f"doi:{doi}")
+        if is_cache_valid(cache_path, max_cache_days):
+            data = load_cache(cache_path)
+            if data:
+                return data
+
         url = f"{base_url}/DOI:{doi}"
         params = {"fields": "url,externalIds,title,abstract,openAccessPdf"}
         data = fetch_with_adaptive_delay(url, params, progress_prefix)
         if data:
+            save_cache(cache_path, data)
             return data
 
     # Fallback to search by title
     if title:
+        cache_path = get_cache_path(f"title:{title.lower()}")
+        if is_cache_valid(cache_path, max_cache_days):
+            data = load_cache(cache_path)
+            if data:
+                return data
+
         search_url = f"{base_url}/search"
         params = {
             "query": title,
@@ -91,11 +145,13 @@ def get_semantic_scholar_data(title, doi=None, progress_prefix=""):
         }
         data = fetch_with_adaptive_delay(search_url, params, progress_prefix)
         if data and data.get("data"):
-            return data["data"][0]
+            result = data["data"][0]
+            save_cache(cache_path, result)
+            return result
             
     return None
 
-def enrich_bib(file_path):
+def enrich_bib(file_path, max_cache_days=180):
     print(f"Enriching {file_path} with Semantic Scholar data...")
     
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -144,7 +200,7 @@ def enrich_bib(file_path):
         
         if (needs_sem or needs_doi or needs_abs or (needs_url and not doi)) and title:
             # Fetch data (Adaptive delay handled inside)
-            data = get_semantic_scholar_data(title, doi, progress_msg + " ")
+            data = get_semantic_scholar_data(title, doi, progress_msg + " ", max_cache_days)
             
             if data:
                 if needs_sem and data.get("url"):
@@ -193,7 +249,10 @@ def enrich_bib(file_path):
             f.write("\n\n")
 
 if __name__ == "__main__":
-    file_path = "publications.bib"
-    if len(sys.argv) > 1:
-        file_path = sys.argv[1]
-    enrich_bib(file_path)
+    parser = argparse.ArgumentParser(description="Enrich BibTeX metadata using Semantic Scholar API.")
+    parser.add_argument("file", nargs="?", default="publications.bib", help="Path to the BibTeX file.")
+    parser.add_argument("-d", "--days", type=int, default=180, help="Cache expiration in days. Use 0 to ignore cache. Default is 180.")
+    
+    args = parser.parse_args()
+    
+    enrich_bib(args.file, args.days)
