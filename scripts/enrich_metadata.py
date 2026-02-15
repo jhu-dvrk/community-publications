@@ -12,10 +12,11 @@ import sys
 import argparse
 import hashlib
 import os
+import difflib
 
 # Mutable container for delay state
 # [current_delay]
-delay_state = [1.5]
+delay_state = [3.0]
 
 CACHE_DIR = "cache"
 
@@ -80,8 +81,8 @@ def fetch_with_adaptive_delay(url, params, progress_prefix=""):
             
             if response.status_code == 200:
                 # Success!
-                # "if 5s works, return to 1.5"
-                delay_state[0] = 1.5
+                # "if 5s works, return to 2.0"
+                delay_state[0] = 2.0
                 return response.json()
                 
             elif response.status_code == 429:
@@ -123,7 +124,7 @@ def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_day
                 return data
 
         url = f"{base_url}/DOI:{doi}"
-        params = {"fields": "url,externalIds,title,abstract,openAccessPdf"}
+        params = {"fields": "url,externalIds,title,abstract,openAccessPdf,publicationTypes,authors"}
         data = fetch_with_adaptive_delay(url, params, progress_prefix)
         if data:
             save_cache(cache_path, data)
@@ -140,14 +141,43 @@ def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_day
         search_url = f"{base_url}/search"
         params = {
             "query": title,
-            "fields": "url,externalIds,title,year,abstract,openAccessPdf",
-            "limit": 1
+            "fields": "url,externalIds,title,year,abstract,openAccessPdf,publicationTypes,authors",
+            "limit": 5
         }
         data = fetch_with_adaptive_delay(search_url, params, progress_prefix)
         if data and data.get("data"):
-            result = data["data"][0]
-            save_cache(cache_path, result)
-            return result
+            # Filter and pick the best match
+            results = data["data"]
+            best_match = None
+            highest_score = 0
+            
+            for result in results:
+                res_title = result.get("title", "")
+                # Simple similarity score
+                similarity = difflib.SequenceMatcher(None, title.lower(), res_title.lower()).ratio()
+                
+                # Check for generic markers
+                publication_types = result.get("publicationTypes") or []
+                is_generic = any(t in ["Conference", "Journal"] for t in publication_types)
+                
+                # If it's generic and we have a very low similarity, skip it
+                # High similarity might mean it actually IS the conference paper (sometimes tagged weirdly)
+                # But usually, papers are tagged "JournalArticle" or "ConferenceArticle"
+                
+                score = similarity
+                if is_generic:
+                    score -= 0.3 # Penalize generic entries
+                
+                if score > highest_score:
+                    highest_score = score
+                    best_match = result
+            
+            # Threshold for accepting a match
+            if highest_score > 0.7:
+                save_cache(cache_path, best_match)
+                return best_match
+            else:
+                print(f"\rNo good match for '{title[:30]}...' (best score: {highest_score:.2f}){' '*20}")
             
     return None
 
@@ -164,8 +194,11 @@ def enrich_bib(file_path, max_cache_days=180):
     total_entries = len([e for e in entries if e.strip()])
     current_idx = 0
 
-    for raw in entries:
+    for idx, raw in enumerate(entries):
         if not raw.strip():
+            # If it is the first entry and empty, we still want to keep it
+            if idx == 0:
+                enriched_entries.append("")
             continue
             
         current_idx += 1
@@ -177,28 +210,35 @@ def enrich_bib(file_path, max_cache_days=180):
         full_entry = "@" + raw
         
         # Extract fields
-        title_match = re.search(r'title\s*=\s*[{"\'](.+?)[}"\'],?\s*\n', raw, re.IGNORECASE | re.DOTALL)
-        if not title_match:
-             title_match = re.search(r'title\s*=\s*[{"\'](.+?)[}"\']', raw, re.IGNORECASE)
-        title = title_match.group(1) if title_match else ""
-        title = re.sub(r'\s+', ' ', title).strip().strip('{}').strip('""')
+        # Extract fields robustly
+        title = ""
+        # Look for title = {Prop...} or title = "Prop..."
+        tm = re.search(r'(?i)\s+title\s*=\s*[{"\'](.+?)[}"\']', raw, re.DOTALL)
+        if tm:
+            title = tm.group(1)
+            # Remove LaTeX braces and double spaces
+            title = re.sub(r'[\{\}]', '', title)
+            title = re.sub(r'\s+', ' ', title).strip()
         
-        doi_match = re.search(r'doi\s*=\s*[{"\'](.+?)[}"\']', raw, re.IGNORECASE)
-        doi = doi_match.group(1) if doi_match else None
+        doi = None
+        dm = re.search(r'(?i)\s+doi\s*=\s*[{"\'](.+?)[}"\']', raw)
+        if dm:
+            doi = dm.group(1).strip()
         
-        sem_match = re.search(r'semanticscholar\s*=\s*', raw, re.IGNORECASE)
-        url_match = re.search(r'url\s*=\s*', raw, re.IGNORECASE)
-        
-        abstract_match = re.search(r'abstract\s*=\s*', raw, re.IGNORECASE)
+        sem_match = re.search(r'(?i)\s+semanticscholar\s*=', raw)
+        url_match = re.search(r'(?i)\s+url\s*=', raw)
+        abstract_match = re.search(r'(?i)\s+abstract\s*=', raw)
+        arxiv_match = re.search(r'(?i)\s+arxiv\s*=', raw)
         
         needs_sem = sem_match is None
         needs_doi = doi is None
         needs_abs = abstract_match is None
         needs_url = url_match is None
+        needs_arxiv = arxiv_match is None
         
         changes = []
         
-        if (needs_sem or needs_doi or needs_abs or (needs_url and not doi)) and title:
+        if (needs_sem or needs_doi or needs_abs or needs_arxiv or (needs_url and not doi)) and title:
             # Fetch data (Adaptive delay handled inside)
             data = get_semantic_scholar_data(title, doi, progress_msg + " ", max_cache_days)
             
@@ -214,6 +254,10 @@ def enrich_bib(file_path, max_cache_days=180):
                 if needs_abs and data.get("abstract"):
                     abstract = data["abstract"].replace("{", "\\{").replace("}", "\\}")
                     changes.append(f"  abstract = {{{abstract}}}")
+
+                if needs_arxiv and data.get("externalIds") and data["externalIds"].get("ArXiv"):
+                    arxiv_id = data["externalIds"]["ArXiv"]
+                    changes.append(f"  arxiv = {{https://arxiv.org/abs/{arxiv_id}}}")
                     
                 # Only add url if doi is missing (either originally or just fetched)
                 current_doi = doi or (data.get("externalIds") and data["externalIds"].get("DOI"))
@@ -235,6 +279,19 @@ def enrich_bib(file_path, max_cache_days=180):
                  full_entry = prefix + insertion + full_entry[last_brace_idx:]
                  
         enriched_entries.append(full_entry)
+        
+        # Save progress periodically
+        if current_idx % 10 == 0:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                for entry in enriched_entries:
+                    f.write(entry.strip())
+                    f.write("\n\n")
+                # Append the rest of the original entries that haven't been processed yet
+                for i in range(idx + 1, len(entries)):
+                    e = entries[i]
+                    if e.strip():
+                        f.write("@" + e.strip())
+                        f.write("\n\n")
         
         # NOTE: Explicit time.sleep(1.5) loop removed here.
         # It is now handled inside fetch_with_adaptive_delay before each request.

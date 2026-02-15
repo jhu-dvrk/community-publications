@@ -129,6 +129,9 @@
                         <a v-if="pub.semanticscholar" :href="pub.semanticscholar" target="_blank" class="pub-link">
                             🔍 Semantic Scholar
                         </a>
+                        <a v-if="pub.arxiv" :href="pub.arxiv" target="_blank" class="pub-link" style="background-color: #4f46e5;">
+                            arXiv
+                        </a>
                         <a v-if="pub.openaccesspdf" :href="pub.openaccesspdf" target="_blank" class="pub-link" style="background-color: #dc2626;">
                             🔓 PDF
                         </a>

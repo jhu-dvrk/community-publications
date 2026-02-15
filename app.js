@@ -141,6 +141,7 @@ createApp({
                             url: tags.url || '',
                             ieeexplore: tags.ieeexplore || '',
                             semanticscholar: tags.semanticscholar || '',
+                            arxiv: tags.arxiv || '',
                             abstract: CONFIG.convertLatexToUnicode(tags.abstract || ''),
                             openaccesspdf: tags.openaccesspdf || '',
                             research_field: tags.research_field || '',

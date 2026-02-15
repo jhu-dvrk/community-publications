@@ -61,6 +61,8 @@ def append_to_bib(paper, bib_path):
                 bib_block += f',\n semanticscholar = {{{paper["semanticscholar"]}}}'
             if paper.get("ieeexplore"):
                 bib_block += f',\n ieeexplore = {{{paper["ieeexplore"]}}}'
+            if paper.get("arxiv"):
+                bib_block += f',\n arxiv = {{{paper["arxiv"]}}}'
                 
             bib_block += "\n}\n"
             
@@ -158,6 +160,7 @@ def search_semantic_scholar(query, years, existing_dois, existing_titles, reject
                 "bibtex": paper.get("citationStyles", {}).get("bibtex"),
                 "doi": doi,
                 "semanticscholar": paper.get("url"), # Semantic Scholar API returns its own URL here
+                "arxiv": f"https://arxiv.org/abs/{paper['externalIds']['ArXiv']}" if paper.get("externalIds") and paper["externalIds"].get("ArXiv") else None,
                 "url": None, # We'll leave generic URL empty unless we find something else
                 "ieeexplore": None
             })
@@ -272,6 +275,8 @@ if __name__ == "__main__":
                  print(f"IEEE: {paper['ieeexplore']}")
             if paper.get("url"):
                  print(f"URL: {paper['url']}")
+            if paper.get("arxiv"):
+                 print(f"arXiv: {paper['arxiv']}")
             
             # Open all available links
             if paper.get('semanticscholar'):
@@ -280,6 +285,8 @@ if __name__ == "__main__":
                 webbrowser.open(paper['ieeexplore'])
             elif paper.get('url'):
                 webbrowser.open(paper['url'])
+            elif paper.get('arxiv'):
+                webbrowser.open(paper['arxiv'])
             
             if not paper['bibtex']:
                 print("Warning: BibTeX NOT available.")
