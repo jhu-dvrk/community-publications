@@ -49,9 +49,24 @@ def append_to_bib(paper, bib_path):
         return False
         
     try:
+        # Inject our custom fields into the bibtex before writing
+        bib_block = paper["bibtex"].strip()
+        if bib_block.endswith("}"):
+            bib_block = bib_block[:-1] # Remove last brace
+            
+            # Add fields
+            if paper.get("url"):
+                bib_block += f',\n url = {{{paper["url"]}}}'
+            if paper.get("semanticscholar"):
+                bib_block += f',\n semanticscholar = {{{paper["semanticscholar"]}}}'
+            if paper.get("ieeexplore"):
+                bib_block += f',\n ieeexplore = {{{paper["ieeexplore"]}}}'
+                
+            bib_block += "\n}\n"
+            
         with open(bib_path, "a") as f:
             f.write("\n")
-            f.write(paper["bibtex"])
+            f.write(bib_block)
             f.write("\n")
         print(f"Added {paper['title']} to {bib_path}")
         return True
@@ -142,7 +157,9 @@ def search_semantic_scholar(query, years, existing_dois, existing_titles, reject
                 "authors": [a.get("name") for a in paper.get("authors", [])],
                 "bibtex": paper.get("citationStyles", {}).get("bibtex"),
                 "doi": doi,
-                "url": paper.get("url")
+                "semanticscholar": paper.get("url"), # Semantic Scholar API returns its own URL here
+                "url": None, # We'll leave generic URL empty unless we find something else
+                "ieeexplore": None
             })
     return new_papers
 
@@ -193,7 +210,9 @@ def search_ieee_xplore(query, start_year, end_year, existing_dois, existing_titl
                 "authors": authors,
                 "bibtex": None, # Needs separate fetch or construction
                 "doi": doi,
-                "url": article.get("pdf_url")
+                "ieeexplore": article.get("html_url") or article.get("pdf_url"),
+                "semanticscholar": None,
+                "url": None
             })
             
     return new_papers
@@ -246,10 +265,20 @@ if __name__ == "__main__":
             print(f"Authors: {', '.join(paper['authors'][:3])}{' et al.' if len(paper['authors']) > 3 else ''}")
             print(f"Year: {paper['year']}")
             print(f"Source: {paper['source']}")
-            print(f"URL: {paper['url'] or 'N/A'}")
             
-            if paper.get('url'):
-                print("Opening in browser...")
+            if paper.get("semanticscholar"):
+                 print(f"SemScholar: {paper['semanticscholar']}")
+            if paper.get("ieeexplore"):
+                 print(f"IEEE: {paper['ieeexplore']}")
+            if paper.get("url"):
+                 print(f"URL: {paper['url']}")
+            
+            # Open all available links
+            if paper.get('semanticscholar'):
+                webbrowser.open(paper['semanticscholar'])
+            elif paper.get('ieeexplore'):
+                webbrowser.open(paper['ieeexplore'])
+            elif paper.get('url'):
                 webbrowser.open(paper['url'])
             
             if not paper['bibtex']:

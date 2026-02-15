@@ -118,10 +118,16 @@
 
                     <div class="pub-footer">
                         <a v-if="pub.url" :href="pub.url" target="_blank" class="pub-link">
-                            📄 View Paper
+                            📄 URL
                         </a>
                         <a v-if="pub.doi" :href="'https://doi.org/' + pub.doi" target="_blank" class="pub-link">
                             🔗 DOI
+                        </a>
+                        <a v-if="pub.ieeexplore" :href="pub.ieeexplore" target="_blank" class="pub-link">
+                            📚 IEEE Xplore
+                        </a>
+                        <a v-if="pub.semanticscholar" :href="pub.semanticscholar" target="_blank" class="pub-link">
+                            🔍 Semantic Scholar
                         </a>
                         <button @click="toggleBibtex(pub)" class="bibtex-btn">
                             {{ pub.showBibtex ? '✕ Hide' : '📋 BibTeX' }}

@@ -139,6 +139,8 @@ createApp({
                             publisher: CONFIG.convertLatexToUnicode(tags.publisher || ''),
                             doi: tags.doi || '',
                             url: tags.url || '',
+                            ieeexplore: tags.ieeexplore || '',
+                            semanticscholar: tags.semanticscholar || '',
                             research_field: tags.research_field || '',
                             data_type: tags.data_type || '',
                             bibtexText: bibtexEntries[entry.citationKey] || '',
