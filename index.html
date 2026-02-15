@@ -129,9 +129,19 @@
                         <a v-if="pub.semanticscholar" :href="pub.semanticscholar" target="_blank" class="pub-link">
                             🔍 Semantic Scholar
                         </a>
-                        <button @click="toggleBibtex(pub)" class="bibtex-btn">
-                            {{ pub.showBibtex ? '✕ Hide' : '📋 BibTeX' }}
+                        <a v-if="pub.openaccesspdf" :href="pub.openaccesspdf" target="_blank" class="pub-link" style="background-color: #dc2626;">
+                            🔓 PDF
+                        </a>
+                        <button v-if="pub.abstract" @click="toggleAbstract(pub)" class="bibtex-btn">
+                            {{ pub.showAbstract ? '✕ Hide Abstract' : '📝 Abstract' }}
                         </button>
+                        <button @click="toggleBibtex(pub)" class="bibtex-btn">
+                            {{ pub.showBibtex ? '✕ Hide BibTeX' : '📋 BibTeX' }}
+                        </button>
+                    </div>
+
+                    <div v-if="pub.showAbstract" class="bibtex-container" style="background: #f0fdf4; border-color: #bbf7d0;">
+                        <p class="bibtex-text" style="white-space: pre-wrap; font-family: sans-serif;">{{ pub.abstract }}</p>
                     </div>
 
                     <div v-if="pub.showBibtex" class="bibtex-container">

@@ -141,10 +141,13 @@ createApp({
                             url: tags.url || '',
                             ieeexplore: tags.ieeexplore || '',
                             semanticscholar: tags.semanticscholar || '',
+                            abstract: CONFIG.convertLatexToUnicode(tags.abstract || ''),
+                            openaccesspdf: tags.openaccesspdf || '',
                             research_field: tags.research_field || '',
                             data_type: tags.data_type || '',
                             bibtexText: bibtexEntries[entry.citationKey] || '',
-                            showBibtex: false
+                            showBibtex: false,
+                            showAbstract: false
                         };
                     })
                     .sort((a, b) => parseInt(b.year) - parseInt(a.year));
@@ -167,6 +170,11 @@ createApp({
         },
         toggleBibtex(pub) {
             pub.showBibtex = !pub.showBibtex;
+            if (pub.showBibtex) pub.showAbstract = false;
+        },
+        toggleAbstract(pub) {
+            pub.showAbstract = !pub.showAbstract;
+            if (pub.showAbstract) pub.showBibtex = false;
         },
         downloadBibtex() {
             // Collect BibTeX entries for filtered publications

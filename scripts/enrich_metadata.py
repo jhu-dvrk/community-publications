@@ -14,7 +14,8 @@ def fetch_with_retry(url, params, retries=3, delay=5):
             if response.status_code == 200:
                 return response.json()
             elif response.status_code == 429:
-                print(f"Rate limited. Waiting {delay} seconds (Attempt {i+1}/{retries})...")
+                sys.stdout.write(f"\rRate limited. Waiting {delay} seconds (Attempt {i+1}/{retries})...{' '*20}")
+                sys.stdout.flush()
                 time.sleep(delay)
                 delay *= 2
             else:
@@ -35,7 +36,7 @@ def get_semantic_scholar_data(title, doi=None):
     if doi:
         # Semantic Scholar DOI lookup
         url = f"{base_url}/DOI:{doi}"
-        params = {"fields": "url,externalIds,title"}
+        params = {"fields": "url,externalIds,title,abstract,openAccessPdf"}
         data = fetch_with_retry(url, params)
         if data:
             return data
@@ -45,7 +46,7 @@ def get_semantic_scholar_data(title, doi=None):
         search_url = f"{base_url}/search"
         params = {
             "query": title,
-            "fields": "url,externalIds,title,year",
+            "fields": "url,externalIds,title,year,abstract,openAccessPdf",
             "limit": 1
         }
         data = fetch_with_retry(search_url, params)
@@ -95,13 +96,22 @@ def enrich_bib(file_path):
         sem_match = re.search(r'semanticscholar\s*=\s*', raw, re.IGNORECASE)
         
         # Determine if we need to fetch
+        # We fetch if ANY interesting field is missing, but for now let's be conservative
+        # and fetch if we are modifying the entry or if specifically abstract is missing?
+        # The user wants to add them. Let's check if they exist.
+        
+        abstract_match = re.search(r'abstract\s*=\s*', raw, re.IGNORECASE)
+        pdf_match = re.search(r'openaccesspdf\s*=\s*', raw, re.IGNORECASE)
+        
         needs_sem = sem_match is None
-        # We can also fetch if DOI is missing
         needs_doi = doi is None
+        needs_abs = abstract_match is None
+        needs_pdf = pdf_match is None
         
         changes = []
         
-        if (needs_sem or needs_doi) and title:
+        # We'll fetch if we are missing basic IDs OR if we are missing enriched metadata
+        if (needs_sem or needs_doi or needs_abs or needs_pdf) and title:
             # Fetch data
             data = get_semantic_scholar_data(title, doi)
             
@@ -109,14 +119,25 @@ def enrich_bib(file_path):
                 # Add Semantic Scholar URL
                 if needs_sem and data.get("url"):
                     url = data.get("url")
-                    # Check if entry ends with "}" or "}\n"
-                    # We insert before the last brace
                     changes.append(f"  semanticscholar = {{{url}}}")
                     
                 # Add DOI if missing and found
                 if needs_doi and data.get("externalIds") and data["externalIds"].get("DOI"):
                     new_doi = data["externalIds"]["DOI"]
                     changes.append(f"  doi = {{{new_doi}}}")
+                    
+                # Add Abstract
+                if needs_abs and data.get("abstract"):
+                    # Escape braces in abstract to be safe? 
+                    # BibTeX abstracts can contain LaTeX. 
+                    # Minimal escaping for now:
+                    abstract = data["abstract"].replace("{", "\\{").replace("}", "\\}")
+                    changes.append(f"  abstract = {{{abstract}}}")
+                    
+                # Add Open Access PDF
+                if needs_pdf and data.get("openAccessPdf") and data["openAccessPdf"].get("url"):
+                    pdf_url = data["openAccessPdf"]["url"]
+                    changes.append(f"  openaccesspdf = {{{pdf_url}}}")
         
         if changes:
              updated_count += 1
@@ -129,8 +150,8 @@ def enrich_bib(file_path):
                  
         enriched_entries.append(full_entry)
         
-        # Be nice to API
-        time.sleep(0.5)
+        # Be nice to API (Respect 1 RPS limit)
+        time.sleep(1.5)
 
     print(f"\nUpdated {updated_count} entries.")
     
