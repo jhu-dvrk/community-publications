@@ -112,76 +112,96 @@ def fetch_with_adaptive_delay(url, params, progress_prefix=""):
             
     return None
 
-def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_days=180):
+def is_valid_match(title, result):
+    """Check if a Semantic Scholar result is a good match for the given title."""
+    res_title = result.get("title", "")
+    # Simple similarity score
+    similarity = difflib.SequenceMatcher(None, title.lower(), res_title.lower()).ratio()
+    
+    # Check for generic markers
+    publication_types = result.get("publicationTypes") or []
+    is_generic = any(t in ["Conference", "Journal"] for t in publication_types)
+    
+    # High similarity might mean it actually IS the conference paper (sometimes tagged weirdly)
+    # But usually, papers are tagged "JournalArticle" or "ConferenceArticle"
+    score = similarity
+    if is_generic:
+        score -= 0.3 # Penalize generic entries
+    
+    return score > 0.7, score
+
+def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_days=180, reprocess=False):
     base_url = "https://api.semanticscholar.org/graph/v1/paper"
     
     # Try searching by DOI first if available
     if doi:
         cache_path = get_cache_path(f"doi:{doi}")
-        if is_cache_valid(cache_path, max_cache_days):
+        if os.path.exists(cache_path):
             data = load_cache(cache_path)
             if data:
-                return data
+                # If reprocessing, we still want to validate the cached result
+                if reprocess:
+                    is_valid, score = is_valid_match(title, data)
+                    if not is_valid:
+                        # If cached DOI data is invalid (unlikely but possible if title doesn't match)
+                        return None
+                
+                if is_cache_valid(cache_path, max_cache_days) or reprocess:
+                    return data
 
-        url = f"{base_url}/DOI:{doi}"
-        params = {"fields": "url,externalIds,title,abstract,openAccessPdf,publicationTypes,authors"}
-        data = fetch_with_adaptive_delay(url, params, progress_prefix)
-        if data:
-            save_cache(cache_path, data)
-            return data
+        if not reprocess:
+            url = f"{base_url}/DOI:{doi}"
+            params = {"fields": "url,externalIds,title,abstract,openAccessPdf,publicationTypes,authors"}
+            data = fetch_with_adaptive_delay(url, params, progress_prefix)
+            if data:
+                save_cache(cache_path, data)
+                return data
 
     # Fallback to search by title
     if title:
         cache_path = get_cache_path(f"title:{title.lower()}")
-        if is_cache_valid(cache_path, max_cache_days):
+        if os.path.exists(cache_path):
             data = load_cache(cache_path)
             if data:
-                return data
+                # Validate cached record
+                is_valid, score = is_valid_match(title, data)
+                if is_valid:
+                    if is_cache_valid(cache_path, max_cache_days) or reprocess:
+                        return data
+                elif reprocess:
+                    # During reprocess, explicitely return None if cache is invalid
+                    return None
 
-        search_url = f"{base_url}/search"
-        params = {
-            "query": title,
-            "fields": "url,externalIds,title,year,abstract,openAccessPdf,publicationTypes,authors",
-            "limit": 5
-        }
-        data = fetch_with_adaptive_delay(search_url, params, progress_prefix)
-        if data and data.get("data"):
-            # Filter and pick the best match
-            results = data["data"]
-            best_match = None
-            highest_score = 0
-            
-            for result in results:
-                res_title = result.get("title", "")
-                # Simple similarity score
-                similarity = difflib.SequenceMatcher(None, title.lower(), res_title.lower()).ratio()
+        if not reprocess:
+            search_url = f"{base_url}/search"
+            params = {
+                "query": title,
+                "fields": "url,externalIds,title,year,abstract,openAccessPdf,publicationTypes,authors",
+                "limit": 5
+            }
+            data = fetch_with_adaptive_delay(search_url, params, progress_prefix)
+            if data and data.get("data"):
+                # Filter and pick the best match
+                results = data["data"]
+                best_match = None
+                highest_score = 0
                 
-                # Check for generic markers
-                publication_types = result.get("publicationTypes") or []
-                is_generic = any(t in ["Conference", "Journal"] for t in publication_types)
+                for result in results:
+                    is_valid, score = is_valid_match(title, result)
+                    if score > highest_score:
+                        highest_score = score
+                        best_match = result
                 
-                # If it's generic and we have a very low similarity, skip it
-                # High similarity might mean it actually IS the conference paper (sometimes tagged weirdly)
-                # But usually, papers are tagged "JournalArticle" or "ConferenceArticle"
-                
-                score = similarity
-                if is_generic:
-                    score -= 0.3 # Penalize generic entries
-                
-                if score > highest_score:
-                    highest_score = score
-                    best_match = result
-            
-            # Threshold for accepting a match
-            if highest_score > 0.7:
-                save_cache(cache_path, best_match)
-                return best_match
-            else:
-                print(f"\rNo good match for '{title[:30]}...' (best score: {highest_score:.2f}){' '*20}")
+                # Threshold for accepting a match
+                if highest_score > 0.7:
+                    save_cache(cache_path, best_match)
+                    return best_match
+                else:
+                    print(f"\rNo good match for '{title[:30]}...' (best score: {highest_score:.2f}){' '*20}")
             
     return None
 
-def enrich_bib(file_path, max_cache_days=180):
+def enrich_bib(file_path, max_cache_days=180, reprocess=False):
     print(f"Enriching {file_path} with Semantic Scholar data...")
     
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -240,7 +260,7 @@ def enrich_bib(file_path, max_cache_days=180):
         
         if (needs_sem or needs_doi or needs_abs or needs_arxiv or (needs_url and not doi)) and title:
             # Fetch data (Adaptive delay handled inside)
-            data = get_semantic_scholar_data(title, doi, progress_msg + " ", max_cache_days)
+            data = get_semantic_scholar_data(title, doi, progress_msg + " ", max_cache_days, reprocess)
             
             if data:
                 if needs_sem and data.get("url"):
@@ -309,7 +329,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Enrich BibTeX metadata using Semantic Scholar API.")
     parser.add_argument("file", nargs="?", default="publications.bib", help="Path to the BibTeX file.")
     parser.add_argument("-d", "--days", type=int, default=180, help="Cache expiration in days. Use 0 to ignore cache. Default is 180.")
+    parser.add_argument("-r", "--reprocess", action="store_true", help="Reprocess using only cached data. Skips network calls.")
     
     args = parser.parse_args()
     
-    enrich_bib(args.file, args.days)
+    enrich_bib(args.file, args.days, args.reprocess)
