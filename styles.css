@@ -114,6 +114,10 @@ main {
     transition: all 0.2s ease;
 }
 
+.year-select {
+    flex: 0 0 100px;
+}
+
 .filter-select:focus {
     outline: none;
     border-color: var(--primary-color);

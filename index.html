@@ -35,9 +35,16 @@
                 </div>
 
                 <div class="filters">
-                    <select v-model="selectedYear" class="filter-select">
-                        <option value="">All Years</option>
-                        <option v-for="year in availableYears" :key="year" :value="year">
+                    <select v-model="startYear" class="filter-select year-select">
+                        <option value="">From Year</option>
+                        <option v-for="year in availableStartYears" :key="year" :value="year">
+                            {{ year }}
+                        </option>
+                    </select>
+
+                    <select v-model="endYear" class="filter-select year-select">
+                        <option value="">To Year</option>
+                        <option v-for="year in availableEndYears" :key="year" :value="year">
                             {{ year }}
                         </option>
                     </select>

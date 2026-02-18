@@ -5,7 +5,8 @@ createApp({
         return {
             publications: [],
             searchQuery: '',
-            selectedYear: '',
+            startYear: '',
+            endYear: '',
             selectedType: '',
             selectedField: '',
             selectedDataType: '',
@@ -17,6 +18,14 @@ createApp({
         availableYears() {
             const years = [...new Set(this.publications.map(p => p.year))];
             return years.sort((a, b) => b - a);
+        },
+        availableStartYears() {
+            if (!this.endYear) return this.availableYears;
+            return this.availableYears.filter(year => parseInt(year) <= parseInt(this.endYear));
+        },
+        availableEndYears() {
+            if (!this.startYear) return this.availableYears;
+            return this.availableYears.filter(year => parseInt(year) >= parseInt(this.startYear));
         },
         availableFields() {
             const fields = new Set();
@@ -62,9 +71,12 @@ createApp({
                 });
             }
 
-            // Year filter
-            if (this.selectedYear) {
-                filtered = filtered.filter(pub => pub.year === this.selectedYear);
+            // Year range filter
+            if (this.startYear) {
+                filtered = filtered.filter(pub => parseInt(pub.year) >= parseInt(this.startYear));
+            }
+            if (this.endYear) {
+                filtered = filtered.filter(pub => parseInt(pub.year) <= parseInt(this.endYear));
             }
 
             // Type filter
@@ -248,7 +260,8 @@ createApp({
         },
         resetFilters() {
             this.searchQuery = '';
-            this.selectedYear = '';
+            this.startYear = '';
+            this.endYear = '';
             this.selectedType = '';
             this.selectedField = '';
             this.selectedDataType = '';
@@ -258,7 +271,15 @@ createApp({
             const urlParams = new URLSearchParams(window.location.search);
 
             if (urlParams.has('year')) {
-                this.selectedYear = urlParams.get('year');
+                const y = urlParams.get('year');
+                this.startYear = y;
+                this.endYear = y;
+            }
+            if (urlParams.has('startYear')) {
+                this.startYear = urlParams.get('startYear');
+            }
+            if (urlParams.has('endYear')) {
+                this.endYear = urlParams.get('endYear');
             }
             if (urlParams.has('field')) {
                 this.selectedField = decodeURIComponent(urlParams.get('field'));
