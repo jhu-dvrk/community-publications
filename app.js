@@ -165,6 +165,11 @@ createApp({
                     })
                     .sort((a, b) => parseInt(b.year) - parseInt(a.year));
 
+                if (this.publications.length > 0 && this.availableYears.length > 0) {
+                    if (!this.startYear) this.startYear = this.availableYears[this.availableYears.length - 1];
+                    if (!this.endYear) this.endYear = this.availableYears[0];
+                }
+
             } catch (error) {
                 console.error('Error loading publications:', error);
             }
@@ -260,8 +265,13 @@ createApp({
         },
         resetFilters() {
             this.searchQuery = '';
-            this.startYear = '';
-            this.endYear = '';
+            if (this.publications.length > 0 && this.availableYears.length > 0) {
+                this.startYear = this.availableYears[this.availableYears.length - 1];
+                this.endYear = this.availableYears[0];
+            } else {
+                this.startYear = '';
+                this.endYear = '';
+            }
             this.selectedType = '';
             this.selectedField = '';
             this.selectedDataType = '';

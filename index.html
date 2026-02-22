@@ -36,16 +36,14 @@
 
                 <div class="filters">
                     <select v-model="startYear" class="filter-select year-select">
-                        <option value="">From Year</option>
                         <option v-for="year in availableStartYears" :key="year" :value="year">
-                            {{ year }}
+                            From {{ year }}
                         </option>
                     </select>
 
                     <select v-model="endYear" class="filter-select year-select">
-                        <option value="">To Year</option>
                         <option v-for="year in availableEndYears" :key="year" :value="year">
-                            {{ year }}
+                            To {{ year }}
                         </option>
                     </select>
 
