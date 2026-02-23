@@ -476,8 +476,20 @@ footer a:hover {
     border-bottom: 2px solid var(--border-color);
 }
 
+.full-width-chart {
+    grid-column: 1 / -1;
+    margin-top: 1.5rem;
+    overflow-x: auto;
+}
+
+.sites-chart-wrapper {
+    min-width: 800px;
+    height: 500px;
+}
+
 .chart-container canvas {
     max-height: 400px;
+    width: 100% !important;
 }
 
 @media (max-width: 768px) {

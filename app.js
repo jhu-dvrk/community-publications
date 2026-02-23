@@ -10,6 +10,7 @@ createApp({
             selectedType: '',
             selectedField: '',
             selectedDataType: '',
+            selectedSite: '',
             currentPage: 1,
             itemsPerPage: 50
         };
@@ -55,6 +56,21 @@ createApp({
             });
             return Array.from(dataTypes).sort();
         },
+        availableSites() {
+            const sites = new Map();
+            this.publications.forEach(pub => {
+                if (pub.dvrk_site) {
+                    const parsedSites = this.parseSites(pub.dvrk_site);
+                    parsedSites.forEach(s => {
+                        sites.set(s.acronym, s.name);
+                    });
+                }
+            });
+            // Return array of objects for display {acronym, name}
+            return Array.from(sites.entries())
+                .map(([acronym, name]) => ({ acronym, name }))
+                .sort((a, b) => a.name.localeCompare(b.name));
+        },
         filteredPublications() {
             let filtered = this.publications;
 
@@ -99,6 +115,15 @@ createApp({
                     if (!pub.data_type) return false;
                     const types = this.parseDataTypes(pub.data_type);
                     return types.includes(this.selectedDataType);
+                });
+            }
+            
+            // Site filter
+            if (this.selectedSite) {
+                filtered = filtered.filter(pub => {
+                    if (!pub.dvrk_site) return false;
+                    const sites = this.parseSites(pub.dvrk_site);
+                    return sites.some(site => site.acronym === this.selectedSite || site.name === this.selectedSite);
                 });
             }
 
@@ -156,8 +181,9 @@ createApp({
                             arxiv: tags.arxiv || '',
                             abstract: CONFIG.convertLatexToUnicode(tags.abstract || ''),
                             openaccesspdf: tags.openaccesspdf || '',
-                            research_field: tags.research_field || '',
-                            data_type: tags.data_type || '',
+                            research_field: tags.research_field ? tags.research_field.replace(/[{}]/g, '') : '',
+                            data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
+                            dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
                             bibtexText: bibtexEntries[entry.citationKey] || '',
                             showBibtex: false,
                             showAbstract: false
@@ -242,26 +268,21 @@ createApp({
                 .filter(dt => dt)
                 .map(code => CONFIG.DATA_TYPE_MAP[code] || code);
         },
+        parseSites(sites) {
+            if (!sites) return [];
+            return sites.split(' and ')
+                .map(s => s.trim())
+                .filter(s => s)
+                .map(acronym => ({
+                    acronym: acronym,
+                    name: CONFIG.SITE_MAP[acronym] || acronym
+                }));
+        },
         getFieldDescription(fieldName) {
-            const descriptions = {
-                'Automation': 'This field refers to all the works automating any aspect of robotic surgery in order to improve the surgical workflow or to optimize the performance in a certain task.',
-                'Training, skill assessment and gesture recognition': 'Publications where new training platforms and protocols were designed and evaluated, as well as research efforts towards learning enhancement by multi-sensory training augmentation, skill assessment, and workflow analysis.',
-                'Hardware implementation and integration': 'All works that have contributed to develop the dVRK system, as well as further modifications of its software and hardware to make surgery more affordable and capable to interface with other surgical equipment.',
-                'System simulation and modelling': 'Studies that focused on the integration of the dVRK into simulation environments, optimizing simulation to obtain realistic robot interactions, and robot parametrization.',
-                'Imaging and vision': 'Publications related to the processing of images acquired by the endoscopic camera, including camera calibration, detection, segmentation, tracking, spatial mapping, and image augmentation.',
-                'Reviews': 'Review papers that cite the dVRK platform.'
-            };
-            return descriptions[fieldName] || '';
+            return CONFIG.FIELD_DESCRIPTIONS[fieldName] || '';
         },
         getDataTypeDescription(dataTypeName) {
-            const descriptions = {
-                'Raw Images': 'The left and right video stream from the da Vinci stereo endoscope or any other cameras',
-                'Kinematic Data': 'Information associated to the kinematics of the dVRK (including ECM, MTMs, PSMs and SUJ)',
-                'Dynamic Data': 'Information associated to the dynamics of the dVRK (including ECM, MTMs, PSMs)',
-                'System Data': 'Data associated to the robot teleoperation states, as signals coming from foot pedals, head sensor for operator presence detection, etc.',
-                'External Data': 'All data associated with additional technologies that were used along with the dVRK, such as eye trackers, force sensors, different imaging technologies, etc.'
-            };
-            return descriptions[dataTypeName] || '';
+            return CONFIG.DATA_TYPE_DESCRIPTIONS[dataTypeName] || '';
         },
         resetFilters() {
             this.searchQuery = '';
@@ -275,6 +296,7 @@ createApp({
             this.selectedType = '';
             this.selectedField = '';
             this.selectedDataType = '';
+            this.selectedSite = '';
             this.currentPage = 1;
         },
         applyUrlFilters() {
@@ -297,6 +319,9 @@ createApp({
             if (urlParams.has('dataType')) {
                 this.selectedDataType = decodeURIComponent(urlParams.get('dataType'));
             }
+            if (urlParams.has('site')) {
+                this.selectedSite = decodeURIComponent(urlParams.get('site'));
+            }
         }
     },
     watch: {
@@ -304,7 +329,8 @@ createApp({
             this.currentPage = 1;
         }
     },
-    mounted() {
+    async mounted() {
+        await CONFIG.init();
         this.loadPublications();
         this.applyUrlFilters();
     }

@@ -69,6 +69,13 @@
                         </option>
                     </select>
 
+                    <select v-model="selectedSite" class="filter-select">
+                        <option value="">All Sites</option>
+                        <option v-for="site in availableSites" :key="site.acronym" :value="site.acronym">
+                            {{ site.name }} ({{ site.acronym }})
+                        </option>
+                    </select>
+
                     <button @click="resetFilters" class="reset-btn">Reset Filters</button>
                     <button @click="downloadBibtex" class="download-btn">⬇ Download BibTeX ({{
                         filteredPublications.length }})</button>
@@ -118,6 +125,13 @@
                         <span v-for="dataType in parseDataTypes(pub.data_type)" :key="dataType"
                             :title="getDataTypeDescription(dataType)" class="tag tag-data">
                             {{ dataType }}
+                        </span>
+                    </div>
+
+                    <div class="pub-tags" v-if="pub.dvrk_site">
+                        <span v-for="site in parseSites(pub.dvrk_site)" :key="site.acronym"
+                            class="tag" style="background-color: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7;">
+                            {{ site.name }}
                         </span>
                     </div>
 

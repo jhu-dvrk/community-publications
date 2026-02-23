@@ -2,25 +2,47 @@
 // This file contains mappings and constants used across the application
 
 const CONFIG = {
-    // Research field code to full name mapping
-    // As defined in README.md
-    FIELD_MAP: {
-        'AU': 'Automation',
-        'TR': 'Training, skill assessment and gesture recognition',
-        'HW': 'Hardware implementation and integration',
-        'SS': 'System simulation and modelling',
-        'IM': 'Imaging and vision',
-        'RE': 'Reviews'
-    },
+    // These will be populated from custom_tags.json
+    FIELD_MAP: {},
+    DATA_TYPE_MAP: {},
+    SITE_MAP: {},
+    FIELD_DESCRIPTIONS: {},
+    DATA_TYPE_DESCRIPTIONS: {},
 
-    // Data type code to full name mapping
-    // As defined in README.md
-    DATA_TYPE_MAP: {
-        'RI': 'Raw Images',
-        'KD': 'Kinematic Data',
-        'DD': 'Dynamic Data',
-        'SD': 'System Data',
-        'ED': 'External Data'
+    // Initialize configuration by loading custom_tags.json
+    async init() {
+        try {
+            const response = await fetch('custom_tags.json');
+            const data = await response.json();
+            
+            // Populate RESEARCH_FIELDS
+            if (data.research_fields) {
+                data.research_fields.forEach(field => {
+                    this.FIELD_MAP[field.id] = field.name;
+                    this.FIELD_DESCRIPTIONS[field.name] = field.description;
+                });
+            }
+            
+            // Populate DATA_TYPES
+            if (data.data_types) {
+                data.data_types.forEach(type => {
+                    this.DATA_TYPE_MAP[type.id] = type.name;
+                    this.DATA_TYPE_DESCRIPTIONS[type.name] = type.description;
+                });
+            }
+            
+            // Populate SITES
+            if (data.dvrk_site) {
+                data.dvrk_site.forEach(site => {
+                    this.SITE_MAP[site.id] = site.name;
+                });
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Error loading custom_tags.json:', error);
+            return false;
+        }
     },
 
     // Convert LaTeX special characters to Unicode

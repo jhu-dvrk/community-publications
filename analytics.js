@@ -43,8 +43,9 @@ createApp({
                             title: CONFIG.convertLatexToUnicode(tags.title ? tags.title.replace(/[{}]/g, '') : ''),
                             author: CONFIG.convertLatexToUnicode(tags.author || ''),
                             year: tags.year || '',
-                            research_field: tags.research_field || '',
-                            data_type: tags.data_type || ''
+                            research_field: tags.research_field ? tags.research_field.replace(/[{}]/g, '') : '',
+                            data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
+                            dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : ''
                         };
                     })
                     .sort((a, b) => parseInt(a.year) - parseInt(b.year));
@@ -66,6 +67,7 @@ createApp({
             this.createCumulativeChart();
             this.createResearchFieldsChart();
             this.createDataTypesChart();
+            this.createSitesChart();
         },
         createPublicationsPerYearChart() {
             const yearCounts = {};
@@ -328,9 +330,90 @@ createApp({
                     }
                 }
             });
+        },
+        createSitesChart() {
+            const siteCounts = {};
+            this.publications.forEach(pub => {
+                if (pub.dvrk_site) {
+                    pub.dvrk_site.split(' and ').forEach(site => {
+                        const trimmed = site.trim();
+                        if (trimmed) {
+                            siteCounts[trimmed] = (siteCounts[trimmed] || 0) + 1;
+                        }
+                    });
+                }
+            });
+
+            // Sort by count
+            const sites = Object.keys(siteCounts).sort((a, b) => siteCounts[b] - siteCounts[a]);
+            const counts = sites.map(site => siteCounts[site]);
+            
+            // Map acronyms to full names for tooltips but use acronyms for X-axis labels to fit better "by column"
+            const labels = sites;
+            const fullNames = sites.map(acronym => CONFIG.SITE_MAP[acronym] || acronym);
+
+            const ctx = document.getElementById('sitesChart');
+            if (!ctx) return;
+
+            this.charts.sites = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Publications',
+                        data: counts,
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const site = sites[index]; 
+                            window.location.href = `index.html?site=${site}`;
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: (context) => {
+                                    const index = context[0].dataIndex;
+                                    return fullNames[index];
+                                },
+                                label: function (context) {
+                                    return `Total Publications: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
         }
     },
-    mounted() {
+    async mounted() {
+        await CONFIG.init();
         this.loadPublications();
     }
 }).mount('#app');

@@ -31,3 +31,10 @@ The field is `data_type`.  For example: `data_type={RI and KD and SD and ED}`.  
 * `DD`: **Dynamic Data**, information associated to the dynamics of the dVRK (including ECM, MTMs, PSMs) 
 * `SD`: **System Data**, the data associated to the robot teleoperation states, as signals coming from foot pedals, head sensor for operator presence detection, etc.
 * `ED`: **External Data**, all the data associated with additional technologies that were used along with the dVRK, such as eye trackers, force sensors, different imaging technologies, etc. 
+
+## Research Sites / Institutions
+
+The field is `dvrk_site`. For example: `dvrk_site={JHU and ICL}`.
+This field is used to identify the affiliation(s) of the authors.
+The full list of acronyms and their corresponding institution names can be found in [custom_tags.json](custom_tags.json).
+Common examples: `JHU` (Johns Hopkins University), `ICL` (Imperial College London), `WPI` (Worcester Polytechnic Institute).
