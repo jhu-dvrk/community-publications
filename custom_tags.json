@@ -65,6 +65,7 @@
         { "id": "CUHK", "name": "Chinese University of Hong Kong", "country": "Hong Kong" },
         { "id": "CWRU", "name": "Case Western Reserve University", "country": "USA" },
         { "id": "ICL", "name": "Imperial College London", "country": "UK" },
+        { "id": "ISS", "name": "Intuitive Surgical", "country": "USA" },
         { "id": "JHU", "name": "Johns Hopkins University", "country": "USA" },
         { "id": "OU", "name": "Obuda University", "country": "Hungary" },
         { "id": "POLIMI", "name": "Politecnico di Milano", "country": "Italy" },

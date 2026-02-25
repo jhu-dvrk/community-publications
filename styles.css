@@ -63,6 +63,15 @@ header h1 {
     opacity: 0.9;
 }
 
+.subtitle a {
+    color: white;
+    text-decoration: underline;
+}
+
+.subtitle a:hover {
+    opacity: 0.8;
+}
+
 /* Main Content */
 main {
     padding: 1rem 0;
