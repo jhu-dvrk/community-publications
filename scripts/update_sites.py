@@ -78,7 +78,9 @@ def update_sites(bib_file, mapping_file):
                 for p in patterns:
                     # Use lookahead/lookbehind for boundaries to handle names correctly
                     # (especially those with dots or other non-word characters).
-                    if re.search(r'(?<!\w)' + p + r'(?!\w)', author_str, re.IGNORECASE):
+                    # Make dots in patterns optional to handle "First M. Last" and "First M Last"
+                    p_regex = p.replace(r'\.', r'\.?')
+                    if re.search(r'(?<!\w)' + p_regex + r'(?!\w)', author_str, re.IGNORECASE):
                         found_match = True
                         break
 
