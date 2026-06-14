@@ -30,7 +30,8 @@ createApp({
                 const bibtexText = await response.text();
 
                 // Parse BibTeX using bibtex-parse-js
-                const parsed = bibtexParse.toJSON(bibtexText);
+                const cleanedBibtexText = CONFIG.cleanBibtexText(bibtexText);
+                const parsed = bibtexParse.toJSON(cleanedBibtexText);
 
                 // Convert to our format
                 this.publications = parsed

@@ -222,6 +222,11 @@ def enrich_bib(file_path, max_cache_days=180, reprocess=False):
             continue
             
         current_idx += 1
+        
+        # Skip commented-out entries (like @comment)
+        if raw.strip().lower().startswith("comment"):
+            enriched_entries.append("@" + raw)
+            continue
         # Print progress, overwriting weight message
         progress_msg = f"Processing {current_idx}/{total_entries}..."
         sys.stdout.write(f"\r{progress_msg}{' '*20}")

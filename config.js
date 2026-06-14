@@ -45,6 +45,54 @@ const CONFIG = {
         }
     },
 
+    // Strip comments to prevent parser crashes
+    cleanBibtexText(text) {
+        if (!text) return '';
+        
+        let result = '';
+        let pos = 0;
+        
+        while (pos < text.length) {
+            // Find the next occurrence of @comment (case-insensitive)
+            const nextComment = text.toLowerCase().indexOf('@comment', pos);
+            if (nextComment === -1) {
+                result += text.substring(pos);
+                break;
+            }
+            
+            // Append everything up to the @comment
+            result += text.substring(pos, nextComment);
+            
+            // Advance pos to start scanning the comment
+            pos = nextComment + 8; // length of '@comment'
+            
+            // Find the opening brace of the comment
+            while (pos < text.length && /\s/.test(text[pos])) {
+                pos++;
+            }
+            
+            if (pos < text.length && text[pos] === '{') {
+                pos++; // skip '{'
+                let braceCount = 1;
+                // Scan until braces are balanced
+                while (pos < text.length && braceCount > 0) {
+                    // If we see a new entry starting, stop parsing this comment to prevent runaway
+                    if (text[pos] === '@' && (pos === 0 || text[pos-1] === '\n' || text[pos-1] === '\r')) {
+                        break;
+                    }
+                    if (text[pos] === '{') {
+                        braceCount++;
+                    } else if (text[pos] === '}') {
+                        braceCount--;
+                    }
+                    pos++;
+                }
+            }
+        }
+        
+        return result;
+    },
+
     // Convert LaTeX special characters to Unicode
     convertLatexToUnicode(text) {
         if (!text) return '';

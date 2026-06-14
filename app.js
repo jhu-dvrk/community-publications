@@ -152,10 +152,11 @@ createApp({
                 const bibtexText = await response.text();
 
                 // Parse BibTeX using bibtex-parse-js
-                const parsed = bibtexParse.toJSON(bibtexText);
+                const cleanedBibtexText = CONFIG.cleanBibtexText(bibtexText);
+                const parsed = bibtexParse.toJSON(cleanedBibtexText);
 
                 // Extract individual BibTeX entries
-                const bibtexEntries = this.extractBibtexEntries(bibtexText);
+                const bibtexEntries = this.extractBibtexEntries(cleanedBibtexText);
 
                 // Convert to our format and sort by year
                 this.publications = parsed
