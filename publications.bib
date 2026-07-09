@@ -1,28 +1,3 @@
-
-
-@comment{@article{Hu_2026, title={Multiscale deformable objects manipulation via wavelet-decomposed boundary element method}, ISSN={1741-3176}, url={http://dx.doi.org/10.1177/02783649261441639}, DOI={10.1177/02783649261441639}, journal={The International Journal of Robotics Research}, publisher={SAGE Publications}, author={Hu, Junlei and Jones, Dominic and Melibary, Majed and Liu, Jiannan and Valdastri, Pietro}, year={2026}, month = {Apr},
-  semanticscholar = {https://www.semanticscholar.org/paper/02507542b4d918dc705108e2da012f5bc92ab168},
-  abstract = { Robotic deformable object manipulation (DOM) faces critical challenges in industrial and medical applications due to under-actuation, unpredictable deformation, and partial observability. Model-free methods often suffer from unstable Jacobians arising from ill-conditioned observations, while physics-based models typically depend on precise parameters and volumetric meshing, limiting their real-time practicality. We propose a wavelet-boundary element method (BEM) framework that leverages multiscale wavelet descriptors to control 3D deformations directly from efficient feedback modalities, such as contours and curves. By coupling wavelets with BEM, we derive an analytical deformation Jacobian that functions independently of material stiffness (e.g., Young’s modulus), relying solely on an online-calibrated Poisson’s ratio. This mesh-free formulation significantly enhances real-time performance and robustness against sensor occlusion. Validated in simulation and on the da Vinci Research Kit (dVRK) with phantom and ex vivo animal tissue, our method achieves millimetre-level accuracy. Comparative studies against Fourier-based, model-free, and online finite element method (FEM) approaches demonstrate superior stability and computational efficiency. Notably, our framework achieves convergence speeds significantly faster than online FEM by avoiding volumetric computations, while resolving ill-conditioning through spatial–frequency localization. This work advances deformable object manipulation in unstructured environments, particularly in surgical robotics, where stability under partial observability is essential. Project page: https://junleihu.github.io/projects/dwtbem/ .
-}
-}
-}
-
-@comment{@article{Cunico_2026, title={Spartan: surgical peg-and-ring triplet and workflow anticipation benchmark}, ISSN={1861-6429}, url={http://dx.doi.org/10.1007/s11548-026-03688-y}, DOI={10.1007/s11548-026-03688-y}, journal={International Journal of Computer Assisted Radiology and Surgery}, publisher={Springer Science and Business Media LLC}, author={Cunico, Federico and Sandrini, Michele and Piccinelli, Nicola and Muradore, Riccardo}, year={2026}, month = {may},
-  semanticscholar = {https://www.semanticscholar.org/paper/17f244cb08e858c28d521ae0168c6b3cb5bd8d8b}
-}}
-
-@comment{@article{Hu_2026, title={Autonomous robotic exploration of unknown soft objects}, ISSN={1741-3176}, url={http://dx.doi.org/10.1177/02783649251415415}, DOI={10.1177/02783649251415415}, journal={The International Journal of Robotics Research}, publisher={SAGE Publications}, author={Hu, Junlei and Jones, Dominic and Loza Galindo, Gerardo and Huang, Shoudong and Valdastri, Pietro}, year={2026}, month = {Feb},
-  semanticscholar = {https://www.semanticscholar.org/paper/75504bd0091d45d38131bccce2609640e56f3532},
-  abstract = { Robotic exploration of unknown soft objects presents significant challenges for autonomous systems due to unpredictable deformations and shape changes during manipulation. To address this, we propose a framework that integrates topology-aware 3D reconstruction with a topology-guided motion planner, enabling the discovery and reconstruction of previously hidden or concave regions. This topology-aware 3D reconstruction employs a novel representation of deformable objects by combining Cylinder Čech Complexes with point clouds, enabling rapid tracking of significant topology changes and detection of non-manifold boundaries. The topology analysis and canonical reconstruction guide motion planning by optimising grasp points and planning trajectories to reveal previously unseen surfaces through two actions: turning over and stretching. We validated our algorithm through simulations and experiments using the da Vinci Research Kit, demonstrating successful exploration with two or three manipulators. We showed it can fully explore surfaces of two everyday objects, a beanie and a rubber glove, and two cadaveric organs, a liver and a colon, within seven manipulations. Our method achieved a 45.6% improvement in 3D reconstruction accuracy compared to state-of-the-art point-cloud-based methods while also demonstrating the capability to detect and fix non-manifold geometry.
-}
-}
-}
-
-@comment{@article{Hansen_2026, title={ImitateCholec: A Multimodal Dataset for Long-Horizon Imitation Learning in Robotic Cholecystectomy}, volume={13}, ISSN={2052-4463}, url={http://dx.doi.org/10.1038/s41597-025-06526-z}, DOI={10.1038/s41597-025-06526-z}, number={1}, journal={Scientific Data}, publisher={Springer Science and Business Media LLC}, author={Hansen, Pascal and Kim, Ji Woong Brian and Goldenberg, Antony and Chen, Juo Tung and Li, Yuanzhe Amos and Deguet, Anton and White, Brandon and Tsai, De Ru and Cha, Richard and Jopling, Jeffrey and Scheikl, Paul Maria and Krieger, Axel}, year={2026}, month = {Jan},
-  semanticscholar = {https://www.semanticscholar.org/paper/70fadb1a014dcbc72ddd3585e81746134a8e2bf8},
-  abstract = {The growing global shortage of skilled surgeons underscores the need for intelligent, assistive technologies in the operating room. To address this challenge, we introduce ImitateCholec, a publicly available dataset specifically designed to advance autonomous robotic systems during the critical clipping and cutting phase of laparoscopic cholecystectomy. The dataset comprises over 18,000 demonstrations from 34 ex vivo porcine cholecystectomies, totaling approximately 20 hours of data. Each clipping and cutting phase recorded in the dataset is segmented into 17 distinct surgical tasks. ImitateCholec uniquely integrates endoscopic videos captured from multiple camera perspectives with comprehensive kinematic data acquired through the da Vinci Research Kit. Both optimal demonstration executions and recovery maneuvers were systematically recorded, enabling the training of imitation learning models capable of robustly addressing real-world surgical variability. Primarily, ImitateCholec facilitates imitation learning for long-horizon surgical workflow execution, significantly advancing the development of autonomous robotic systems toward achieving phase-level autonomy and, ultimately, full procedural autonomy. Additional supported applications include surgical workflow modeling, error recognition, and surgical tool pose estimation.}
-}}
-
 @comment{@misc{Consortium2026open-h-embodiment,
   author = {Open-H-Embodiment Consortium and : and Nigel Nelson and Juo-Tung Chen and Jesse Haworth and Xinhao Chen and Lukas Zbinden and Dianye Huang and Alaa Eldin Abdelaal and Alberto Arezzo and Ayberk Acar and Farshid Alambeigi and Carlo Alberto Ammirati and Yunke Ao and Pablo David Aranda Rodriguez and Soofiyan Atar and Mattia Ballo and Noah Barnes and Federica Barontini and Filip Binkiewicz and Peter Black and Sebastian Bodenstedt and Leonardo Borgioli and Nikola Budjak and Benjamin Calmé and Fabio Carrillo and Nicola Cavalcanti and Changwei Chen and Haoxin Chen and Sihang Chen and Qihan Chen and Zhongyu Chen and Ziyang Chen and Shing Shin Cheng and Meiqing Cheng and Min Cheng and Zih-Yun Sarah Chiu and Xiangyu Chu and Camilo Correa-Gallego and Giulio Dagnino and Anton Deguet and Jacob Delgado and Jonathan C. DeLong and Kaizhong Deng and Alexander Dimitrakakis and Qingpeng Ding and Hao Ding and Giovanni Distefano and Daniel Donoho and Anqing Duan and Marco Esposito and Shane Farritor and Jad Fayad and Zahi Fayad and Mario Ferradosa and Filippo Filicori and Chelsea Finn and Philipp Fürnstahl and Jiawei Ge and Stamatia Giannarou and Xavier Giralt Ludevid and Frederic Giraud and Aditya Amit Godbole and Ken Goldberg and Antony Goldenberg and Diego Granero Marana and Xiaoqing Guo and Tamás Haidegger and Evan Hailey and Pascal Hansen and Ziyi Hao and Kush Hari and Kengo Hayashi and Jonathon Hawkins and Shelby Haworth and Ortrun Hellig and S. Duke Herrell and Zhouyang Hong and Andrew Howe and Junlei Hu and Zhaoyang Jacopo Hu and Ria Jain and Mohammad Rafiee Javazm and Howard Ji and Rui Ji and Jianmin Ji and Zhongliang Jiang and Dominic Jones and Jeffrey Jopling and Britton Jordan and Ran Ju and Michael Kam and Luoyao Kang and Fausto Kang and Siddhartha Kapuria and Peter Kazanzides and Sonika Kiehler and Ethan Kilmer and Ji Woong Kim and Przemysław Korzeniowski and Chandra Kuchi and Nithesh Kumar and Alan Kuntz and Federico Lavagno and Yu Chung Lee and Hao-Chih Lee and Hang Li and Zhen Li and Xiao Liang and Xinxin Lin and Jinsong Lin and Chang Liu and Fei Liu and Pei Liu and Yun-hui Liu and Wanli Liuchen and Eszter Lukács and Sareena Mann and Miles Mannas and Brett Marinelli and Sabina Martyniak and Francesco Marzola and Lorenzo Mazza and Xueyan Mei and Maria Clara Morais and Luigi Muratore and Chetan Reddy Narayanaswamy and Michał Naskręt and David Navarro-Alarcon and Cyrus Neary and Chi Kit Ng and Christopher Nguan and David Noonan and Ki Hwan Oh and Tom Christian Olesch and Allison M. Okamura and Justin Opfermann and Matteo Pescio and Doan Xuan Viet Pham and Tito Porras and Hongliang Ren and Ariel Rodriguez Jimenez and Ferdinando Rodriguez y Baena and Septimiu E. Salcudean and Asmitha Sathya and Preethi Satish and Lalithkumar Seenivasan and Jiaqi Shao and Yiqing Shen and Yu Sheng and Lucy XiaoYang Shi and Zoe Soulé and Stefanie Speidel and Mingwu Su and Jianhao Su and Idris Sunmola and Kristóf Takács and Yunxi Tang and Patrick Thornycroft and Yu Tian and Jordan Thompson and Mehmet K. Turkcan and Mathias Unberath and Pietro Valdastri and Carlos Vives and Quan Vuong and Martin Wagner and Farong Wang and Wei Wang and Lidian Wang and Chung-Pang Wang and Guankun Wang and Junyi Wang and Erqi Wang and Ziyi Wang and Tanner Watts and Wolfgang Wein and Yimeng Wu and Zijian Wu and Hongjun Wu and Luohong Wu and Jie Ying Wu and Junlin Wu and Victoria Wu and Kaixuan Wu and Mateusz Wójcikowski and Yunye Xiao and Nan Xiao and Wenxuan Xie and Hao Yang and Tianqi Yang and Yinuo Yang and Menglong Ye and Ryan S. Yeung and Nural Yilmaz and Chim Ho Yin and Michael Yip and Rayan Younis and Chenhao Yu and Sayem Nazmuz Zaman and Milos Zefran and Han Zhang and Yuelin Zhang and Yidong Zhang and Yanyong Zhang and Xuyang Zhang and Yameng Zhang and Joyce Zhang and Ning Zhong and Peng Zhou and Haoying Zhou and Xiuli Zuo and Nassir Navab and Mahdi Azizian and Sean D. Huver and Axel Krieger},
   title  = {Open-H-Embodiment: A Large-Scale Dataset for Enabling Foundation Models in Medical Robotics},
@@ -61,19 +36,6 @@
 ,
   arxiv = {https://arxiv.org/abs/2603.07032v1}
 }}
-
-@comment{@misc{Ding2024towards,
-  author = {Hao Ding and Lalithkumar Seenivasan and Hongchao Shu and Grayson Byrd and Han Zhang and Pu Xiao and Juan Antonio Barragan and Russell H. Taylor and Peter Kazanzides and Mathias Unberath},
-  title  = {Towards Robust Surgical Automation via Digital Twin Representations from Foundation Models},
-  year   = {2024},
-  howpublished = {\url{https://arxiv.org/abs/2409.13107v3}},
-,
-  arxiv = {https://arxiv.org/abs/2409.13107v3}
-},
-  semanticscholar = {https://www.semanticscholar.org/paper/e791d5c49c554bee380dacee404526ffe9f0efc4},
-  doi = {10.1007/978-3-032-09784-2_3},
-  abstract = {Large language model-based (LLM) agents are emerging as a powerful enabler of robust embodied intelligence due to their capability of planning complex action sequences. Sound planning ability is necessary for robust automation in many task domains, but especially in surgical automation. These agents rely on a highly detailed natural language representation of the scene. Thus, to leverage the emergent capabilities of LLM agents for surgical task planning, developing similarly powerful and robust perception algorithms is necessary to derive a detailed scene representation of the environment from visual input. Previous research has focused primarily on enabling LLM-based task planning while adopting simple yet severely limited perception solutions to meet the needs for bench-top experiments, but lacks the critical flexibility to scale to less constrained settings. In this work, we propose an alternate perception approach -- a digital twin (DT)-based machine perception approach that capitalizes on the convincing performance and out-of-the-box generalization of recent vision foundation models. Integrating our DT representation and LLM agent for planning with the dVRK platform, we develop an embodied intelligence system and evaluate its robustness in performing peg transfer and gauze retrieval tasks. Our approach shows strong task performance and generalizability to varied environmental settings. Despite a convincing performance, this work is merely a first step towards the integration of DT representations. Future studies are necessary for the realization of a comprehensive DT framework to improve the interpretability and generalizability of embodied intelligence in surgery.}
-}
 
 @comment{@misc{Banks2025autocam,
   author = {Alexandre Banks and Randy Moore and Sayem Nazmuz Zaman and Alaa Eldin Abdelaal and Septimiu E. Salcudean},
@@ -125,6 +87,20 @@
   abstract = {The predominant paradigm for robotic minimallyinvasive surgery places the main surgeon at a console, teleoperating robotic instruments inside the patient, with an assistant surgeon providing support at the bedside. We present an open-source simulation platform for training this robotic surgery team that integrates the console from a da Vinci Research Kit (dVRK) for the main surgeon, a haptic device (repurposed from an existing simulator) for the assistant surgeon, a simulation environment built on the Asynchronous Multi-Body Framework (AMBF), and an Augmented Reality (AR) interface on a head-mounted display (HMD) to provide a common training environment. Our system emulates a realistic surgical scenario in which the dVRK console enables the surgeon to control the patient-side manipulators while the haptic device provides both control and tactile feedback for the first assistant (FA) operating a virtual laparoscopic grasper, with the HMD providing visualization of the extra-corporeal parts of the robot. A user study with 6 teams (12 subjects total), each performing a retraction and suturing task with both a physical system and our proposed simulator, demonstrates that our simulation platform effectively replicates key aspects of team-based surgical training.},
 }
 
+@article{Hu_2026,
+  author = {Hu, Junlei and Jones, Dominic and Loza Galindo, Gerardo and Huang, Shoudong and Valdastri, Pietro},
+  title = {Autonomous robotic exploration of unknown soft objects},
+  journal = {The International Journal of Robotics Research},
+  year = {2026},
+  month = {Feb},
+  publisher = {SAGE Publications},
+  doi = {10.1177/02783649251415415},
+  url = {http://dx.doi.org/10.1177/02783649251415415},
+  semanticscholar = {https://www.semanticscholar.org/paper/75504bd0091d45d38131bccce2609640e56f3532},
+  abstract = {Robotic exploration of unknown soft objects presents significant challenges for autonomous systems due to unpredictable deformations and shape changes during manipulation. To address this, we propose a framework that integrates topology-aware 3D reconstruction with a topology-guided motion planner, enabling the discovery and reconstruction of previously hidden or concave regions. This topology-aware 3D reconstruction employs a novel representation of deformable objects by combining Cylinder Čech Complexes with point clouds, enabling rapid tracking of significant topology changes and detection of non-manifold boundaries. The topology analysis and canonical reconstruction guide motion planning by optimising grasp points and planning trajectories to reveal previously unseen surfaces through two actions: turning over and stretching. We validated our algorithm through simulations and experiments using the da Vinci Research Kit, demonstrating successful exploration with two or three manipulators. We showed it can fully explore surfaces of two everyday objects, a beanie and a rubber glove, and two cadaveric organs, a liver and a colon, within seven manipulations. Our method achieved a 45.6% improvement in 3D reconstruction accuracy compared to state-of-the-art point-cloud-based methods while also demonstrating the capability to detect and fix non-manifold geometry.},
+  issn = {1741-3176},
+}
+
 @article{Sui_2026,
   author = {Sui, Shougang and Liu, Zhiqi and Huang, Jiabin and Luo, Shizhan and Liu, Xiuzhe and Li, Kun},
   title = {Hierarchical reinforcement learning–based path planning for an endoscopic surgical robot},
@@ -137,6 +113,22 @@
   semanticscholar = {https://www.semanticscholar.org/paper/f72be214c1070958d83657b917f1d579c113c5a0},
   abstract = {With the rapid development of robotic and artificial intelligence technologies, the autonomous decision-making capability of endoscopic surgical robot has been significantly enhanced, accompanied by growing demands for automation in non-decision-making tasks. This study focuses on the path planning for complex tasks in surgical robot by proposing a hierarchical reinforcement learning (HRL) framework based on the option framework. Within this framework, the Semi-Markov Decision Process (SMDP) is extended into an augmented Markov Decision Process (MDP) to optimize termination conditions and facilitate long-horizon task training. To address the sparse reward problem, a hierarchical reward function is designed with intrinsic temporal rewards specifically implemented for high-level policies. In addition, a Type-Shared Option Policy (TSOP) is proposed to enhance training efficiency. Experimental results demonstrate that the proposed HRL framework effectively improves both the success rate and stability of path planning for surgical robot in the da Vinci Research Kit (dVRK) simulation environment.},
   issn = {1477-0369},
+}
+
+@article{Hansen_2026,
+  author = {Hansen, Pascal and Kim, Ji Woong Brian and Goldenberg, Antony and Chen, Juo Tung and Li, Yuanzhe Amos and Deguet, Anton and White, Brandon and Tsai, De Ru and Cha, Richard and Jopling, Jeffrey and Scheikl, Paul Maria and Krieger, Axel},
+  title = {ImitateCholec: A Multimodal Dataset for Long-Horizon Imitation Learning in Robotic Cholecystectomy},
+  journal = {Scientific Data},
+  year = {2026},
+  volume = {13},
+  number = {1},
+  month = {Jan},
+  publisher = {Springer Science and Business Media LLC},
+  doi = {10.1038/s41597-025-06526-z},
+  url = {http://dx.doi.org/10.1038/s41597-025-06526-z},
+  semanticscholar = {https://www.semanticscholar.org/paper/70fadb1a014dcbc72ddd3585e81746134a8e2bf8},
+  abstract = {The growing global shortage of skilled surgeons underscores the need for intelligent, assistive technologies in the operating room. To address this challenge, we introduce ImitateCholec, a publicly available dataset specifically designed to advance autonomous robotic systems during the critical clipping and cutting phase of laparoscopic cholecystectomy. The dataset comprises over 18,000 demonstrations from 34 ex vivo porcine cholecystectomies, totaling approximately 20 hours of data. Each clipping and cutting phase recorded in the dataset is segmented into 17 distinct surgical tasks. ImitateCholec uniquely integrates endoscopic videos captured from multiple camera perspectives with comprehensive kinematic data acquired through the da Vinci Research Kit. Both optimal demonstration executions and recovery maneuvers were systematically recorded, enabling the training of imitation learning models capable of robustly addressing real-world surgical variability. Primarily, ImitateCholec facilitates imitation learning for long-horizon surgical workflow execution, significantly advancing the development of autonomous robotic systems toward achieving phase-level autonomy and, ultimately, full procedural autonomy. Additional supported applications include surgical workflow modeling, error recognition, and surgical tool pose estimation.},
+  issn = {2052-4463},
 }
 
 @article{Hu_2026,
@@ -1139,17 +1131,12 @@
   urldate = {2024-06-01},
 }
 
-@article{ding2024towards,
-  author = {Ding, Hao and Seenivasan, Lalithkumar and Shu, Hongchao and Byrd, Grayson and Zhang, Han and Xiao, Pu and Barragan, Juan Antonio and Taylor, Russell H and Kazanzides, Peter and Unberath, Mathias},
-  title = {Towards robust automation of surgical systems via digital twin-based scene representations from foundation models},
-  journal = {arXiv preprint arXiv:2409.13107},
+@misc{Ding2024towards,
+  author = {Hao Ding and Lalithkumar Seenivasan and Hongchao Shu and Grayson Byrd and Han Zhang and Pu Xiao and Juan Antonio Barragan and Russell H. Taylor and Peter Kazanzides and Mathias Unberath},
+  title = {Towards Robust Surgical Automation via Digital Twin Representations from Foundation Models},
   year = {2024},
-  doi = {10.48550/arXiv.2409.13107},
-  url = {https://arxiv.org/abs/2409.13107},
-  semanticscholar = {https://www.semanticscholar.org/paper/84db0a87c3613b1b418bced000bd06cae1bb8f05},
-  arxiv = {https://arxiv.org/abs/2409.13107},
-  dvrk_site = {JHU},
-  abstract = {Large language model-based (LLM) agents are emerging as a powerful enabler of robust embodied intelligence due to their capability of planning complex action sequences. Sound planning ability is necessary for robust automation in many task domains, but especially in surgical automation. These agents rely on a highly detailed natural language representation of the scene. Thus, to leverage the emergent capabilities of LLM agents for surgical task planning, developing similarly powerful and robust perception algorithms is necessary to derive a detailed scene representation of the environment from visual input. Previous research has focused primarily on enabling LLM-based task planning while adopting simple yet severely limited perception solutions to meet the needs for bench-top experiments but lack the critical flexibility to scale to less constrained settings. In this work, we propose an alternate perception approach -- a digital twin-based machine perception approach that capitalizes on the convincing performance and out-of-the-box generalization of recent vision foundation models. Integrating our digital twin-based scene representation and LLM agent for planning with the dVRK platform, we develop an embodied intelligence system and evaluate its robustness in performing peg transfer and gauze retrieval tasks. Our approach shows strong task performance and generalizability to varied environment settings. Despite convincing performance, this work is merely a first step towards the integration of digital twin-based scene representations. Future studies are necessary for the realization of a comprehensive digital twin framework to improve the interpretability and generalizability of embodied intelligence in surgery.},
+  arxiv = {https://arxiv.org/abs/2409.13107v3},
+  howpublished = {\url{https://arxiv.org/abs/2409.13107v3}},
 }
 
 @article{Ferro2023ACD,
@@ -6441,4 +6428,3 @@
   pubstate = {published},
   tppubtype = {inproceedings},
 }
-
