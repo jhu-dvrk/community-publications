@@ -20,6 +20,7 @@ import urllib.parse
 import json
 import time
 import os
+import argparse
 
 # ---------------------------------------------------------------------------
 # Institution name → dVRK site ID mapping
@@ -157,7 +158,7 @@ def match_sites(institution_names):
                 break  # Stop at first match for this institution
     return matched_sites
 
-def main():
+def main(refresh_misses=False):
     # Load bib
     parser = BibTexParser(common_strings=True)
     parser.ignore_nonstandard_types = False
@@ -185,7 +186,7 @@ def main():
         entry_id = entry['ID']
 
         # Check cache
-        if doi in cache:
+        if doi in cache and not (refresh_misses and not cache[doi]):
             institutions = cache[doi]
         else:
             # Try OpenAlex first
@@ -238,4 +239,13 @@ def main():
         print("\nNo changes to write.")
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(
+        description="Assign dVRK sites from DOI-linked author affiliations."
+    )
+    parser.add_argument(
+        "--refresh-misses",
+        action="store_true",
+        help="Retry cached empty affiliation lookups.",
+    )
+    args = parser.parse_args()
+    main(refresh_misses=args.refresh_misses)
