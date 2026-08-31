@@ -70,6 +70,10 @@ INSTITUTION_TO_SITE = {
 
     # Italy
     "Politecnico di Milano":            "POLIMI",
+    "University of Turin":              "UNITO",
+    "University of Torino":             "UNITO",
+    "Università degli Studi di Torino": "UNITO",
+    "Universita degli Studi di Torino": "UNITO",
     "Scuola Superiore Sant'Anna":       "SSSA",
     "Sant'Anna School":                 "SSSA",
     "University of Verona":             "UV",
