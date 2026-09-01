@@ -24,7 +24,8 @@ SELECT_FIELDS = (
     "id,doi,display_name,publication_year,authorships,abstract_inverted_index"
 )
 DOI_BATCH_SIZE = 40
-TIMEOUT_SECONDS = 30
+TIMEOUT_SECONDS = 15
+MAX_ATTEMPTS = 3
 REQUEST_DELAY_SECONDS = 0.15
 
 
@@ -115,7 +116,7 @@ def request_json(path, *, params=None):
     """Request JSON with bounded retries for transient API failures."""
     request_headers = {"User-Agent": "dVRK-Community-Publications/1.0"}
 
-    for attempt in range(4):
+    for attempt in range(MAX_ATTEMPTS):
         try:
             response = requests.get(
                 f"{API_BASE}{path}",
@@ -124,16 +125,20 @@ def request_json(path, *, params=None):
                 timeout=TIMEOUT_SECONDS,
             )
         except requests.RequestException as error:
-            if attempt == 3:
+            if attempt == MAX_ATTEMPTS - 1:
                 return None, f"request error: {error}"
             time.sleep(2 ** attempt)
             continue
 
         if response.status_code == 200:
             return response.json(), None
-        if response.status_code in {429, 500, 502, 503, 504} and attempt < 3:
+        if (
+            response.status_code in {429, 500, 502, 503, 504}
+            and attempt < MAX_ATTEMPTS - 1
+        ):
             retry_after = response.headers.get("Retry-After")
             delay = float(retry_after) if retry_after else 2 ** (attempt + 1)
+            delay = min(delay, 15)
             time.sleep(delay)
             continue
         return None, f"HTTP {response.status_code}: {response.text[:200]}"
