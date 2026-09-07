@@ -93,6 +93,9 @@ INSTITUTION_TO_SITE = {
 
     # Korea
     "Seoul National University":        "SNU",
+
+    # Germany
+    "Max Planck":                       "MPI",
 }
 
 CACHE_PATH = "cache/affiliation_cache.json"
