@@ -12,7 +12,8 @@ createApp({
             selectedDataType: '',
             selectedSite: '',
             currentPage: 1,
-            itemsPerPage: 50
+            itemsPerPage: 50,
+            isNavigatingToPublication: false
         };
     },
     computed: {
@@ -187,7 +188,9 @@ createApp({
                             dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
                             bibtexText: bibtexEntries[entry.citationKey] || '',
                             showBibtex: false,
-                            showAbstract: false
+                            showAbstract: false,
+                            copied: false,
+                            isHighlighted: false
                         };
                     })
                     .sort((a, b) => parseInt(b.year) - parseInt(a.year));
@@ -300,6 +303,94 @@ createApp({
             this.selectedSite = '';
             this.currentPage = 1;
         },
+        sharePublication(pub) {
+            const url = `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(pub.id)}`;
+            const onCopied = () => {
+                pub.copied = true;
+                setTimeout(() => {
+                    pub.copied = false;
+                }, 2000);
+            };
+
+            window.history.replaceState(null, '', url);
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(onCopied).catch(() => {
+                    this.fallbackCopyText(url, onCopied);
+                });
+            } else {
+                this.fallbackCopyText(url, onCopied);
+            }
+        },
+        fallbackCopyText(text, callback) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                if (callback) callback();
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+            document.body.removeChild(textArea);
+        },
+        navigateToPublication(id) {
+            if (!id) return;
+            const targetId = id.trim().toLowerCase();
+            const pub = this.publications.find(p => p.id && p.id.toLowerCase() === targetId);
+            if (!pub) return;
+
+            this.isNavigatingToPublication = true;
+
+            // Ensure publication is within start/end year range
+            if (pub.year) {
+                const yearNum = parseInt(pub.year);
+                if (this.startYear && yearNum < parseInt(this.startYear)) {
+                    this.startYear = pub.year;
+                }
+                if (this.endYear && yearNum > parseInt(this.endYear)) {
+                    this.endYear = pub.year;
+                }
+            }
+
+            // If hidden by other active filters, reset them so it is visible
+            if (!this.filteredPublications.some(p => p.id && p.id.toLowerCase() === targetId)) {
+                this.searchQuery = '';
+                this.selectedType = '';
+                this.selectedField = '';
+                this.selectedDataType = '';
+                this.selectedSite = '';
+                if (this.availableYears.length > 0) {
+                    this.startYear = this.availableYears[this.availableYears.length - 1];
+                    this.endYear = this.availableYears[0];
+                }
+            }
+
+            // Calculate target pagination page
+            const index = this.filteredPublications.findIndex(p => p.id && p.id.toLowerCase() === targetId);
+            if (index !== -1) {
+                this.currentPage = Math.floor(index / this.itemsPerPage) + 1;
+            }
+
+            // Highlight the target publication
+            this.publications.forEach(p => { p.isHighlighted = false; });
+            pub.isHighlighted = true;
+
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    this.isNavigatingToPublication = false;
+                    const el = document.getElementById(pub.id);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 150);
+            });
+        },
         applyUrlFilters() {
             const urlParams = new URLSearchParams(window.location.search);
 
@@ -323,17 +414,30 @@ createApp({
             if (urlParams.has('site')) {
                 this.selectedSite = decodeURIComponent(urlParams.get('site'));
             }
+
+            const targetId = urlParams.get('id') || (window.location.hash ? window.location.hash.replace(/^#/, '') : null);
+            if (targetId) {
+                this.navigateToPublication(targetId);
+            }
         }
     },
     watch: {
         filteredPublications() {
-            this.currentPage = 1;
+            if (!this.isNavigatingToPublication) {
+                this.currentPage = 1;
+            }
         }
     },
     async mounted() {
         await CONFIG.init();
-        this.loadPublications();
+        await this.loadPublications();
         this.applyUrlFilters();
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash ? window.location.hash.replace(/^#/, '') : null;
+            if (hash) {
+                this.navigateToPublication(hash);
+            }
+        });
     }
 }).mount('#app');
 

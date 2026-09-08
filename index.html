@@ -103,7 +103,8 @@
 
             <!-- Publications List -->
             <div class="publications-list">
-                <div v-for="(pub, index) in paginatedPublications" :key="pub.id" class="publication-card">
+                <div v-for="(pub, index) in paginatedPublications" :key="pub.id" :id="pub.id"
+                    :class="['publication-card', { 'pub-highlight': pub.isHighlighted }]">
                     <h3 class="pub-title">{{ pub.title }}</h3>
 
                     <p class="pub-authors" v-if="pub.author">
@@ -157,6 +158,9 @@
                         <a v-if="pub.openaccesspdf" :href="pub.openaccesspdf" target="_blank" class="pub-link" style="background-color: #dc2626;">
                             🔓 PDF
                         </a>
+                        <button @click="sharePublication(pub)" class="pub-link share-btn" :class="{ 'copied': pub.copied }" :title="'Share link to ' + pub.title">
+                            {{ pub.copied ? '✓ Copied' : '🔗 Share' }}
+                        </button>
                         <button v-if="pub.abstract" @click="toggleAbstract(pub)" class="bibtex-btn">
                             {{ pub.showAbstract ? '✕ Hide Abstract' : '📝 Abstract' }}
                         </button>

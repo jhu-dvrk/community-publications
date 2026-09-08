@@ -285,6 +285,42 @@ main {
     background: var(--secondary-color);
 }
 
+.share-btn {
+    background: #0284c7;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.share-btn:hover {
+    background: #0369a1;
+}
+
+.share-btn.copied {
+    background: #16a34a !important;
+}
+
+.publication-card.pub-highlight {
+    border-left: 4px solid var(--primary-color);
+    animation: pubHighlightPulse 2.5s ease-out;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35), var(--shadow-lg);
+}
+
+@keyframes pubHighlightPulse {
+    0% {
+        background-color: #dbeafe;
+        box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.5), var(--shadow-lg);
+    }
+    70% {
+        background-color: #eff6ff;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35), var(--shadow-lg);
+    }
+    100% {
+        background-color: var(--card-bg);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35), var(--shadow-lg);
+    }
+}
+
 .bibtex-btn {
     display: inline-flex;
     align-items: center;
