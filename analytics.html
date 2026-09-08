@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dVRK Publications Analytics</title>
+    <title>dVRK Community Publications</title>
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -18,17 +18,21 @@
             <div class="container">
                 <div class="header-content">
                     <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
-                    <h1>Publications Analytics</h1>
+                    <h1>Community Publications</h1>
                 </div>
-                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications</p>
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications  • 
+                    Contribute  
+                    <a href="https://github.com/jhu-dvrk/community-publications" target="_blank" rel="noopener noreferrer">https://github.com/jhu-dvrk/community-publications</a>
+                </p>
+                <div class="header-nav">
+                    <a href="index.html" class="nav-btn">Publications</a>
+                    <a href="analytics.html" class="nav-btn active">Analytics</a>
+                    <a href="graph.html" class="nav-btn">Graph</a>
+                </div>
             </div>
         </header>
 
         <main class="container">
-            <!-- Navigation -->
-            <div class="analytics-nav">
-                <a href="index.html" class="nav-btn">← Back to Publications</a>
-            </div>
 
             <!-- Loading State -->
             <div v-if="loading" class="loading">

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dVRK Community Publications</title>
+    <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+    <script src="config.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
+                    <h1>Community Publications</h1>
+                </div>
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications  • 
+                    Contribute  
+                    <a href="https://github.com/jhu-dvrk/community-publications" target="_blank" rel="noopener noreferrer">https://github.com/jhu-dvrk/community-publications</a>
+                </p>
+                <div class="header-nav">
+                    <a href="index.html" class="nav-btn">Publications</a>
+                    <a href="analytics.html" class="nav-btn">Analytics</a>
+                    <a href="graph.html" class="nav-btn active">Graph</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="container graph-main">
+            <!-- Loading State -->
+            <div v-if="loading" class="loading">
+                <p>Loading citation network data...</p>
+            </div>
+
+            <div v-else class="graph-content">
+                <!-- Controls Toolbar -->
+                <div class="graph-toolbar">
+                    <!-- Search & Quick Focus -->
+                    <div class="toolbar-group search-group">
+                        <label class="toolbar-label">Find & Focus:</label>
+                        <div class="graph-search-wrapper">
+                            <input type="text" v-model="searchQuery" @input="filterSearchResults"
+                                placeholder="Search paper or author..." class="graph-search-input"
+                                @keydown.esc="clearSearch" @focus="showSearchResults = true">
+                            <button v-if="searchQuery" @click="clearSearch" class="clear-search-btn">✕</button>
+                            <div v-if="showSearchResults && searchResults.length > 0" class="graph-search-dropdown">
+                                <div v-for="res in searchResults" :key="res.id" class="search-result-item"
+                                    @click="selectAndFocusPaper(res)">
+                                    <div class="result-key"><strong>{{ res.id }}</strong> ({{ res.year }})</div>
+                                    <div class="result-title">{{ res.title }}</div>
+                                    <div class="result-meta">Citations: {{ res.cited_by.length }} • Refs: {{ res.cites.length }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Min Citations Filter -->
+                    <div class="toolbar-group">
+                        <label class="toolbar-label">Min Citations:</label>
+                        <div class="btn-group">
+                            <button v-for="threshold in [1, 2, 3, 5, 10]" :key="threshold"
+                                :class="['pill-btn', { active: minCitations === threshold }]"
+                                @click="setMinCitations(threshold)">
+                                ≥ {{ threshold }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Year Range Filter -->
+                    <div class="toolbar-group">
+                        <label class="toolbar-label">Years:</label>
+                        <div class="year-range-inputs">
+                            <select v-model="startYear" @change="applyFilters" class="toolbar-select">
+                                <option v-for="y in availableYears" :key="'from-' + y" :value="y">{{ y }}</option>
+                            </select>
+                            <span class="range-sep">–</span>
+                            <select v-model="endYear" @change="applyFilters" class="toolbar-select">
+                                <option v-for="y in availableYears" :key="'to-' + y" :value="y">{{ y }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Layout Mode Toggle -->
+                    <div class="toolbar-group">
+                        <label class="toolbar-label">Layout:</label>
+                        <div class="btn-group">
+                            <button :class="['pill-btn', { active: layoutMode === 'clusters' }]"
+                                @click="setLayoutMode('clusters')" title="Organic force-directed clusters">
+                                🌐 Clusters
+                            </button>
+                            <button :class="['pill-btn', { active: layoutMode === 'timeline' }]"
+                                @click="setLayoutMode('timeline')" title="Hierarchical left-to-right chronological timeline">
+                                📅 Timeline
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Color Scheme Toggle -->
+                    <div class="toolbar-group">
+                        <label class="toolbar-label">Color:</label>
+                        <div class="btn-group">
+                            <button :class="['pill-btn', { active: colorScheme === 'year' }]"
+                                @click="setColorScheme('year')" title="Color by publication era">
+                                🎨 By Year
+                            </button>
+                            <button :class="['pill-btn', { active: colorScheme === 'site' }]"
+                                @click="setColorScheme('site')" title="Color by primary research site">
+                                🏛️ By Site
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- View Reset / Fit -->
+                    <div class="toolbar-group action-group">
+                        <button @click="fitGraph" class="action-btn" title="Fit all nodes to view">
+                            ⛶ Fit View
+                        </button>
+                        <button v-if="selectedPub" @click="clearSelection" class="action-btn clear-btn" title="Clear node selection">
+                            ✕ Reset Selection
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Workspace: Graph Canvas + Detail Sidebar -->
+                <div class="graph-workspace">
+                    <!-- Graph Canvas Area -->
+                    <div class="graph-canvas-container">
+                        <div id="citation-network" class="network-canvas"></div>
+
+                        <!-- Canvas Floating Overlay HUD -->
+                        <div class="canvas-hud">
+                            <span class="hud-badge">
+                                <strong>{{ visibleNodesCount }}</strong> papers • <strong>{{ visibleEdgesCount }}</strong> connections
+                            </span>
+                            <span v-if="isPhysicsStabilizing" class="hud-badge stabilizing-badge">
+                                ⚙️ Stabilizing layout...
+                            </span>
+                            <span v-if="selectedPub" class="hud-badge active-hud">
+                                Focused: <strong>{{ selectedPub.id }}</strong>
+                            </span>
+                        </div>
+
+                        <!-- Canvas Zoom Controls -->
+                        <div class="canvas-controls">
+                            <button @click="zoomIn" class="zoom-btn" title="Zoom In">+</button>
+                            <button @click="zoomOut" class="zoom-btn" title="Zoom Out">−</button>
+                            <button @click="fitGraph" class="zoom-btn" title="Reset Camera">⛶</button>
+                        </div>
+                    </div>
+
+                    <!-- Detail Inspector Sidebar -->
+                    <div class="graph-sidebar">
+                        <!-- Node Selected State -->
+                        <div v-if="selectedPub" class="sidebar-card">
+                            <div class="sidebar-card-header">
+                                <div class="card-badges">
+                                    <span class="key-badge">{{ selectedPub.id }}</span>
+                                    <span class="year-badge">{{ selectedPub.year }}</span>
+                                    <span v-if="selectedPub.dvrk_site" class="site-badge">{{ selectedPub.dvrk_site }}</span>
+                                </div>
+                                <button @click="clearSelection" class="close-sidebar-btn" title="Close inspector">✕</button>
+                            </div>
+
+                            <h3 class="sidebar-title">{{ selectedPub.title }}</h3>
+                            <p class="sidebar-authors">{{ selectedPub.author }}</p>
+                            <p class="sidebar-venue" v-if="selectedPub.journal || selectedPub.booktitle">
+                                <em>{{ selectedPub.journal || selectedPub.booktitle }}</em>
+                            </p>
+
+                            <!-- Primary Action Links -->
+                            <div class="sidebar-actions">
+                                <a :href="'index.html#' + selectedPub.id" target="_blank" class="sidebar-link-btn primary-link">
+                                    📄 Open in Publications List ➔
+                                </a>
+                                <a v-if="selectedPub.doi" :href="'https://doi.org/' + selectedPub.doi" target="_blank" class="sidebar-link-btn">
+                                    DOI ➔
+                                </a>
+                                <a v-if="selectedPub.url && !selectedPub.doi" :href="selectedPub.url" target="_blank" class="sidebar-link-btn">
+                                    Link ➔
+                                </a>
+                            </div>
+
+                            <hr class="sidebar-divider">
+
+                            <!-- Direct References (Papers it Cites) -->
+                            <div class="citation-group">
+                                <div class="citation-group-title">
+                                    <span class="dot outgoing-dot"></span>
+                                    <strong>References (Cites {{ selectedPub.cites.length }} dVRK papers):</strong>
+                                </div>
+                                <div v-if="selectedPub.cites.length === 0" class="empty-citations">
+                                    No recorded dVRK citations.
+                                </div>
+                                <ul v-else class="sidebar-citation-list">
+                                    <li v-for="targetId in selectedPub.cites" :key="'cites-' + targetId"
+                                        class="sidebar-citation-item" @click="focusNodeById(targetId)">
+                                        <div class="item-header">
+                                            <strong>{{ targetId }}</strong>
+                                            <span v-if="publicationMap[targetId]" class="item-year">({{ publicationMap[targetId].year }})</span>
+                                        </div>
+                                        <div v-if="publicationMap[targetId]" class="item-sub">
+                                            {{ publicationMap[targetId].title }}
+                                        </div>
+                                        <span class="jump-indicator">➔</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <hr class="sidebar-divider">
+
+                            <!-- Papers Citing this Work -->
+                            <div class="citation-group">
+                                <div class="citation-group-title">
+                                    <span class="dot incoming-dot"></span>
+                                    <strong>Cited by ({{ selectedPub.cited_by.length }} dVRK papers):</strong>
+                                </div>
+                                <div v-if="selectedPub.cited_by.length === 0" class="empty-citations">
+                                    No incoming community citations yet.
+                                </div>
+                                <ul v-else class="sidebar-citation-list">
+                                    <li v-for="citingId in selectedPub.cited_by" :key="'citedby-' + citingId"
+                                        class="sidebar-citation-item" @click="focusNodeById(citingId)">
+                                        <div class="item-header">
+                                            <strong>{{ citingId }}</strong>
+                                            <span v-if="publicationMap[citingId]" class="item-year">({{ publicationMap[citingId].year }})</span>
+                                        </div>
+                                        <div v-if="publicationMap[citingId]" class="item-sub">
+                                            {{ publicationMap[citingId].title }}
+                                        </div>
+                                        <span class="jump-indicator">➔</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Default Overview State (No Node Selected) -->
+                        <div v-else class="sidebar-card overview-card">
+                            <h3 class="overview-heading">🕸️ Citation Network</h3>
+                            <p class="overview-instructions">
+                                Click any node to highlight direct incoming and outgoing citations. Drag to inspect or zoom with scroll wheel.
+                            </p>
+
+                            <div class="legend-box">
+                                <strong>Legend:</strong>
+                                <div class="legend-item">
+                                    <span class="legend-circle node-sample"></span>
+                                    <span>Node size = Total community citations</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-line incoming-line"></span>
+                                    <span>Incoming arrows = Papers citing selected work</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-line outgoing-line"></span>
+                                    <span>Outgoing arrows = Papers referenced by work</span>
+                                </div>
+                            </div>
+
+                            <hr class="sidebar-divider">
+
+                            <!-- Top Cited in Current View -->
+                            <div class="top-papers-section">
+                                <h4>Top Cited Papers in View:</h4>
+                                <ul class="top-papers-list">
+                                    <li v-for="pub in topCitedInView" :key="pub.id"
+                                        class="top-paper-item" @click="focusNodeById(pub.id)">
+                                        <div class="top-paper-badge">{{ pub.cited_by.length }}</div>
+                                        <div class="top-paper-info">
+                                            <div class="top-paper-key"><strong>{{ pub.id }}</strong> ({{ pub.year }})</div>
+                                            <div class="top-paper-title">{{ pub.title }}</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="graph.js"></script>
+</body>
+
+</html>
