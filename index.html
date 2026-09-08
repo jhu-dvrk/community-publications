@@ -99,6 +99,10 @@
                     <div class="stat-number">{{ yearRange }}</div>
                     <div class="stat-label">Year Range</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ totalInternalCitations }}</div>
+                    <div class="stat-label">Community Citations</div>
+                </div>
             </div>
 
             <!-- Publications List -->
@@ -167,6 +171,12 @@
                         <button @click="toggleBibtex(pub)" class="bibtex-btn">
                             {{ pub.showBibtex ? '✕ Hide BibTeX' : '📋 BibTeX' }}
                         </button>
+                        <button v-if="pub.cites && pub.cites.length > 0" @click="toggleCites(pub)" class="pub-link cite-btn" :class="{ 'active': pub.showCites }" :title="'View ' + pub.cites.length + ' dVRK papers referenced by this work'">
+                            {{ pub.showCites ? '✕ Hide Refs' : '📚 Refs (' + pub.cites.length + ')' }}
+                        </button>
+                        <button v-if="pub.cited_by && pub.cited_by.length > 0" @click="toggleCitedBy(pub)" class="pub-link cited-by-btn" :class="{ 'active': pub.showCitedBy }" :title="'View ' + pub.cited_by.length + ' dVRK papers citing this work'">
+                            {{ pub.showCitedBy ? '✕ Hide Cited By' : '🌟 Cited by (' + pub.cited_by.length + ')' }}
+                        </button>
                     </div>
 
                     <div v-if="pub.showAbstract" class="bibtex-container" style="background: #f9fafb; border-color: #e5e7eb;">
@@ -175,6 +185,42 @@
 
                     <div v-if="pub.showBibtex" class="bibtex-container">
                         <pre class="bibtex-text">{{ pub.bibtexText }}</pre>
+                    </div>
+
+                    <div v-if="pub.showCites" class="citation-container">
+                        <div class="citation-header">
+                            <strong>📚 dVRK Community Papers Referenced ({{ pub.cites.length }}):</strong>
+                        </div>
+                        <ul class="citation-list">
+                            <li v-for="citeId in pub.cites" :key="citeId" class="citation-item" @click="navigateToPublication(citeId)">
+                                <div class="citation-info" v-if="getPublicationById(citeId)">
+                                    <span class="citation-link-title">{{ getPublicationById(citeId).title }}</span>
+                                    <span class="citation-meta">{{ getPublicationById(citeId).year }} • {{ formatAuthors(getPublicationById(citeId).author) }}</span>
+                                </div>
+                                <div class="citation-info" v-else>
+                                    <span class="citation-link-title">{{ citeId }}</span>
+                                </div>
+                                <span class="jump-arrow">➔</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div v-if="pub.showCitedBy" class="citation-container">
+                        <div class="citation-header">
+                            <strong>🌟 dVRK Community Papers Citing This Work ({{ pub.cited_by.length }}):</strong>
+                        </div>
+                        <ul class="citation-list">
+                            <li v-for="citingId in pub.cited_by" :key="citingId" class="citation-item" @click="navigateToPublication(citingId)">
+                                <div class="citation-info" v-if="getPublicationById(citingId)">
+                                    <span class="citation-link-title">{{ getPublicationById(citingId).title }}</span>
+                                    <span class="citation-meta">{{ getPublicationById(citingId).year }} • {{ formatAuthors(getPublicationById(citingId).author) }}</span>
+                                </div>
+                                <div class="citation-info" v-else>
+                                    <span class="citation-link-title">{{ citingId }}</span>
+                                </div>
+                                <span class="jump-arrow">➔</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

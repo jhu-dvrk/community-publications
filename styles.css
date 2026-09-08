@@ -300,6 +300,105 @@ main {
     background: #16a34a !important;
 }
 
+.cite-btn {
+    background: #0f766e;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.cite-btn:hover,
+.cite-btn.active {
+    background: #115e59;
+}
+
+.cited-by-btn {
+    background: #d97706;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.cited-by-btn:hover,
+.cited-by-btn.active {
+    background: #b45309;
+}
+
+.citation-container {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.citation-header {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.citation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.citation-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.45rem 0.65rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.citation-item:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    transform: translateX(2px);
+}
+
+.citation-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.78rem;
+    line-height: 1.35;
+}
+
+.citation-link-title {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.citation-meta {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+.jump-arrow {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    transition: color 0.15s ease, transform 0.15s ease;
+    flex-shrink: 0;
+}
+
+.citation-item:hover .jump-arrow {
+    color: var(--primary-color);
+    transform: translateX(2px);
+}
+
 .publication-card.pub-highlight {
     border-left: 4px solid var(--primary-color);
     animation: pubHighlightPulse 2.5s ease-out;

@@ -38,3 +38,9 @@ The field is `dvrk_site`. For example: `dvrk_site={JHU and ICL}`.
 This field is used to identify the affiliation(s) of the authors.
 The full list of acronyms and their corresponding institution names can be found in [custom_tags.json](custom_tags.json).
 Common examples: `JHU` (Johns Hopkins University), `ICL` (Imperial College London), `WPI` (Worcester Polytechnic Institute).
+
+## Community Citations
+
+The field is `dvrk_cites`. For example: `dvrk_cites={Kazanzides2014 and Chen2013}`.
+This field identifies which other publications in this database are referenced by this paper. Multiple citation keys are separated with "` and `". The web interface uses this field to show bidirectional references (`Refs` and `Cited by`) and allows one-click jumping between linked papers.
+

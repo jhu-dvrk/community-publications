@@ -13,7 +13,8 @@ createApp({
             selectedSite: '',
             currentPage: 1,
             itemsPerPage: 50,
-            isNavigatingToPublication: false
+            isNavigatingToPublication: false,
+            publicationMap: {}
         };
     },
     computed: {
@@ -143,14 +144,17 @@ createApp({
         },
         yearRange() {
             return CONFIG.calculateYearRange(this.filteredPublications);
+        },
+        totalInternalCitations() {
+            return this.filteredPublications.reduce((acc, p) => acc + (p.cites ? p.cites.length : 0), 0);
         }
     },
     methods: {
         async loadPublications() {
             try {
                 // Fetch the BibTeX file
-                const response = await fetch('publications.bib');
-                const bibtexText = await response.text();
+                const bibResponse = await fetch('publications.bib');
+                const bibtexText = await bibResponse.text();
 
                 // Parse BibTeX using bibtex-parse-js
                 const cleanedBibtexText = CONFIG.cleanBibtexText(bibtexText);
@@ -164,6 +168,8 @@ createApp({
                     .filter(entry => entry.entryTags && entry.entryTags.title && entry.entryTags.year)
                     .map(entry => {
                         const tags = entry.entryTags;
+                        const rawCites = tags.dvrk_cites ? tags.dvrk_cites.replace(/[{}]/g, '') : '';
+                        const cites = rawCites ? rawCites.split(' and ').map(s => s.trim()).filter(Boolean) : [];
                         return {
                             id: entry.citationKey,
                             type: entry.entryType,
@@ -187,6 +193,10 @@ createApp({
                             data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
                             dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
                             bibtexText: bibtexEntries[entry.citationKey] || '',
+                            cites: cites,
+                            cited_by: [],
+                            showCites: false,
+                            showCitedBy: false,
                             showBibtex: false,
                             showAbstract: false,
                             copied: false,
@@ -194,6 +204,31 @@ createApp({
                         };
                     })
                     .sort((a, b) => parseInt(b.year) - parseInt(a.year));
+
+                // Populate publication map for fast lookup
+                this.publicationMap = {};
+                this.publications.forEach(p => {
+                    this.publicationMap[p.id] = p;
+                });
+
+                // Invert citations to compute cited_by dynamically
+                this.publications.forEach(p => {
+                    if (p.cites && p.cites.length > 0) {
+                        p.cites.forEach(targetId => {
+                            const target = this.publicationMap[targetId];
+                            if (target) {
+                                target.cited_by.push(p.id);
+                            }
+                        });
+                    }
+                });
+
+                // Sort cited_by for consistent ordering
+                this.publications.forEach(p => {
+                    if (p.cited_by && p.cited_by.length > 1) {
+                        p.cited_by.sort();
+                    }
+                });
 
                 if (this.publications.length > 0 && this.availableYears.length > 0) {
                     if (!this.startYear) this.startYear = this.availableYears[this.availableYears.length - 1];
@@ -218,11 +253,38 @@ createApp({
         },
         toggleBibtex(pub) {
             pub.showBibtex = !pub.showBibtex;
-            if (pub.showBibtex) pub.showAbstract = false;
+            if (pub.showBibtex) {
+                pub.showAbstract = false;
+                pub.showCites = false;
+                pub.showCitedBy = false;
+            }
         },
         toggleAbstract(pub) {
             pub.showAbstract = !pub.showAbstract;
-            if (pub.showAbstract) pub.showBibtex = false;
+            if (pub.showAbstract) {
+                pub.showBibtex = false;
+                pub.showCites = false;
+                pub.showCitedBy = false;
+            }
+        },
+        toggleCites(pub) {
+            pub.showCites = !pub.showCites;
+            if (pub.showCites) {
+                pub.showCitedBy = false;
+                pub.showBibtex = false;
+                pub.showAbstract = false;
+            }
+        },
+        toggleCitedBy(pub) {
+            pub.showCitedBy = !pub.showCitedBy;
+            if (pub.showCitedBy) {
+                pub.showCites = false;
+                pub.showBibtex = false;
+                pub.showAbstract = false;
+            }
+        },
+        getPublicationById(id) {
+            return this.publicationMap[id] || this.publications.find(p => p.id === id);
         },
         downloadBibtex() {
             // Collect BibTeX entries for filtered publications
