@@ -26,6 +26,7 @@ walks you through each result interactively so you can add or reject it.
 
 | Source | API key needed? | Notes |
 |---|---|---|
+| **OpenAlex** | No | Broadest open catalog; auto-tags abstracts and author `dvrk_site` affiliations |
 | **CrossRef** | No | Best for published journal/conference papers; uses polite pool |
 | **arXiv** | No | Best for preprints and open-access papers |
 | **Semantic Scholar** | Optional | Works without a key but heavily rate-limited; set `SEMANTIC_SCHOLAR_API_KEY` for reliable access |

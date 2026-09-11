@@ -4,9 +4,11 @@ Search for new dVRK / da Vinci Research Kit publications and interactively
 add them to publications.bib.
 
 Search sources (tried in order, all free):
-  1. CrossRef       — covers most published journals and conference papers
-  2. arXiv          — covers preprints and many open-access papers
-  3. Semantic Scholar — works best with an API key; heavily rate-limited otherwise
+  1. OpenAlex       — broad open index; includes abstracts and author affiliations
+  2. CrossRef       — covers most published journals and conference papers
+  3. arXiv          — covers preprints and many open-access papers
+  4. Semantic Scholar — works best with an API key; heavily rate-limited otherwise
+  5. IEEE Xplore    — requires IEEE_API_KEY
 
 BibTeX is fetched from doi.org via content negotiation for the best quality.
 
@@ -19,15 +21,24 @@ Optional environment variables:
 """
 
 import argparse
-import os
 import json
+import os
+import re
 import sys
 import time
+import urllib.parse
 import webbrowser
 import xml.etree.ElementTree as ET
-import urllib.parse
 
 import requests
+
+try:
+    from tag_sites_from_affiliations import match_sites
+except ImportError:
+    try:
+        from scripts.tag_sites_from_affiliations import match_sites
+    except ImportError:
+        match_sites = None
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -36,14 +47,40 @@ SEMANTIC_SCHOLAR_API_KEY = os.environ.get("SEMANTIC_SCHOLAR_API_KEY", "")
 IEEE_API_KEY = os.environ.get("IEEE_API_KEY", "")
 REJECTED_FILE = "rejected_papers.json"
 CROSSREF_MAILTO = "dvrk@jhu.edu"   # Polite-pool access; CrossRef asks for this
+OPENALEX_MAILTO = "dvrk@jhu.edu"   # Polite-pool access for OpenAlex
 
 
 # ---------------------------------------------------------------------------
 # BibTeX file helpers
 # ---------------------------------------------------------------------------
 
+def normalize_doi(doi: str) -> str:
+    if not doi:
+        return ""
+    doi = doi.lower().strip()
+    for prefix in (
+        "https://doi.org/", "http://doi.org/",
+        "https://dx.doi.org/", "http://dx.doi.org/",
+        "doi:",
+    ):
+        if doi.startswith(prefix):
+            doi = doi[len(prefix):]
+    return doi.strip()
+
+
+def normalize_title(title: str) -> str:
+    """Lowercase, strip LaTeX markup, remove punctuation, collapse whitespace."""
+    if not title:
+        return ""
+    title = re.sub(r"\\[a-zA-Z]+(?:\{[^}]*\})?", " ", title)
+    title = re.sub(r"\{([^}]*)\}", r"\1", title)
+    title = title.lower()
+    title = re.sub(r"[^\w\s]", " ", title)
+    return re.sub(r"\s+", " ", title).strip()
+
+
 def load_existing_data(bib_path):
-    """Return (set of DOIs, set of titles) already in the bib file."""
+    """Return (set of DOIs, set of normalized titles) already in the bib file."""
     dois, titles = set(), set()
     try:
         with open(bib_path, encoding="utf-8") as f:
@@ -51,10 +88,14 @@ def load_existing_data(bib_path):
                 line = line.strip()
                 if line.lower().startswith(("doi =", "doi=")):
                     v = line.split("=", 1)[1].strip().strip(",").strip('"').strip("{}")
-                    dois.add(v.lower())
+                    norm_d = normalize_doi(v)
+                    if norm_d:
+                        dois.add(norm_d)
                 elif line.lower().startswith(("title =", "title=")):
                     v = line.split("=", 1)[1].strip().strip(",").strip('"').strip("{}")
-                    titles.add(v.lower())
+                    norm_t = normalize_title(v)
+                    if norm_t:
+                        titles.add(norm_t)
     except Exception as e:
         print(f"Error reading bib file: {e}")
     return dois, titles
@@ -68,9 +109,9 @@ def load_rejected_dois(rejected_path):
             with open(rejected_path) as f:
                 for item in json.load(f):
                     if item.get("doi"):
-                        items.add(item["doi"].lower())
+                        items.add(normalize_doi(item["doi"]))
                     if item.get("title"):
-                        items.add(item["title"].lower())
+                        items.add(normalize_title(item["title"]))
         except Exception as e:
             print(f"Error reading rejected file: {e}")
     return items
@@ -100,15 +141,21 @@ def append_to_bib(paper, bib_path):
         bib_block = paper["bibtex"].strip()
         if bib_block.endswith("}"):
             bib_block = bib_block[:-1]  # strip closing brace
-            # Inject custom / extra fields
-            if paper.get("url"):
+            # Inject custom / extra fields if not already present
+            block_lower = bib_block.lower()
+            if paper.get("url") and "url =" not in block_lower and "url=" not in block_lower:
                 bib_block += f",\n  url = {{{paper['url']}}}"
-            if paper.get("semanticscholar"):
+            if paper.get("semanticscholar") and "semanticscholar =" not in block_lower:
                 bib_block += f",\n  semanticscholar = {{{paper['semanticscholar']}}}"
-            if paper.get("ieeexplore"):
+            if paper.get("ieeexplore") and "ieeexplore =" not in block_lower:
                 bib_block += f",\n  ieeexplore = {{{paper['ieeexplore']}}}"
-            if paper.get("arxiv"):
+            if paper.get("arxiv") and "arxiv =" not in block_lower:
                 bib_block += f",\n  arxiv = {{{paper['arxiv']}}}"
+            if paper.get("dvrk_site") and "dvrk_site =" not in block_lower:
+                bib_block += f",\n  dvrk_site = {{{paper['dvrk_site']}}}"
+            if paper.get("abstract") and "abstract =" not in block_lower and "abstract=" not in block_lower:
+                clean_abs = " ".join(paper["abstract"].split())
+                bib_block += f",\n  abstract = {{{clean_abs}}}"
             bib_block += "\n}\n"
         with open(bib_path, "a", encoding="utf-8") as f:
             f.write("\n")
@@ -164,7 +211,152 @@ def doi_to_bibtex(doi):
 
 
 # ---------------------------------------------------------------------------
-# Source 1: CrossRef
+# Source 1: OpenAlex (broadest open index, polite pool, abstracts & sites)
+# ---------------------------------------------------------------------------
+
+def _reconstruct_openalex_abstract(inverted_index):
+    if not inverted_index:
+        return ""
+    words = []
+    for word, positions in inverted_index.items():
+        for pos in positions:
+            words.append((pos, word))
+    words.sort(key=lambda x: x[0])
+    return " ".join(w[1] for w in words)
+
+
+def _is_openalex_relevant(title, abstract, venue):
+    combined = (title + " " + (abstract or "") + " " + (venue or "")).lower()
+    # Filter out German political acronym "DVRK" (Demokratische Volksrepublik Korea) and non-robotics matches
+    DISQUALIFIERS = [
+        "nordkorea", "volksrepublik korea", "koreanische atomprogramm",
+        "digital nutrition services", "track your atmosphere", "token quantization",
+    ]
+    if any(d in combined for d in DISQUALIFIERS):
+        return False
+    return True
+
+
+def search_openalex(query, start_year, end_year, existing_dois, existing_titles, rejected_dois):
+    """
+    Search OpenAlex for works matching *query* in title/abstract published
+    between start_year and end_year. Free and uses polite pool via mailto.
+    """
+    url = "https://api.openalex.org/works"
+    cursor = "*"
+    new_papers = []
+    EXCLUDE_TYPES = {"dataset", "software", "paratext"}
+    print(f"Searching OpenAlex for '{query}' ({start_year}–{end_year})...")
+
+    while cursor:
+        params = {
+            "filter": f"title_and_abstract.search:{query},publication_year:{start_year}-{end_year}",
+            "mailto": OPENALEX_MAILTO,
+            "per_page": 100,
+            "cursor": cursor,
+            "select": "id,doi,title,publication_year,publication_date,authorships,primary_location,open_access,type,abstract_inverted_index,ids",
+        }
+        r = fetch_with_retry(url, params=params)
+        if not r:
+            break
+        data = r.json()
+        results = data.get("results", [])
+        if not results:
+            break
+
+        for item in results:
+            w_type = item.get("type", "")
+            if w_type in EXCLUDE_TYPES:
+                continue
+
+            raw_doi = item.get("doi") or ""
+            doi = normalize_doi(raw_doi)
+            title = item.get("title") or ""
+            if not title:
+                continue
+
+            norm_t = normalize_title(title)
+            if doi and doi in existing_dois:
+                continue
+            if norm_t in existing_titles:
+                continue
+            if doi and doi in rejected_dois:
+                continue
+            if norm_t in rejected_dois:
+                continue
+
+            loc = item.get("primary_location") or {}
+            source_obj = loc.get("source") or {}
+            venue = source_obj.get("display_name") or ""
+            abstract = _reconstruct_openalex_abstract(item.get("abstract_inverted_index"))
+
+            if not _is_openalex_relevant(title, abstract, venue):
+                continue
+
+            authors = [
+                a.get("author", {}).get("display_name", "").strip()
+                for a in item.get("authorships", [])
+                if a.get("author", {}).get("display_name")
+            ]
+
+            affs = []
+            for a in item.get("authorships", []):
+                for inst in a.get("institutions", []):
+                    if inst.get("display_name"):
+                        affs.append(inst["display_name"])
+                for s in a.get("raw_affiliation_strings", []):
+                    affs.append(s)
+            matched_sites = match_sites(affs) if match_sites else set()
+            dvrk_site = " and ".join(sorted(matched_sites)) if matched_sites else None
+
+            year = item.get("publication_year")
+            ids = item.get("ids", {})
+            arxiv_id = ids.get("arxiv")
+            arxiv_url = f"https://arxiv.org/abs/{arxiv_id.split('/')[-1]}" if arxiv_id else None
+            landing_url = loc.get("landing_page_url") or (f"https://doi.org/{doi}" if doi else None)
+
+            fallback_bibtex = None
+            if not doi:
+                first_author = authors[0].split()[-1] if authors else "Unknown"
+                key = f"{first_author}{year or ''}{title.split()[0].lower().strip(':')}"
+                lines = [
+                    f"@article{{{key},",
+                    f"  author = {{{' and '.join(authors)}}},",
+                    f"  title  = {{{title}}},",
+                    f"  year   = {{{year}}},",
+                ]
+                if venue:
+                    lines.append(f"  journal = {{{venue}}},")
+                if landing_url:
+                    lines.append(f"  url = {{{landing_url}}},")
+                lines.append("}")
+                fallback_bibtex = "\n".join(lines)
+
+            new_papers.append({
+                "source": "OpenAlex",
+                "title": title,
+                "year": year,
+                "authors": authors,
+                "doi": doi,
+                "venue": venue,
+                "bibtex": fallback_bibtex,
+                "semanticscholar": None,
+                "ieeexplore": None,
+                "arxiv": arxiv_url,
+                "url": landing_url,
+                "abstract": abstract if abstract else None,
+                "dvrk_site": dvrk_site,
+            })
+
+        cursor = data.get("meta", {}).get("next_cursor")
+        time.sleep(0.1)
+
+    print(f"  -> {len(new_papers)} new results from OpenAlex")
+    return new_papers
+
+
+# ---------------------------------------------------------------------------
+# Source 2: CrossRef
 # ---------------------------------------------------------------------------
 
 def _is_crossref_relevant(title, venue, query):
@@ -485,6 +677,13 @@ def main():
     parser.add_argument("--start-year", type=int, default=2021, help="Start year (default: 2021)")
     parser.add_argument("--end-year",   type=int, default=2025, help="End year   (default: 2025)")
     parser.add_argument("--bib",        default="publications.bib", help="Path to bib file")
+    parser.add_argument(
+        "--sources",
+        nargs="+",
+        default=["openalex", "crossref", "arxiv", "semanticscholar", "ieee"],
+        choices=["openalex", "crossref", "arxiv", "semanticscholar", "ieee", "s2"],
+        help="Sources to search (default: openalex crossref arxiv semanticscholar ieee)",
+    )
     args = parser.parse_args()
 
     existing_dois, existing_titles = load_existing_data(args.bib)
@@ -494,40 +693,52 @@ def main():
 
     queries = ["dVRK", "da Vinci Research Kit"]
     years   = list(range(args.start_year, args.end_year + 1))
+    sources_to_run = [s.lower() for s in args.sources]
 
     all_new: list[dict] = []
     seen_titles: set[str] = set()
 
     def add_results(papers):
         for p in papers:
-            t = (p.get("title") or "").lower()
+            t = normalize_title(p.get("title") or "")
             if t and t not in seen_titles and t not in existing_titles:
                 all_new.append(p)
                 seen_titles.add(t)
 
-    # --- CrossRef (primary, no key needed) ---
-    for q in queries:
-        add_results(search_crossref(q, args.start_year, args.end_year,
-                                    existing_dois, existing_titles, rejected_dois))
-        time.sleep(1)   # polite
+    # --- OpenAlex (broadest open index, polite pool, includes abstracts & affiliations) ---
+    if "openalex" in sources_to_run:
+        for q in queries:
+            add_results(search_openalex(q, args.start_year, args.end_year,
+                                        existing_dois, existing_titles, rejected_dois))
+            time.sleep(0.2)
+
+    # --- CrossRef (secondary, polite pool) ---
+    if "crossref" in sources_to_run:
+        for q in queries:
+            add_results(search_crossref(q, args.start_year, args.end_year,
+                                        existing_dois, existing_titles, rejected_dois))
+            time.sleep(1)   # polite
 
     # --- arXiv (good for preprints, no key needed) ---
-    for q in queries:
-        add_results(search_arxiv(q, args.start_year, args.end_year,
-                                 existing_dois, existing_titles, rejected_dois))
-        time.sleep(1)
+    if "arxiv" in sources_to_run:
+        for q in queries:
+            add_results(search_arxiv(q, args.start_year, args.end_year,
+                                     existing_dois, existing_titles, rejected_dois))
+            time.sleep(1)
 
     # --- Semantic Scholar (optional, rate-limited without key) ---
-    for q in queries:
-        add_results(search_semantic_scholar(q, years,
-                                            existing_dois, existing_titles, rejected_dois))
-        time.sleep(2)
+    if "semanticscholar" in sources_to_run or "s2" in sources_to_run:
+        for q in queries:
+            add_results(search_semantic_scholar(q, years,
+                                                existing_dois, existing_titles, rejected_dois))
+            time.sleep(2)
 
     # --- IEEE Xplore (optional, requires key) ---
-    for q in queries:
-        add_results(search_ieee_xplore(q, args.start_year, args.end_year,
-                                       existing_dois, existing_titles, rejected_dois))
-        time.sleep(1)
+    if "ieee" in sources_to_run:
+        for q in queries:
+            add_results(search_ieee_xplore(q, args.start_year, args.end_year,
+                                           existing_dois, existing_titles, rejected_dois))
+            time.sleep(1)
 
     if not all_new:
         print("\nNo new papers found.")
@@ -545,6 +756,13 @@ def main():
         print(f"  Year:    {paper.get('year')}")
         if paper.get("venue"):
             print(f"  Venue:   {paper['venue']}")
+        if paper.get("dvrk_site"):
+            print(f"  Site:    {paper['dvrk_site']}")
+        if paper.get("abstract"):
+            abs_preview = " ".join(paper["abstract"].split())
+            if len(abs_preview) > 250:
+                abs_preview = abs_preview[:250] + "..."
+            print(f"  Abstract: {abs_preview}")
 
         # Try to get high-quality BibTeX via doi.org
         bibtex_val = paper.get("bibtex") or ""
@@ -588,9 +806,9 @@ def main():
             choice = input("\n  Add? [y]es / [n]o (reject) / [s]kip / [q]uit: ").lower().strip()
             if choice in ("y", "yes"):
                 if append_to_bib(paper, args.bib):
-                    existing_titles.add(paper["title"].lower())
+                    existing_titles.add(normalize_title(paper["title"]))
                     if paper.get("doi"):
-                        existing_dois.add(paper["doi"].lower())
+                        existing_dois.add(normalize_doi(paper["doi"]))
                 break
             elif choice in ("n", "no"):
                 save_rejected(paper, REJECTED_FILE)
