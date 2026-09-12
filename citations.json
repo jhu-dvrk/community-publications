@@ -1,0 +1,5041 @@
+{
+  "summary": {
+    "total_papers": 611,
+    "total_citations": 908,
+    "papers_citing": 125,
+    "papers_cited": 269
+  },
+  "citations": {
+    "LozaGalindo2026DRENDS": {
+      "cites": [
+        "DEttorre2021"
+      ],
+      "cited_by": []
+    },
+    "Zhang2026Dynamics": {
+      "cites": [
+        "Anooshahpour2017",
+        "Argin2024daVinciRK",
+        "Chen2013",
+        "Chrysilla2019",
+        "DEttorre2021",
+        "Fontanelli2017b",
+        "Gondokaryono2019",
+        "Khan2025DevelopmentOA",
+        "Lin2019",
+        "Lin2021",
+        "Nowakowski2024Learning",
+        "Pique2019a",
+        "Sang2017b",
+        "Tran2020",
+        "Wang2019c",
+        "WuISMR2021a",
+        "Xu2025",
+        "Yang2024",
+        "Yang2025TMRB",
+        "Yilmaz2022IJCARS",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024"
+      ],
+      "cited_by": []
+    },
+    "Zhou2026SurgSync": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Yan2026Overcoming": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zargarzadeh2026Gradual": {
+      "cites": [
+        "Moghani2024Sufia",
+        "Ou2023RobotLI",
+        "Ou2024",
+        "Sen2016"
+      ],
+      "cited_by": []
+    },
+    "Martuscelli2026Dithering": {
+      "cites": [
+        "Kazanzides2014",
+        "Wang2019c",
+        "Wu2018a",
+        "WuISMR2021a",
+        "Xu2025",
+        "Yang2024",
+        "Yang2025TMRB",
+        "Yilmaz2020",
+        "YilmazRAL2024",
+        "Zhou2025GravityCO"
+      ],
+      "cited_by": []
+    },
+    "Magnani2026ConsoleFree": {
+      "cites": [
+        "Ai2024",
+        "Chen2024Safer",
+        "ChenISMR2023",
+        "Kazanzides2014",
+        "Rhee2024Unconstrained"
+      ],
+      "cited_by": []
+    },
+    "Connolly2026NoCancer": {
+      "cites": [
+        "Kazanzides2014",
+        "Wu2023Automatic"
+      ],
+      "cited_by": []
+    },
+    "Abkhofte2026Multimodal": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Roberti2026Semantic": {
+      "cites": [
+        "Bombieri2023Mapping",
+        "Chen2024Humanoutoftheloop",
+        "DEttorre2021",
+        "Haidegger2019a",
+        "Huang2022ASP",
+        "Kim2025Speech",
+        "Ma2022Augmented",
+        "Mariani2020a",
+        "Pasini2023",
+        "Roberti2023Semantic",
+        "Song2019",
+        "kossowsky2022predicting",
+        "meli2021autonomous",
+        "tagliabue2022deliberation"
+      ],
+      "cited_by": []
+    },
+    "Muratore2026NailIt": {
+      "cites": [
+        "Abdelaal2021",
+        "Gondokaryono2019",
+        "Kazanzides2014",
+        "Munawar2022Open",
+        "Varier2020",
+        "fan2022unity"
+      ],
+      "cited_by": []
+    },
+    "Mahayana2026SVR": {
+      "cites": [
+        "Fontanelli2017b",
+        "Gondokaryono2019",
+        "Hwang2020",
+        "Kazanzides2014",
+        "Long2025",
+        "Mahler2014b",
+        "Pique2019a",
+        "Richter2019a",
+        "Su2020a",
+        "Wang2019c",
+        "Zhou2025GravityCO",
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "Hu2026ImperfectDemos": {
+      "cites": [
+        "Pore2021Learning"
+      ],
+      "cited_by": []
+    },
+    "Yao_2026": {
+      "cites": [
+        "Kazanzides2014",
+        "Qian2018a",
+        "Qian2019",
+        "Qian2019a"
+      ],
+      "cited_by": []
+    },
+    "Hu2026exploration": {
+      "cites": [
+        "Chen2023Frsra",
+        "Hu2023Coordinate",
+        "Hu2023Occlusionrobust",
+        "Kazanzides2014"
+      ],
+      "cited_by": [
+        "Hu2026multiscale"
+      ]
+    },
+    "Huang2026failure": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Sui_2026": {
+      "cites": [
+        "Abdelaal2021",
+        "Chiu2021Bimanual",
+        "Ou2023Simtoreal"
+      ],
+      "cited_by": []
+    },
+    "Hansen_2026": {
+      "cites": [
+        "Kazanzides2014"
+      ],
+      "cited_by": []
+    },
+    "Hu2026multiscale": {
+      "cites": [
+        "Hu2023Coordinate",
+        "Hu2023Occlusionrobust",
+        "Hu2026exploration",
+        "Kazanzides2014",
+        "Long2025",
+        "Shin2019b",
+        "Xu2025"
+      ],
+      "cited_by": []
+    },
+    "Muratore_2026": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Consortium2026open-h-embodiment": {
+      "cites": [],
+      "cited_by": []
+    },
+    "mocellin2026origrasp": {
+      "cites": [
+        "DEttorre2021",
+        "Huan2020",
+        "Liu2020a"
+      ],
+      "cited_by": []
+    },
+    "Huang2026reeling": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Cunico_2026": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hu2026ssp": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wu2026surgcalib": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Bao2026surgicalwam": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhou2026towards": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Caccianiga2026mvdvrk": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chen2026macaw": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Huang2026learning": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chen2026surgvil": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ou2026cressim": {
+      "cites": [],
+      "cited_by": []
+    },
+    "GamazoTejero2026cosmos": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wu2026contact": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Su2026tdhd": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Jiang2026compensation": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Shaaban2026Cloudbaseda": {
+      "cites": [
+        "Fontanelli2017b",
+        "Fontanelli2018f",
+        "Hong2019c",
+        "Qian2019",
+        "Rhee2024Unconstrained"
+      ],
+      "cited_by": []
+    },
+    "Kotian2026Simulation": {
+      "cites": [
+        "Attanasio2021Open",
+        "Gondokaryono2019",
+        "Haidegger2019a",
+        "Hu2023TowardsHC",
+        "Hwang2022Automating",
+        "McDonaldBowyer2023Organ",
+        "Nagy2018d",
+        "Ozguner2020",
+        "Zhang2023AST"
+      ],
+      "cited_by": []
+    },
+    "Pescio2026Artificial": {
+      "cites": [
+        "Kazanzides2014",
+        "Long2025",
+        "Ma2019b",
+        "Moghani2025Sufiabc",
+        "Paul2024Evaluation",
+        "Varier2020"
+      ],
+      "cited_by": []
+    },
+    "Walsh2025Development": {
+      "cites": [
+        "Kazanzides2014",
+        "Munawar2022Open",
+        "Su2020a",
+        "Wang2019c"
+      ],
+      "cited_by": []
+    },
+    "Tan2026Ekfenhanced": {
+      "cites": [
+        "Col2021Automating",
+        "DEttorre2021",
+        "Fontanelli2017b",
+        "Huang2022ASP",
+        "Lu2022TowardIA",
+        "Ma2019b",
+        "Moccia2020",
+        "Molnar2020"
+      ],
+      "cited_by": []
+    },
+    "Yilmaz2026Imitation": {
+      "cites": [
+        "Cui2022CaveatsOT",
+        "Ding2024towards",
+        "Ou2023Simtoreal",
+        "Xu2025",
+        "Zhong2019"
+      ],
+      "cited_by": []
+    },
+    "Liang2026Vivoa": {
+      "cites": [
+        "Kazanzides2014"
+      ],
+      "cited_by": []
+    },
+    "Mazzotta2026Preliminarya": {
+      "cites": [
+        "Kazanzides2014"
+      ],
+      "cited_by": []
+    },
+    "Duan2026Realtimea": {
+      "cites": [
+        "Kazanzides2014",
+        "Li2024OnTM",
+        "Lin2024Worlda",
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "Yang2026Shaftintegrated": {
+      "cites": [
+        "Abdelaal2025ForceAwareAR",
+        "Chua2021Force",
+        "Chua2023Modular",
+        "Fontanelli2017b",
+        "Hosseinabadi2024Multiaxis",
+        "Kazanzides2014",
+        "Nowakowski2024Learning",
+        "Shahzada2016a",
+        "Vuong2025EffectsOW",
+        "Wang2019c",
+        "WuISMR2021a",
+        "Yang2024",
+        "Yang2025TMRB",
+        "Yilmaz2020",
+        "YilmazRAL2024"
+      ],
+      "cited_by": []
+    },
+    "Kim2025Speech": {
+      "cites": [
+        "DEttorre2021",
+        "Hong2019c",
+        "Jo2020",
+        "Kazanzides2014",
+        "Kim2016",
+        "Kim2017",
+        "Kim2022Study",
+        "Kim2024Multimodal",
+        "Ma2019b",
+        "Molnar2020",
+        "Pasini2022",
+        "Rhee2024Unconstrained"
+      ],
+      "cited_by": [
+        "Roberti2026Semantic"
+      ]
+    },
+    "WangJ2025ISMR": {
+      "cites": [
+        "Ishida2023CommLoss",
+        "Kazanzides2014",
+        "Munawar2022Open",
+        "Orosco2020",
+        "Qian2019a",
+        "Su2020a"
+      ],
+      "cited_by": []
+    },
+    "Col_2025": {
+      "cites": [],
+      "cited_by": []
+    },
+    "iovene2025situation": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chen2025AccuracyAA": {
+      "cites": [
+        "Haidegger2019a",
+        "Hwang2020",
+        "Kazanzides2014",
+        "Mahler2014b",
+        "Ozguner2020",
+        "Zhang2020a"
+      ],
+      "cited_by": []
+    },
+    "WangS2025ISMR": {
+      "cites": [
+        "Chen2024Safer",
+        "Cui2022CaveatsOT",
+        "Gao2023Intraoperative",
+        "Kazanzides2014",
+        "Long2022",
+        "Marinho2019",
+        "Saracino2019a",
+        "Zhou2024ISMR"
+      ],
+      "cited_by": []
+    },
+    "Yang2025TMRB": {
+      "cites": [
+        "Black2020",
+        "Chua2022Characterization",
+        "Kazanzides2014",
+        "Khan2025DevelopmentOA",
+        "Nowakowski2024Learning",
+        "Tran2020",
+        "Wang2019c",
+        "WuISMR2021a",
+        "Xu2025",
+        "Yang2024",
+        "Yilmaz2020"
+      ],
+      "cited_by": [
+        "Martuscelli2026Dithering",
+        "Yang2026Shaftintegrated",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Wu2025HTL": {
+      "cites": [
+        "Colleoni2020"
+      ],
+      "cited_by": []
+    },
+    "sharon2025augmenting": {
+      "cites": [
+        "Abdelaal2018",
+        "Coad2017a",
+        "Enayati2018b",
+        "Jarc2015",
+        "Kazanzides2014",
+        "Patel2018b",
+        "Patel2018c",
+        "Shahbazi2018a",
+        "oquendo2024haptic"
+      ],
+      "cited_by": [
+        "sharon2025dataset"
+      ]
+    },
+    "Banks2025autocam": {
+      "cites": [],
+      "cited_by": []
+    },
+    "zbinden2025cosmossurgdvrk": {
+      "cites": [],
+      "cited_by": []
+    },
+    "sharon2025dataset": {
+      "cites": [
+        "Bahar2020",
+        "Caccianiga2021",
+        "Coad2017a",
+        "Kazanzides2014",
+        "Mariani2020",
+        "Rivas-Blanco2021a",
+        "Sharon2021",
+        "Wang2018b",
+        "itzkovich2022generalization",
+        "oquendo2024haptic",
+        "sharon2025augmenting"
+      ],
+      "cited_by": []
+    },
+    "Abkhofte2025DeepLS": {
+      "cites": [
+        "Garg2016b",
+        "Li2020a",
+        "Naidu2017"
+      ],
+      "cited_by": []
+    },
+    "Khan2025DevelopmentOA": {
+      "cites": [
+        "Kazanzides2014",
+        "Tran2020",
+        "Wu2018a",
+        "WuISMR2021a",
+        "Yilmaz2020"
+      ],
+      "cited_by": [
+        "Yang2025TMRB",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Liang2025DifferentiableRP": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Xu2025": {
+      "cites": [
+        "DEttorre2021",
+        "Kazanzides2014",
+        "Su2020a",
+        "Wu2018a"
+      ],
+      "cited_by": [
+        "Hu2026multiscale",
+        "Martuscelli2026Dithering",
+        "Yang2025TMRB",
+        "Yilmaz2026Imitation",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Thompson2025EarlyFD": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Vuong2025EffectsOW": {
+      "cites": [
+        "Chua2020",
+        "Kazanzides2014",
+        "Quek2018"
+      ],
+      "cited_by": [
+        "Yang2026Shaftintegrated"
+      ]
+    },
+    "Abdelaal2025ForceAwareAR": {
+      "cites": [],
+      "cited_by": [
+        "Yang2026Shaftintegrated"
+      ]
+    },
+    "Spagnulo_2025": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhou2025GravityCO": {
+      "cites": [],
+      "cited_by": [
+        "Mahayana2026SVR",
+        "Martuscelli2026Dithering"
+      ]
+    },
+    "Zhang2025HybridDR": {
+      "cites": [
+        "Chen2024Human",
+        "DEttorre2021",
+        "Hu2023TowardsHC",
+        "Kazanzides2014",
+        "Schmidgall2024Surgical",
+        "Shin2019b",
+        "Varier2020",
+        "Zheng2024AUS",
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "meli2025inductive": {
+      "cites": [
+        "Bombieri2023Mapping",
+        "Fan2024Learna",
+        "Kazanzides2014",
+        "Roberti2020b",
+        "meli2021autonomous",
+        "meli2021unsupervised",
+        "tagliabue2022deliberation"
+      ],
+      "cited_by": []
+    },
+    "Ou_2025": {
+      "cites": [
+        "Bendikas2023Learninga",
+        "Chiu2021Bimanual",
+        "Haiderbhai2025Sim2RealRC",
+        "Huang2021b",
+        "Kazanzides2014",
+        "Ou2023Simtoreal",
+        "Ou2024",
+        "Ou2025Cressimmpm",
+        "Pore2021Learning",
+        "Richter2019a",
+        "Richter2020",
+        "Schmidgall2024Surgical",
+        "Varier2020",
+        "xu2021surrol",
+        "yu2024orbit"
+      ],
+      "cited_by": [
+        "Kim2025Surgical",
+        "Ou2025Cressimmpm"
+      ]
+    },
+    "caccianiga2025open": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Levendovics_2025": {
+      "cites": [
+        "Haidegger2019a",
+        "Nagy2019a",
+        "Tak\u00e1cs2024Assessment"
+      ],
+      "cited_by": []
+    },
+    "Maguire2025RoboticAC": {
+      "cites": [
+        "Munawar2022Open",
+        "Podolsky2019",
+        "Wu2020a"
+      ],
+      "cited_by": []
+    },
+    "Banks2025setup-invariant": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Haiderbhai2025Sim2RealRC": {
+      "cites": [
+        "Baweja2023ExperimentalTW",
+        "Chrysilla2019",
+        "DEttorre2021",
+        "Haiderbhai2022RobustST",
+        "Hwang2022Automating",
+        "Lu2022TowardIA",
+        "Murali2015c",
+        "Ozguner2020",
+        "Schmidgall2024Surgical",
+        "Senthilkumar2023SimulatingMC",
+        "Thananjeyan2017b",
+        "Wang2019c",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Haiderbhai2024SimulatingSR",
+        "Ho2025SurgIRLTL",
+        "Ou_2025"
+      ]
+    },
+    "Yoon2025sims": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Long2025": {
+      "cites": [
+        "Attanasio2020",
+        "Bendikas2023Learninga",
+        "Hu2023TowardsHC",
+        "Huang2023DemonstrationGuidedRL",
+        "Kazanzides2014",
+        "Schmidgall2024Surgical",
+        "Su2020a",
+        "Zheng2024AUS",
+        "Zhong2023Robotcamera",
+        "xu2021surrol",
+        "yu2024orbit"
+      ],
+      "cited_by": [
+        "Hu2026multiscale",
+        "Mahayana2026SVR",
+        "Pescio2026Artificial"
+      ]
+    },
+    "Chen2025SurgiPoseES": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ho2025SurgIRLTL": {
+      "cites": [
+        "Bendikas2023Learninga",
+        "Chiu2021Bimanual",
+        "Chiu2022Markerless",
+        "Chiu2023Realtime",
+        "DEttorre2018b",
+        "DEttorre2022Learning",
+        "Fan2024Learna",
+        "Haiderbhai2025Sim2RealRC",
+        "Huang2021b",
+        "Huang2023DemonstrationGuidedRL",
+        "Ji2018b",
+        "Kazanzides2014",
+        "Liang2024Realtosim",
+        "Ou2023Safe",
+        "Ou2023Simtoreal",
+        "Pore2021Learning",
+        "Richter2020",
+        "Richter2021",
+        "Shin2019b",
+        "Varier2020",
+        "xu2021surrol",
+        "\u00d6zg\u00fcner2021VisuallyGN"
+      ],
+      "cited_by": []
+    },
+    "Wu2025ICRA": {
+      "cites": [
+        "Allan2018a",
+        "Bodenstedt2018",
+        "Hwang2020",
+        "Kazanzides2014",
+        "Lu2022Pose",
+        "Molnar2020",
+        "Wu2023Automatic",
+        "Ye2016",
+        "Zhang2017e",
+        "Zhong2020"
+      ],
+      "cited_by": [
+        "Yang2025Instrumentsplattinga"
+      ]
+    },
+    "Haworth2025SutureBotAP": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Maguire2025113": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Jain202585chapter": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Nimal2025Vinci": {
+      "cites": [
+        "Cui2022CaveatsOT",
+        "Kazanzides2014",
+        "Munawar2022Open"
+      ],
+      "cited_by": []
+    },
+    "Paul2025System": {
+      "cites": [
+        "Kazanzides2014",
+        "Tak\u00e1cs2024Assessment"
+      ],
+      "cited_by": []
+    },
+    "Xu2025Aidriven": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Gamazeliuc2025Aipowered": {
+      "cites": [
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "Shankar2025Approacha": {
+      "cites": [
+        "Chen2013",
+        "Colleoni2019a",
+        "DEttorre2021",
+        "Elazzazi2022Natural",
+        "Eslamian2020",
+        "Long2022",
+        "Qian2018a",
+        "Qian2019a",
+        "Seita2018a"
+      ],
+      "cited_by": []
+    },
+    "Chen2025Online": {
+      "cites": [
+        "Caccianiga2020",
+        "Chen2022Robotassisteda",
+        "Chen2023Frsra",
+        "Chen2024Safer",
+        "Enayati2018b",
+        "Long2022",
+        "Moccia2020",
+        "Zhang2022HumanRobotSC",
+        "Zhang2023AST",
+        "oquendo2024haptic"
+      ],
+      "cited_by": []
+    },
+    "Ou2025Cressimmpm": {
+      "cites": [
+        "Bendikas2023Learninga",
+        "Chiu2021Bimanual",
+        "Enayati2018b",
+        "Fontanelli2018f",
+        "Kazanzides2014",
+        "Liu2021Realtosim",
+        "Munawar2022Open",
+        "Ou2024",
+        "Ou_2025",
+        "Richter2019a",
+        "Schmidgall2024Surgical",
+        "Yang2024EfficientPS",
+        "xu2021surrol",
+        "yu2024orbit"
+      ],
+      "cited_by": [
+        "Ou_2025"
+      ]
+    },
+    "Liu2025Dart": {
+      "cites": [
+        "Huang2023DemonstrationGuidedRL",
+        "Hwang2022Automating",
+        "Kazanzides2014",
+        "Long2022",
+        "Nagy2019",
+        "Richter2019a",
+        "Schmidgall2024Surgical",
+        "xu2021surrol",
+        "yu2024orbit"
+      ],
+      "cited_by": []
+    },
+    "Cui2025Forbidden": {
+      "cites": [
+        "Hwang2020",
+        "Kazanzides2014"
+      ],
+      "cited_by": []
+    },
+    "Hu2025Humanrobot": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Shkurti2025Improving": {
+      "cites": [
+        "Cui2022CaveatsOT",
+        "DEttorre2018b",
+        "Ficuciello2019a",
+        "Kazanzides2014",
+        "Lu2022AUM",
+        "Murali2015c",
+        "Ozguner2018a",
+        "Ozguner2020",
+        "Pachtrachai2016a",
+        "Shamaei2015b",
+        "Zhang2017e",
+        "Zhong2023Integrateda",
+        "Zhong2023Robotcamera",
+        "\u00d6zg\u00fcner2021VisuallyGN"
+      ],
+      "cited_by": []
+    },
+    "Yang2025Instrumentsplattinga": {
+      "cites": [
+        "Allan2018a",
+        "Barragan2024ICRA",
+        "Kazanzides2014",
+        "Munawar2022Open",
+        "Wu2025ICRA",
+        "Ye2016"
+      ],
+      "cited_by": []
+    },
+    "Liang2025Medic": {
+      "cites": [
+        "Chiu2023Realtime",
+        "DEttorre2018b",
+        "Elek2017",
+        "Huang2021b",
+        "Karimi2024Rewarda",
+        "Kazanzides2014",
+        "Liang2024Realtosim",
+        "Liu2021Realtosim",
+        "Marahrens2024Ultrasoundguided",
+        "Murali2015c",
+        "Richter2020",
+        "Thananjeyan2017b",
+        "meli2021autonomous"
+      ],
+      "cited_by": []
+    },
+    "Sadra2025Multimodal": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Lim2025Optimal": {
+      "cites": [
+        "9661536",
+        "Haidegger2019a",
+        "Kazanzides2014",
+        "Orosco2020"
+      ],
+      "cited_by": []
+    },
+    "Hu2025Pretraining": {
+      "cites": [
+        "Hashempour2020a",
+        "Kazanzides2014",
+        "Lu2022TowardIA",
+        "Pore2021Learning",
+        "Richter2020",
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "Nieto2025Ridl": {
+      "cites": [
+        "Long2022",
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "Moghani2025Sufiabc": {
+      "cites": [
+        "Kazanzides2014",
+        "Li2020a",
+        "Moghani2024Sufia",
+        "xu2021surrol",
+        "yu2024orbit"
+      ],
+      "cited_by": [
+        "Pescio2026Artificial"
+      ]
+    },
+    "Kim2025Surgical": {
+      "cites": [
+        "DEttorre2021",
+        "Ferro2023ACD",
+        "Kazanzides2014",
+        "Munawar2022Open",
+        "Ou2024",
+        "Ou_2025",
+        "Schmidgall2024Surgical",
+        "Su2020a",
+        "Zhou2024ISMR",
+        "xu2021surrol",
+        "yu2024orbit"
+      ],
+      "cited_by": []
+    },
+    "Ding2025Robusta": {
+      "cites": [
+        "Colleoni2020",
+        "Ding2022",
+        "Kazanzides2014"
+      ],
+      "cited_by": []
+    },
+    "Schmidgall2025Willa": {
+      "cites": [
+        "Cui2022CaveatsOT",
+        "Haidegger2019a",
+        "Haiderbhai2022RobustST",
+        "Huang2023DemonstrationGuidedRL",
+        "Kazanzides2014",
+        "Li2020a",
+        "Liu2021Realtosim",
+        "Lu2022Pose",
+        "Murali2015c",
+        "Ou2023Simtoreal",
+        "Ou2024",
+        "Ozguner2020",
+        "Pachtrachai2016a",
+        "Penza2017",
+        "Richter2020",
+        "Schmidgall2024Surgical",
+        "Song2019",
+        "Wang2017b",
+        "xu2021surrol",
+        "yu2024orbit"
+      ],
+      "cited_by": []
+    },
+    "Yang2024": {
+      "cites": [
+        "Chua2023Modular",
+        "Ferro2023ACD",
+        "Fontanelli2017b",
+        "Fontanelli2020",
+        "Kazanzides2014",
+        "Pique2019a",
+        "Sang2017b",
+        "Wang2019c",
+        "WuISMR2021a",
+        "Yilmaz2020",
+        "Yilmaz2022IJCARS"
+      ],
+      "cited_by": [
+        "Martuscelli2026Dithering",
+        "Yang2025TMRB",
+        "Yang2026Shaftintegrated",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Ou2024": {
+      "cites": [
+        "Enayati2018b",
+        "Fontanelli2018f",
+        "Kazanzides2014",
+        "Richter2019a",
+        "Richter2020",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Kim2025Surgical",
+        "Ou2025Cressimmpm",
+        "Ou_2025",
+        "Schmidgall2025Willa",
+        "Zargarzadeh2026Gradual"
+      ]
+    },
+    "Strohmeyer2024ASD": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zheng2024AUS": {
+      "cites": [
+        "Hu2023TowardsHC",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Long2025",
+        "Zhang2025HybridDR"
+      ]
+    },
+    "Zargarzadeh2024AugmentedRT": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Yang2024AutomatedTG": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Cui2024CalibrationFF": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Soberanis-Mukul2024CognitiveLI": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Walder2024CostEfficientAO": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Argin2024daVinciRK": {
+      "cites": [
+        "DEttorre2021",
+        "Ferro2023ACD",
+        "Ficuciello2019a",
+        "Fontanelli2017b",
+        "Fontanelli2020",
+        "Kazanzides2014",
+        "Moccia2020",
+        "Pique2019a",
+        "Sang2017b",
+        "Wang2019c"
+      ],
+      "cited_by": [
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Iacono2024DesignAV": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Yang2024EfficientPS": {
+      "cites": [],
+      "cited_by": [
+        "Ou2025Cressimmpm"
+      ]
+    },
+    "Yilmaz2024IJCARS": {
+      "cites": [
+        "Chua2021Force",
+        "Chua2022Characterization",
+        "DEttorre2021",
+        "Kazanzides2014",
+        "Pique2019a",
+        "Sang2017b",
+        "Saracino2019a",
+        "Tran2020",
+        "WuISMR2021a",
+        "Yilmaz2020",
+        "Yilmaz2022IJCARS",
+        "YilmazRAL2024"
+      ],
+      "cited_by": [
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Rajarajeswari2024": {
+      "cites": [
+        "9661536",
+        "Fontanelli2018f",
+        "Gondokaryono2019",
+        "Haiderbhai2022RobustST",
+        "Long2022",
+        "Ozguner2020",
+        "fan2022unity",
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "Oh2024ExpandedCR": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Li2024GMMBasedHD": {
+      "cites": [
+        "Banach2019",
+        "Ma2020",
+        "Moccia2020",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Jawad2024Deep",
+        "Li2024RealTimeGJ"
+      ]
+    },
+    "oquendo2024haptic": {
+      "cites": [
+        "Abdelaal2018",
+        "Coad2017a",
+        "Enayati2017",
+        "Enayati2018b",
+        "Jarc2015",
+        "Kazanzides2014",
+        "fan2022unity"
+      ],
+      "cited_by": [
+        "Chen2025Online",
+        "rota2024performance",
+        "sharon2025augmenting",
+        "sharon2025dataset"
+      ]
+    },
+    "rota2024implementation": {
+      "cites": [
+        "Caccianiga2020",
+        "Caccianiga2021",
+        "Enayati2018b",
+        "Fontanelli2017b",
+        "Mariani2018a",
+        "fan2022unity"
+      ],
+      "cited_by": []
+    },
+    "Barragan2024ISMR": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Rivas-Blanco2024InstrumentDA": {
+      "cites": [],
+      "cited_by": []
+    },
+    "kim2024learning": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ai2024": {
+      "cites": [
+        "ChenISMR2023",
+        "Dardona2019",
+        "Gondokaryono2019",
+        "Hong2019c",
+        "Kazanzides2014",
+        "Ma2022Augmented",
+        "Qian2020"
+      ],
+      "cited_by": [
+        "Magnani2026ConsoleFree"
+      ]
+    },
+    "Marra2024MPCFS": {
+      "cites": [
+        "Bendikas2023Learninga",
+        "Chiu2021Bimanual",
+        "DEttorre2018b",
+        "DEttorre2021",
+        "Ferro2023ACD",
+        "Fontanelli2017b",
+        "Lu2020",
+        "Lu2022TowardIA",
+        "Moccia2020",
+        "Sallam2023PrototypeRO",
+        "Schwaner2021Autonomous",
+        "Varier2020"
+      ],
+      "cited_by": []
+    },
+    "Fu2024MultiobjectiveCL": {
+      "cites": [
+        "Bendikas2023Learninga",
+        "Huang2023DemonstrationGuidedRL",
+        "Patel2018c",
+        "Schwaner2021Autonomous",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Ding2024towards"
+      ]
+    },
+    "Li2024OnTM": {
+      "cites": [
+        "Chiu2022Markerless",
+        "Chiu2023Realtime",
+        "DEttorre2018b",
+        "Lu2022TowardIA",
+        "Munawar2022Open",
+        "Ozguner2018a",
+        "Richter2021",
+        "Zhong2023Integrateda",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Duan2026Realtimea",
+        "Li2024RealTimeGJ"
+      ]
+    },
+    "Yoon2024optimizing": {
+      "cites": [],
+      "cited_by": []
+    },
+    "yu2024orbit": {
+      "cites": [
+        "Ficuciello2019a",
+        "Fontanelli2018f",
+        "Kazanzides2014",
+        "Krishnan2017",
+        "Murali2015c",
+        "Richter2019a",
+        "Schmidgall2024Surgical",
+        "Thananjeyan2017b",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Kim2025Surgical",
+        "Liu2025Dart",
+        "Long2025",
+        "Moghani2024Sufia",
+        "Moghani2025Sufiabc",
+        "Ou2025Cressimmpm",
+        "Ou_2025",
+        "Schmidgall2025Willa"
+      ]
+    },
+    "rota2024performance": {
+      "cites": [
+        "Caccianiga2021",
+        "Kazanzides2014",
+        "Mariani2018a",
+        "Mariani2020",
+        "fan2022unity",
+        "oquendo2024haptic"
+      ],
+      "cited_by": []
+    },
+    "Li2024RealTimeGJ": {
+      "cites": [
+        "Hwang2020",
+        "Kazanzides2014",
+        "Li2024GMMBasedHD",
+        "Li2024OnTM",
+        "Lin2024Worlda",
+        "Lu2022AUM",
+        "Lu2022TowardIA",
+        "Mahler2014b",
+        "Munawar2022Open",
+        "Richter2021",
+        "Zhong2023Integrateda",
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "Barragan2024ICRA": {
+      "cites": [
+        "Chiu2022Markerless",
+        "Ding2022",
+        "Jiang2023Markerless",
+        "Kazanzides2014",
+        "Lu2021Super",
+        "Munawar2022Open",
+        "Richter2020",
+        "Schwaner2021Autonomous"
+      ],
+      "cited_by": [
+        "Yang2025Instrumentsplattinga"
+      ]
+    },
+    "YilmazRAL2024": {
+      "cites": [
+        "Black2020",
+        "Chua2021Force",
+        "Chua2022Characterization",
+        "Chua2023Modular",
+        "Fontanelli2017b",
+        "Kazanzides2014",
+        "Minelli2023TwoLayerBasedMB",
+        "Pique2019a",
+        "Sang2017b",
+        "Saracino2019a",
+        "Tran2020",
+        "Yilmaz2020",
+        "Yilmaz2022IJCARS"
+      ],
+      "cited_by": [
+        "Martuscelli2026Dithering",
+        "Yang2026Shaftintegrated",
+        "Yilmaz2024IJCARS",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Borgioli2024SensoryGS": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Haiderbhai2024SimulatingSR": {
+      "cites": [
+        "Baweja2023ExperimentalTW",
+        "DEttorre2021",
+        "Haiderbhai2022RobustST",
+        "Haiderbhai2025Sim2RealRC",
+        "Senthilkumar2023SimulatingMC",
+        "Zhang2023AST",
+        "xu2021surrol"
+      ],
+      "cited_by": []
+    },
+    "Shinde2024SURESTEPAU": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Cartucho2024SurgT": {
+      "cites": [
+        "Wang2018c",
+        "Wang2022Autonomous",
+        "Weld2022Regularising",
+        "Zhan2020"
+      ],
+      "cited_by": []
+    },
+    "Zhou2024ISMR": {
+      "cites": [],
+      "cited_by": [
+        "Kim2025Surgical",
+        "WangS2025ISMR"
+      ]
+    },
+    "Ding2024towards": {
+      "cites": [
+        "Ding2022",
+        "Fu2024MultiobjectiveCL",
+        "Hwang2022Automating",
+        "Kazanzides2014",
+        "Moghani2024Sufia",
+        "Oguine2024From"
+      ],
+      "cited_by": [
+        "Yilmaz2026Imitation"
+      ]
+    },
+    "Jawad2024Deep": {
+      "cites": [
+        "Elazzazi2022Natural",
+        "Eslamian2020",
+        "Kazanzides2014",
+        "Li2024GMMBasedHD",
+        "Lu2021Super",
+        "kossowsky2022predicting"
+      ],
+      "cited_by": []
+    },
+    "Kim2024Multimodal": {
+      "cites": [
+        "Black2020",
+        "DEttorre2021",
+        "Dardona2019",
+        "Giordano2021Mechanochromica",
+        "Hong2019c",
+        "Jo2020",
+        "Kazanzides2014",
+        "Kim2016",
+        "Kim2017",
+        "Kim2022Study",
+        "Orosco2020",
+        "Saracino2019a",
+        "Zhang2018"
+      ],
+      "cited_by": [
+        "Kim2025Speech"
+      ]
+    },
+    "Fan2024Reinforcement": {
+      "cites": [
+        "Allan2015",
+        "Allan2018a",
+        "DEttorre2021",
+        "Ferro2023ACD",
+        "Moccia2020",
+        "Richter2021",
+        "Ye2016",
+        "fan2022unity"
+      ],
+      "cited_by": []
+    },
+    "Zhang2024Achieving": {
+      "cites": [
+        "Huang2021b",
+        "Kazanzides2014",
+        "Liu2021Realtosim",
+        "Liu2023RoboticMO"
+      ],
+      "cited_by": []
+    },
+    "Marahrens2024Ultrasoundguided": {
+      "cites": [
+        "Attanasio2020",
+        "Avinash2019b",
+        "DEttorre2021",
+        "Ferguson2018c",
+        "Kazanzides2014",
+        "Marahrens2022Autonomous",
+        "McKinley2016b",
+        "Thananjeyan2017b"
+      ],
+      "cited_by": [
+        "Liang2025Medic"
+      ]
+    },
+    "Tak\u00e1cs2024Assessment": {
+      "cites": [],
+      "cited_by": [
+        "Levendovics_2025",
+        "Paul2025System"
+      ]
+    },
+    "Muscolo2024Cabledriven": {
+      "cites": [
+        "Kim2015a"
+      ],
+      "cited_by": []
+    },
+    "B\u00fcter2024Cognitive": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Reyzabal2024Dafoes": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Thach2024Defgoalnet": {
+      "cites": [
+        "Alambeigi2018b",
+        "Alambeigi2018e",
+        "Attanasio2020",
+        "Chiu2021Bimanual",
+        "Kazanzides2014",
+        "Lin2023Semanticsuper",
+        "Lu2021Super",
+        "Murali2015c",
+        "Thananjeyan2017b"
+      ],
+      "cited_by": []
+    },
+    "Paul2024Evaluation": {
+      "cites": [],
+      "cited_by": [
+        "Pescio2026Artificial"
+      ]
+    },
+    "Oguine2024From": {
+      "cites": [],
+      "cited_by": [
+        "Ding2024towards"
+      ]
+    },
+    "Chen2024Human": {
+      "cites": [
+        "Eslamian2020",
+        "Hu2023TowardsHC",
+        "Kaplan2016a",
+        "Kazanzides2014",
+        "Varier2020",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Zhang2025HybridDR"
+      ]
+    },
+    "Fan2024Learna": {
+      "cites": [
+        "Haidegger2019a",
+        "Richter2019a",
+        "Thananjeyan2021",
+        "Varier2020"
+      ],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "meli2025inductive"
+      ]
+    },
+    "Nowakowski2024Learning": {
+      "cites": [],
+      "cited_by": [
+        "Yang2025TMRB",
+        "Yang2026Shaftintegrated",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Hosseinabadi2024Multiaxis": {
+      "cites": [],
+      "cited_by": [
+        "Yang2026Shaftintegrated"
+      ]
+    },
+    "Hu2023Occlusionrobust": {
+      "cites": [],
+      "cited_by": [
+        "Hu2026exploration",
+        "Hu2026multiscale"
+      ]
+    },
+    "Caianiello2024Optimizing": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Liang2024Realtosim": {
+      "cites": [],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "Liang2025Medic"
+      ]
+    },
+    "Karimi2024Rewarda": {
+      "cites": [],
+      "cited_by": [
+        "Liang2025Medic"
+      ]
+    },
+    "DAmbrosia2024Robust": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Moghani2024Sufia": {
+      "cites": [
+        "Ficuciello2019a",
+        "Hwang2020Applying",
+        "Kazanzides2014",
+        "Krishnan2017",
+        "Li2020a",
+        "Shin2019b",
+        "xu2021surrol",
+        "yu2024orbit"
+      ],
+      "cited_by": [
+        "Ding2024towards",
+        "Moghani2025Sufiabc",
+        "Zargarzadeh2026Gradual"
+      ]
+    },
+    "Lin2024Superpm": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Schmidgall2024Surgical": {
+      "cites": [],
+      "cited_by": [
+        "Haiderbhai2025Sim2RealRC",
+        "Kim2025Surgical",
+        "Liu2025Dart",
+        "Long2025",
+        "Ou2025Cressimmpm",
+        "Ou_2025",
+        "Schmidgall2025Willa",
+        "Zhang2025HybridDR",
+        "yu2024orbit"
+      ]
+    },
+    "Sai2024Synergizing": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chen2024Humanoutoftheloop": {
+      "cites": [],
+      "cited_by": [
+        "Roberti2026Semantic"
+      ]
+    },
+    "Chen2024Safer": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025Online",
+        "Magnani2026ConsoleFree",
+        "WangS2025ISMR"
+      ]
+    },
+    "Rhee2024Unconstrained": {
+      "cites": [],
+      "cited_by": [
+        "Kim2025Speech",
+        "Magnani2026ConsoleFree",
+        "Shaaban2026Cloudbaseda"
+      ]
+    },
+    "Lin2024Worlda": {
+      "cites": [],
+      "cited_by": [
+        "Duan2026Realtimea",
+        "Li2024RealTimeGJ"
+      ]
+    },
+    "Ferro2023ACD": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Fan2024Reinforcement",
+        "Kim2025Surgical",
+        "Marra2024MPCFS",
+        "Yang2024"
+      ]
+    },
+    "Zhang2023AST": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025Online",
+        "Haiderbhai2024SimulatingSR",
+        "Kotian2026Simulation"
+      ]
+    },
+    "Rivas-Blanco2021a": {
+      "cites": [],
+      "cited_by": [
+        "sharon2025dataset"
+      ]
+    },
+    "Dharmarajan2023ATF": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Moccia2023AutonomousEC": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chu2023BootstrappingRS": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Oh2023ComprehensiveRC": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Huang2023DemonstrationGuidedRL": {
+      "cites": [],
+      "cited_by": [
+        "Fu2024MultiobjectiveCL",
+        "Ho2025SurgIRLTL",
+        "Liu2025Dart",
+        "Long2025",
+        "Schmidgall2025Willa"
+      ]
+    },
+    "Soudan2023DevelopmentAV": {
+      "cites": [],
+      "cited_by": []
+    },
+    "GreeneISMR2023": {
+      "cites": [],
+      "cited_by": []
+    },
+    "He2023dVRKbasedTO": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Baweja2023ExperimentalTW": {
+      "cites": [],
+      "cited_by": [
+        "Haiderbhai2024SimulatingSR",
+        "Haiderbhai2025Sim2RealRC"
+      ]
+    },
+    "B\u00fcter2023EyeTF": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Deo2023": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Pasini2023": {
+      "cites": [],
+      "cited_by": [
+        "Roberti2026Semantic"
+      ]
+    },
+    "ChenISMR2023": {
+      "cites": [],
+      "cited_by": [
+        "Ai2024",
+        "Magnani2026ConsoleFree"
+      ]
+    },
+    "Vries2023MRguidedHP": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Sallam2023PrototypeRO": {
+      "cites": [],
+      "cited_by": [
+        "Marra2024MPCFS"
+      ]
+    },
+    "Puentes2023": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ou2023RobotLI": {
+      "cites": [],
+      "cited_by": [
+        "Zargarzadeh2026Gradual"
+      ]
+    },
+    "Dharmarajan2023RobotAssistedVS": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Liu2023RoboticMO": {
+      "cites": [],
+      "cited_by": [
+        "Zhang2024Achieving"
+      ]
+    },
+    "Ishida2023CommLoss": {
+      "cites": [],
+      "cited_by": [
+        "WangJ2025ISMR"
+      ]
+    },
+    "Senthilkumar2023SimulatingMC": {
+      "cites": [],
+      "cited_by": [
+        "Haiderbhai2024SimulatingSR",
+        "Haiderbhai2025Sim2RealRC"
+      ]
+    },
+    "Hu2023TowardsHC": {
+      "cites": [],
+      "cited_by": [
+        "Chen2024Human",
+        "Kotian2026Simulation",
+        "Long2025",
+        "Zhang2025HybridDR",
+        "Zheng2024AUS"
+      ]
+    },
+    "Minelli2023TwoLayerBasedMB": {
+      "cites": [],
+      "cited_by": [
+        "YilmazRAL2024"
+      ]
+    },
+    "Wang2023UncertaintyAwareSL": {
+      "cites": [],
+      "cited_by": []
+    },
+    "ZhangISMR2023": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chua2023Modular": {
+      "cites": [],
+      "cited_by": [
+        "Yang2024",
+        "Yang2026Shaftintegrated",
+        "YilmazRAL2024"
+      ]
+    },
+    "Murphy2023Surgical": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wei2023Abdominal": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Caccianiga2023Anodal": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wu2023Automatic": {
+      "cites": [],
+      "cited_by": [
+        "Connolly2026NoCancer",
+        "Wu2025ICRA"
+      ]
+    },
+    "Hwang2022Automating": {
+      "cites": [],
+      "cited_by": [
+        "Ding2024towards",
+        "Haiderbhai2022RobustST",
+        "Haiderbhai2025Sim2RealRC",
+        "Kotian2026Simulation",
+        "Liu2025Dart"
+      ]
+    },
+    "Pandya2023Chatgptenableda": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kumar2023Cognidavinci": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hu2023Coordinate": {
+      "cites": [],
+      "cited_by": [
+        "Hu2026exploration",
+        "Hu2026multiscale"
+      ]
+    },
+    "Rahbar2023Enhanced": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chen2023Frsra": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025Online",
+        "Hu2026exploration"
+      ]
+    },
+    "Zhong2023Integrateda": {
+      "cites": [],
+      "cited_by": [
+        "Li2024OnTM",
+        "Li2024RealTimeGJ",
+        "Shkurti2025Improving"
+      ]
+    },
+    "Gao2023Intraoperative": {
+      "cites": [],
+      "cited_by": [
+        "WangS2025ISMR"
+      ]
+    },
+    "Bendikas2023Learninga": {
+      "cites": [],
+      "cited_by": [
+        "Fu2024MultiobjectiveCL",
+        "Ho2025SurgIRLTL",
+        "Long2025",
+        "Marra2024MPCFS",
+        "Ou2025Cressimmpm",
+        "Ou_2025"
+      ]
+    },
+    "Bombieri2023Mapping": {
+      "cites": [],
+      "cited_by": [
+        "Roberti2026Semantic",
+        "meli2025inductive"
+      ]
+    },
+    "Jiang2023Markerless": {
+      "cites": [],
+      "cited_by": [
+        "Barragan2024ICRA"
+      ]
+    },
+    "McDonaldBowyer2023Organ": {
+      "cites": [],
+      "cited_by": [
+        "Kotian2026Simulation"
+      ]
+    },
+    "Lim2023Physiological": {
+      "cites": [
+        "Kazanzides2014"
+      ],
+      "cited_by": []
+    },
+    "Chiu2023Realtime": {
+      "cites": [
+        "Chiu2021Bimanual",
+        "Chiu2022Markerless",
+        "DEttorre2018b",
+        "Kazanzides2014",
+        "Li2020a",
+        "Lu2021Super",
+        "Ozguner2018a",
+        "Richter2020",
+        "Richter2021"
+      ],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "Li2024OnTM",
+        "Liang2025Medic"
+      ]
+    },
+    "Song2022Realtime": {
+      "cites": [
+        "Moradi2018"
+      ],
+      "cited_by": []
+    },
+    "Zhong2023Robotcamera": {
+      "cites": [
+        "Allan2018a",
+        "DEttorre2021",
+        "Fontanelli2018f",
+        "Kazanzides2014",
+        "Ozguner2020",
+        "Pachtrachai2016a",
+        "Richter2021",
+        "Roberti2020b",
+        "Wang2017b",
+        "Ye2016",
+        "Zhang2017e",
+        "Zhong2020"
+      ],
+      "cited_by": [
+        "Long2025",
+        "Shkurti2025Improving"
+      ]
+    },
+    "Schorp2023Selfsupervised": {
+      "cites": [
+        "Jackson2017",
+        "Kazanzides2014",
+        "Lu2022TowardIA"
+      ],
+      "cited_by": []
+    },
+    "Roberti2023Semantic": {
+      "cites": [
+        "Roberti2020b",
+        "meli2021autonomous",
+        "tagliabue2022deliberation"
+      ],
+      "cited_by": [
+        "Roberti2026Semantic"
+      ]
+    },
+    "Lin2023Semanticsuper": {
+      "cites": [
+        "9661536",
+        "Garcia-Peraza-Herrera2017a",
+        "Kazanzides2014",
+        "Li2020a",
+        "Lu2021Super",
+        "Richter2021",
+        "Ye2017a"
+      ],
+      "cited_by": [
+        "Ou2023Simtoreal",
+        "Thach2024Defgoalnet"
+      ]
+    },
+    "Ou2023Simtoreal": {
+      "cites": [
+        "Alambeigi2018f",
+        "Chen2016a",
+        "Chiu2021Bimanual",
+        "Kazanzides2014",
+        "Li2020a",
+        "Lin2023Semanticsuper",
+        "Liu2021Realtosim",
+        "Lu2021Super",
+        "Richter2020",
+        "Shin2019b",
+        "Thananjeyan2017b",
+        "Zhong2019"
+      ],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "Ou_2025",
+        "Schmidgall2025Willa",
+        "Sui_2026",
+        "Yilmaz2026Imitation"
+      ]
+    },
+    "Ou2023Safe": {
+      "cites": [
+        "Chiu2021Bimanual",
+        "Kazanzides2014",
+        "Pore2021Learning",
+        "Richter2019a",
+        "Thananjeyan2021",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Ho2025SurgIRLTL"
+      ]
+    },
+    "zruya2022new": {
+      "cites": [
+        "Bahar2020",
+        "Coad2017a",
+        "Enayati2018b",
+        "Jarc2015",
+        "Kazanzides2014",
+        "Kim2015a",
+        "Sharon2018a",
+        "Sharon2021"
+      ],
+      "cited_by": []
+    },
+    "Huang2022ASP": {
+      "cites": [
+        "Kazanzides2014",
+        "Li2019",
+        "Long2021Relational"
+      ],
+      "cited_by": [
+        "Roberti2026Semantic",
+        "Tan2026Ekfenhanced"
+      ]
+    },
+    "Lu2022AUM": {
+      "cites": [
+        "Allan2018a",
+        "Colleoni2019a",
+        "Fontanelli2018f",
+        "Haidegger2019a",
+        "Hwang2020",
+        "Lu2022TowardIA",
+        "Ozguner2020",
+        "Pachtrachai2016a",
+        "Pachtrachai2018",
+        "Roberti2020b",
+        "Seita2018a",
+        "Ye2016",
+        "Zhang2017e",
+        "Zhong2020"
+      ],
+      "cited_by": [
+        "Li2024RealTimeGJ",
+        "Shkurti2025Improving"
+      ]
+    },
+    "fan2022unity": {
+      "cites": [
+        "Abdelaal2018",
+        "Enayati2018b",
+        "Kazanzides2014",
+        "Ma2020",
+        "Shahbazi2018a",
+        "Wang2019c",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Fan2024Reinforcement",
+        "Muratore2026NailIt",
+        "Rajarajeswari2024",
+        "oquendo2024haptic",
+        "rota2024implementation",
+        "rota2024performance"
+      ]
+    },
+    "Pasini2022": {
+      "cites": [
+        "Bouget2017",
+        "Col2020",
+        "Kazanzides2014",
+        "Mariani2020a"
+      ],
+      "cited_by": [
+        "Kim2025Speech"
+      ]
+    },
+    "Varier2022AMBFRLAR": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Dharmarajan2022AutomatingVS": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Nagy2022AutonomousPT": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ding2022": {
+      "cites": [
+        "Allan2018a",
+        "Colleoni2020",
+        "Fontanelli2017b",
+        "Kazanzides2014",
+        "Ye2016",
+        "Zhao2021"
+      ],
+      "cited_by": [
+        "Barragan2024ICRA",
+        "Ding2024towards",
+        "Ding2025Robusta"
+      ]
+    },
+    "Cui2022CaveatsOT": {
+      "cites": [
+        "Banach2019",
+        "Cai2021",
+        "Cartucho2021Enhanced",
+        "Chrysilla2019",
+        "DEttorre2021",
+        "Ferguson2018c",
+        "Fontanelli2017b",
+        "Grammatikopoulou2016a",
+        "Hwang2020",
+        "Hwang2020Applying",
+        "Hwang2020a",
+        "Kazanzides2014",
+        "Moccia2020",
+        "Ozguner2020",
+        "Pachtrachai2016a",
+        "Pachtrachai2018",
+        "Richter2021",
+        "Roberti2020b",
+        "Seita2018a",
+        "Wang2017b",
+        "Wang2019c",
+        "Wang2022Autonomous",
+        "Ye2016",
+        "Yilmaz2020",
+        "Zhang2017e",
+        "Zhong2019",
+        "Zhong2020"
+      ],
+      "cited_by": [
+        "Nimal2025Vinci",
+        "Schmidgall2025Willa",
+        "Shkurti2025Improving",
+        "WangS2025ISMR",
+        "Yilmaz2026Imitation"
+      ]
+    },
+    "tagliabue2022deliberation": {
+      "cites": [
+        "Attanasio2020",
+        "DEttorre2021",
+        "Kazanzides2014",
+        "Liu2021Realtosim",
+        "Murali2015c",
+        "Nagy2019",
+        "Pore2021Learning",
+        "Roberti2020b",
+        "Shin2019b",
+        "Tagliabue2021",
+        "Wu2020",
+        "meli2021autonomous"
+      ],
+      "cited_by": [
+        "Roberti2023Semantic",
+        "Roberti2026Semantic",
+        "meli2025inductive"
+      ]
+    },
+    "itzkovich2022generalization": {
+      "cites": [
+        "Enayati2018a",
+        "Kazanzides2014",
+        "Krishnan2017",
+        "Long2021Relational",
+        "Sharon2018a",
+        "Sharon2021",
+        "Tsai2019",
+        "Wang2018b"
+      ],
+      "cited_by": [
+        "kossowsky2022predicting",
+        "sharon2025dataset"
+      ]
+    },
+    "Zhang2022HumanRobotSC": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025Online"
+      ]
+    },
+    "Long2022": {
+      "cites": [
+        "Chiu2021Bimanual",
+        "Kazanzides2014",
+        "Lin2019",
+        "Long2021Relational",
+        "Lu2020",
+        "Penza2017",
+        "Qian2019a",
+        "Richter2019a",
+        "VanAmsterdam2021",
+        "Varier2020",
+        "Zevallos2018b",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Chen2025Online",
+        "Liu2025Dart",
+        "Nieto2025Ridl",
+        "Rajarajeswari2024",
+        "Shankar2025Approacha",
+        "WangS2025ISMR"
+      ]
+    },
+    "Zhang2022": {
+      "cites": [
+        "Kazanzides2014"
+      ],
+      "cited_by": []
+    },
+    "kossowsky2022predicting": {
+      "cites": [
+        "Dardona2019",
+        "Eslamian2016",
+        "Eslamian2017",
+        "Eslamian2020",
+        "Ji2018b",
+        "Mariani2020a",
+        "Molnar2020",
+        "Wu2021",
+        "itzkovich2022generalization"
+      ],
+      "cited_by": [
+        "Jawad2024Deep",
+        "Roberti2026Semantic"
+      ]
+    },
+    "Haiderbhai2022RobustST": {
+      "cites": [
+        "Chiu2021Bimanual",
+        "DEttorre2021",
+        "Gondokaryono2019",
+        "Hwang2022Automating",
+        "Murali2015c",
+        "Qian2019",
+        "Richter2019a",
+        "Thananjeyan2021",
+        "Varier2020",
+        "Wang2019c",
+        "xu2021surrol"
+      ],
+      "cited_by": [
+        "Haiderbhai2024SimulatingSR",
+        "Haiderbhai2025Sim2RealRC",
+        "Rajarajeswari2024",
+        "Schmidgall2025Willa"
+      ]
+    },
+    "Zheng2022TowardCA": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Lu2022TowardIA": {
+      "cites": [
+        "Alambeigi2018e",
+        "Alambeigi2018f",
+        "DEttorre2018b",
+        "Hwang2020",
+        "Jackson2017",
+        "Lu2020",
+        "Ozguner2020",
+        "Seita2018a",
+        "Shin2019b"
+      ],
+      "cited_by": [
+        "Haiderbhai2025Sim2RealRC",
+        "Hu2025Pretraining",
+        "Li2024OnTM",
+        "Li2024RealTimeGJ",
+        "Lu2022AUM",
+        "Marra2024MPCFS",
+        "Schorp2023Selfsupervised",
+        "Tan2026Ekfenhanced"
+      ]
+    },
+    "Yilmaz2022IJCARS": {
+      "cites": [
+        "DEttorre2021",
+        "Fontanelli2017b",
+        "Kazanzides2014",
+        "Pique2019a",
+        "Sang2017b",
+        "Wang2019c",
+        "WuISMR2021a",
+        "Yilmaz2020"
+      ],
+      "cited_by": [
+        "Yang2024",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Elazzazi2022Natural": {
+      "cites": [
+        "Chen2013",
+        "DEttorre2021",
+        "Eslamian2020",
+        "Pandya2019a"
+      ],
+      "cited_by": [
+        "Jawad2024Deep",
+        "Shankar2025Approacha"
+      ]
+    },
+    "Barragan2022Neurotechnological": {
+      "cites": [
+        "Kazanzides2014",
+        "Setti2019"
+      ],
+      "cited_by": []
+    },
+    "Yang2022Semga": {
+      "cites": [
+        "DEttorre2021",
+        "Kazanzides2014"
+      ],
+      "cited_by": []
+    },
+    "Rosa2022Smart": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kim2022Study": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal",
+        "Kim2025Speech"
+      ]
+    },
+    "Ma2022Augmented": {
+      "cites": [
+        "Kazanzides2014",
+        "Kim2017",
+        "Ma2019b",
+        "Ma2020",
+        "Qian2020",
+        "Song2019",
+        "Wang2017a"
+      ],
+      "cited_by": [
+        "Ai2024",
+        "Roberti2026Semantic"
+      ]
+    },
+    "Retana2022Autonomous": {
+      "cites": [
+        "Alambeigi2018b",
+        "Alambeigi2018e",
+        "Alambeigi2018f",
+        "Alambeigi2020",
+        "Kazanzides2014",
+        "Li2020a"
+      ],
+      "cited_by": []
+    },
+    "Chua2022Characterization": {
+      "cites": [],
+      "cited_by": [
+        "Yang2025TMRB",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024"
+      ]
+    },
+    "DEttorre2022Learning": {
+      "cites": [],
+      "cited_by": [
+        "Ho2025SurgIRLTL"
+      ]
+    },
+    "Dietsch2022Localization": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chiu2022Markerless": {
+      "cites": [],
+      "cited_by": [
+        "Barragan2024ICRA",
+        "Chiu2023Realtime",
+        "Ho2025SurgIRLTL",
+        "Li2024OnTM"
+      ]
+    },
+    "Munawar2022Open": {
+      "cites": [],
+      "cited_by": [
+        "Barragan2024ICRA",
+        "Kim2025Surgical",
+        "Li2024OnTM",
+        "Li2024RealTimeGJ",
+        "Maguire2025RoboticAC",
+        "Muratore2026NailIt",
+        "Nimal2025Vinci",
+        "Ou2025Cressimmpm",
+        "Walsh2025Development",
+        "WangJ2025ISMR",
+        "Yang2025Instrumentsplattinga"
+      ]
+    },
+    "Chen2022Patha": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Lu2022Pose": {
+      "cites": [],
+      "cited_by": [
+        "Schmidgall2025Willa",
+        "Wu2025ICRA"
+      ]
+    },
+    "Weld2022Regularising": {
+      "cites": [],
+      "cited_by": [
+        "Cartucho2024SurgT"
+      ]
+    },
+    "Chen2022Reinforcementa": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chen2022Robotassisteda": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025Online"
+      ]
+    },
+    "Long2022Robotic": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wang2022Autonomous": {
+      "cites": [],
+      "cited_by": [
+        "Cartucho2024SurgT",
+        "Cui2022CaveatsOT"
+      ]
+    },
+    "Marahrens2022Autonomous": {
+      "cites": [],
+      "cited_by": [
+        "Marahrens2024Ultrasoundguided"
+      ]
+    },
+    "Attanasio2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Munawar2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Gao2021AHL": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Cai2021": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT"
+      ]
+    },
+    "DEttorre2021": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Cui2022CaveatsOT",
+        "Elazzazi2022Natural",
+        "Fan2024Reinforcement",
+        "Haiderbhai2022RobustST",
+        "Haiderbhai2024SimulatingSR",
+        "Haiderbhai2025Sim2RealRC",
+        "Kim2024Multimodal",
+        "Kim2025Speech",
+        "Kim2025Surgical",
+        "LozaGalindo2026DRENDS",
+        "Marahrens2024Ultrasoundguided",
+        "Marra2024MPCFS",
+        "Roberti2026Semantic",
+        "Shankar2025Approacha",
+        "Tan2026Ekfenhanced",
+        "Xu2025",
+        "Yang2022Semga",
+        "Yilmaz2022IJCARS",
+        "Yilmaz2024IJCARS",
+        "Zhang2025HybridDR",
+        "Zhang2026Dynamics",
+        "Zhong2023Robotcamera",
+        "mocellin2026origrasp",
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Loschi2021AnOT": {
+      "cites": [],
+      "cited_by": []
+    },
+    "d2021autonomous": {
+      "cites": [],
+      "cited_by": []
+    },
+    "meli2021autonomous": {
+      "cites": [],
+      "cited_by": [
+        "Liang2025Medic",
+        "Roberti2023Semantic",
+        "Roberti2026Semantic",
+        "meli2025inductive",
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Wu2021": {
+      "cites": [],
+      "cited_by": [
+        "kossowsky2022predicting"
+      ]
+    },
+    "Tagliabue2021": {
+      "cites": [],
+      "cited_by": [
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Yasin2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "9661536": {
+      "cites": [],
+      "cited_by": [
+        "Lim2025Optimal",
+        "Lin2023Semanticsuper",
+        "Rajarajeswari2024"
+      ]
+    },
+    "Gonzalez2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "VanAmsterdam2021": {
+      "cites": [],
+      "cited_by": [
+        "Long2022"
+      ]
+    },
+    "Gultekin2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Lin2021": {
+      "cites": [],
+      "cited_by": [
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Ghalamzan2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wilcox2021LearningTL": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Fu2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kohlgrueber2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Huang2021b": {
+      "cites": [],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "Liang2025Medic",
+        "Ou_2025",
+        "Zhang2024Achieving"
+      ]
+    },
+    "Caccianiga2021": {
+      "cites": [],
+      "cited_by": [
+        "rota2024implementation",
+        "rota2024performance",
+        "sharon2025dataset"
+      ]
+    },
+    "NagyneElek2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhao2021": {
+      "cites": [],
+      "cited_by": [
+        "Ding2022"
+      ]
+    },
+    "Di2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Abdelaal2021": {
+      "cites": [],
+      "cited_by": [
+        "Muratore2026NailIt",
+        "Sui_2026"
+      ]
+    },
+    "Sharon2021": {
+      "cites": [],
+      "cited_by": [
+        "itzkovich2022generalization",
+        "sharon2025dataset",
+        "zruya2022new"
+      ]
+    },
+    "Thananjeyan2021": {
+      "cites": [],
+      "cited_by": [
+        "Fan2024Learna",
+        "Haiderbhai2022RobustST",
+        "Ou2023Safe"
+      ]
+    },
+    "WuISMR2021a": {
+      "cites": [],
+      "cited_by": [
+        "Khan2025DevelopmentOA",
+        "Martuscelli2026Dithering",
+        "Yang2024",
+        "Yang2025TMRB",
+        "Yang2026Shaftintegrated",
+        "Yilmaz2022IJCARS",
+        "Yilmaz2024IJCARS",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Richter2021": {
+      "cites": [],
+      "cited_by": [
+        "Chiu2023Realtime",
+        "Cui2022CaveatsOT",
+        "Fan2024Reinforcement",
+        "Ho2025SurgIRLTL",
+        "Li2024OnTM",
+        "Li2024RealTimeGJ",
+        "Lin2023Semanticsuper",
+        "Zhong2023Robotcamera"
+      ]
+    },
+    "Barragan2021SACHETSSC": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hasan2021": {
+      "cites": [],
+      "cited_by": []
+    },
+    "xu2021surrol": {
+      "cites": [],
+      "cited_by": [
+        "Chen2024Human",
+        "Duan2026Realtimea",
+        "Fu2024MultiobjectiveCL",
+        "Gamazeliuc2025Aipowered",
+        "Haiderbhai2022RobustST",
+        "Haiderbhai2024SimulatingSR",
+        "Haiderbhai2025Sim2RealRC",
+        "Ho2025SurgIRLTL",
+        "Hu2025Pretraining",
+        "Kim2025Surgical",
+        "Li2024GMMBasedHD",
+        "Li2024OnTM",
+        "Li2024RealTimeGJ",
+        "Liu2025Dart",
+        "Long2022",
+        "Long2025",
+        "Mahayana2026SVR",
+        "Moghani2024Sufia",
+        "Moghani2025Sufiabc",
+        "Nieto2025Ridl",
+        "Ou2023Safe",
+        "Ou2024",
+        "Ou2025Cressimmpm",
+        "Ou_2025",
+        "Rajarajeswari2024",
+        "Schmidgall2025Willa",
+        "Zhang2025HybridDR",
+        "Zheng2024AUS",
+        "fan2022unity",
+        "yu2024orbit"
+      ]
+    },
+    "meli2021unsupervised": {
+      "cites": [],
+      "cited_by": [
+        "meli2025inductive"
+      ]
+    },
+    "\u00d6zg\u00fcner2021VisuallyGN": {
+      "cites": [],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "Shkurti2025Improving"
+      ]
+    },
+    "Cartucho2021Enhanced": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT"
+      ]
+    },
+    "Attanasio2021Open": {
+      "cites": [],
+      "cited_by": [
+        "Kotian2026Simulation"
+      ]
+    },
+    "Col2021Automating": {
+      "cites": [],
+      "cited_by": [
+        "Tan2026Ekfenhanced"
+      ]
+    },
+    "Schwaner2021Autonomous": {
+      "cites": [],
+      "cited_by": [
+        "Barragan2024ICRA",
+        "Fu2024MultiobjectiveCL",
+        "Marra2024MPCFS"
+      ]
+    },
+    "Chiu2021Bimanual": {
+      "cites": [],
+      "cited_by": [
+        "Chiu2023Realtime",
+        "Haiderbhai2022RobustST",
+        "Ho2025SurgIRLTL",
+        "Long2022",
+        "Marra2024MPCFS",
+        "Ou2023Safe",
+        "Ou2023Simtoreal",
+        "Ou2025Cressimmpm",
+        "Ou_2025",
+        "Sui_2026",
+        "Thach2024Defgoalnet"
+      ]
+    },
+    "Sharon2021Combining": {
+      "cites": [],
+      "cited_by": []
+    },
+    "E2021Deeplfd": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ganapathi2021Learning": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Pore2021Learning": {
+      "cites": [],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "Hu2025Pretraining",
+        "Hu2026ImperfectDemos",
+        "Ou2023Safe",
+        "Ou_2025",
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Wu2021Learning": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Qi2021Multisensora": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Huang2021Nonfixed": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Mariani2021Prototyping": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Liu2021Realtosim": {
+      "cites": [],
+      "cited_by": [
+        "Liang2025Medic",
+        "Ou2023Simtoreal",
+        "Ou2025Cressimmpm",
+        "Schmidgall2025Willa",
+        "Zhang2024Achieving",
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Long2021Relational": {
+      "cites": [],
+      "cited_by": [
+        "Huang2022ASP",
+        "Long2022",
+        "itzkovich2022generalization"
+      ]
+    },
+    "Lu2021Super": {
+      "cites": [],
+      "cited_by": [
+        "Barragan2024ICRA",
+        "Chiu2023Realtime",
+        "Jawad2024Deep",
+        "Lin2023Semanticsuper",
+        "Ou2023Simtoreal",
+        "Thach2024Defgoalnet"
+      ]
+    },
+    "Kazanzides2021Teleoperation": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chua2021Force": {
+      "cites": [],
+      "cited_by": [
+        "Yang2026Shaftintegrated",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024"
+      ]
+    },
+    "Giordano2021Mechanochromica": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal"
+      ]
+    },
+    "Sundaresan2021Untanglinga": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hoque2021Visuospatiala": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Black2020": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal",
+        "Yang2025TMRB",
+        "YilmazRAL2024"
+      ]
+    },
+    "Wu2020a": {
+      "cites": [],
+      "cited_by": [
+        "Maguire2025RoboticAC"
+      ]
+    },
+    "Wang2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hashempour2020a": {
+      "cites": [],
+      "cited_by": [
+        "Hu2025Pretraining"
+      ]
+    },
+    "Tran2020": {
+      "cites": [],
+      "cited_by": [
+        "Khan2025DevelopmentOA",
+        "Yang2025TMRB",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Lu2020": {
+      "cites": [],
+      "cited_by": [
+        "Long2022",
+        "Lu2022TowardIA",
+        "Marra2024MPCFS"
+      ]
+    },
+    "Brancadoro2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Alambeigi2020": {
+      "cites": [],
+      "cited_by": [
+        "Retana2022Autonomous"
+      ]
+    },
+    "Zhang2020a": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025AccuracyAA"
+      ]
+    },
+    "Caccianiga2020": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025Online",
+        "rota2024implementation"
+      ]
+    },
+    "Mariani2020a": {
+      "cites": [],
+      "cited_by": [
+        "Pasini2022",
+        "Roberti2026Semantic",
+        "kossowsky2022predicting"
+      ]
+    },
+    "Fontanelli2020": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Yang2024"
+      ]
+    },
+    "Munawar2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Li2020c": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Richter2020": {
+      "cites": [],
+      "cited_by": [
+        "Barragan2024ICRA",
+        "Chiu2023Realtime",
+        "Ho2025SurgIRLTL",
+        "Hu2025Pretraining",
+        "Liang2025Medic",
+        "Ou2023Simtoreal",
+        "Ou2024",
+        "Ou_2025",
+        "Schmidgall2025Willa"
+      ]
+    },
+    "Ginesi2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Attanasio2020": {
+      "cites": [],
+      "cited_by": [
+        "Long2025",
+        "Marahrens2024Ultrasoundguided",
+        "Thach2024Defgoalnet",
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Zhan2020": {
+      "cites": [],
+      "cited_by": [
+        "Cartucho2024SurgT"
+      ]
+    },
+    "Ozguner2020": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025AccuracyAA",
+        "Cui2022CaveatsOT",
+        "Haiderbhai2025Sim2RealRC",
+        "Kotian2026Simulation",
+        "Lu2022AUM",
+        "Lu2022TowardIA",
+        "Rajarajeswari2024",
+        "Schmidgall2025Willa",
+        "Shkurti2025Improving",
+        "Zhong2023Robotcamera"
+      ]
+    },
+    "Su2020a": {
+      "cites": [],
+      "cited_by": [
+        "Kim2025Surgical",
+        "Long2025",
+        "Mahayana2026SVR",
+        "Walsh2025Development",
+        "WangJ2025ISMR",
+        "Xu2025"
+      ]
+    },
+    "Varier2020": {
+      "cites": [],
+      "cited_by": [
+        "Chen2024Human",
+        "Fan2024Learna",
+        "Haiderbhai2022RobustST",
+        "Ho2025SurgIRLTL",
+        "Long2022",
+        "Marra2024MPCFS",
+        "Muratore2026NailIt",
+        "Ou_2025",
+        "Pescio2026Artificial",
+        "Zhang2025HybridDR"
+      ]
+    },
+    "Orosco2020": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal",
+        "Lim2025Optimal",
+        "WangJ2025ISMR"
+      ]
+    },
+    "Seita2020a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Eslamian2020": {
+      "cites": [],
+      "cited_by": [
+        "Chen2024Human",
+        "Elazzazi2022Natural",
+        "Jawad2024Deep",
+        "Shankar2025Approacha",
+        "kossowsky2022predicting"
+      ]
+    },
+    "Hwang2020": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025AccuracyAA",
+        "Cui2022CaveatsOT",
+        "Cui2025Forbidden",
+        "Li2024RealTimeGJ",
+        "Lu2022AUM",
+        "Lu2022TowardIA",
+        "Mahayana2026SVR",
+        "Wu2025ICRA"
+      ]
+    },
+    "Penza2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Qian2020": {
+      "cites": [],
+      "cited_by": [
+        "Ai2024",
+        "Ma2022Augmented"
+      ]
+    },
+    "Zhang2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhong2020": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Lu2022AUM",
+        "Wu2025ICRA",
+        "Zhong2023Robotcamera"
+      ]
+    },
+    "Saracino2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Li2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Roberti2020b": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Lu2022AUM",
+        "Roberti2023Semantic",
+        "Zhong2023Robotcamera",
+        "meli2025inductive",
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Minelli2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Paradis2020a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Bombieri2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wu2020": {
+      "cites": [],
+      "cited_by": [
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Taylor2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Yilmaz2020": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Khan2025DevelopmentOA",
+        "Martuscelli2026Dithering",
+        "Yang2024",
+        "Yang2025TMRB",
+        "Yang2026Shaftintegrated",
+        "Yilmaz2022IJCARS",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024"
+      ]
+    },
+    "Abdelaal2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Thananjeyan2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Col2020": {
+      "cites": [],
+      "cited_by": [
+        "Pasini2022"
+      ]
+    },
+    "Mariani2020": {
+      "cites": [],
+      "cited_by": [
+        "rota2024performance",
+        "sharon2025dataset"
+      ]
+    },
+    "Huan2020": {
+      "cites": [],
+      "cited_by": [
+        "mocellin2026origrasp"
+      ]
+    },
+    "Tagliabue2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Li2020a": {
+      "cites": [],
+      "cited_by": [
+        "Abkhofte2025DeepLS",
+        "Chiu2023Realtime",
+        "Lin2023Semanticsuper",
+        "Moghani2024Sufia",
+        "Moghani2025Sufiabc",
+        "Ou2023Simtoreal",
+        "Retana2022Autonomous",
+        "Schmidgall2025Willa"
+      ]
+    },
+    "Hwang2020a": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT"
+      ]
+    },
+    "Bahar2020": {
+      "cites": [],
+      "cited_by": [
+        "sharon2025dataset",
+        "zruya2022new"
+      ]
+    },
+    "Colleoni2020": {
+      "cites": [],
+      "cited_by": [
+        "Ding2022",
+        "Ding2025Robusta",
+        "Wu2025HTL"
+      ]
+    },
+    "Lasso2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chua2020": {
+      "cites": [],
+      "cited_by": [
+        "Vuong2025EffectsOW"
+      ]
+    },
+    "Leporini2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Liu2020a": {
+      "cites": [],
+      "cited_by": [
+        "mocellin2026origrasp"
+      ]
+    },
+    "Wang2020a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Jo2020": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal",
+        "Kim2025Speech"
+      ]
+    },
+    "Moccia2020": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Chen2025Online",
+        "Cui2022CaveatsOT",
+        "Fan2024Reinforcement",
+        "Li2024GMMBasedHD",
+        "Marra2024MPCFS",
+        "Tan2026Ekfenhanced"
+      ]
+    },
+    "Ma2020": {
+      "cites": [],
+      "cited_by": [
+        "Li2024GMMBasedHD",
+        "Ma2022Augmented",
+        "fan2022unity"
+      ]
+    },
+    "Molnar2020": {
+      "cites": [],
+      "cited_by": [
+        "Kim2025Speech",
+        "Tan2026Ekfenhanced",
+        "Wu2025ICRA",
+        "kossowsky2022predicting"
+      ]
+    },
+    "Hoque2020": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hwang2020Applying": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Moghani2024Sufia"
+      ]
+    },
+    "Mun2020Developmenta": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hwang2020Efficientlya": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wu2020Estimation": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Mannion2020Manipulation": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Abdelaal2020Multimodal": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Abdelaal2020Orientation": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chrysilla2019": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Haiderbhai2025Sim2RealRC",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Wang2019c": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Cui2022CaveatsOT",
+        "Haiderbhai2022RobustST",
+        "Haiderbhai2025Sim2RealRC",
+        "Mahayana2026SVR",
+        "Martuscelli2026Dithering",
+        "Walsh2025Development",
+        "Yang2024",
+        "Yang2025TMRB",
+        "Yang2026Shaftintegrated",
+        "Yilmaz2022IJCARS",
+        "Zhang2026Dynamics",
+        "fan2022unity"
+      ]
+    },
+    "Nagy2019": {
+      "cites": [],
+      "cited_by": [
+        "Liu2025Dart",
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Ginesi2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Setti2019": {
+      "cites": [],
+      "cited_by": [
+        "Barragan2022Neurotechnological"
+      ]
+    },
+    "Ferro2019a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Munawar2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Lin2019": {
+      "cites": [],
+      "cited_by": [
+        "Long2022",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Qian2019a": {
+      "cites": [],
+      "cited_by": [
+        "Long2022",
+        "Shankar2025Approacha",
+        "WangJ2025ISMR",
+        "Yao_2026"
+      ]
+    },
+    "Song2019": {
+      "cites": [],
+      "cited_by": [
+        "Ma2022Augmented",
+        "Roberti2026Semantic",
+        "Schmidgall2025Willa"
+      ]
+    },
+    "Pandya2019a": {
+      "cites": [],
+      "cited_by": [
+        "Elazzazi2022Natural"
+      ]
+    },
+    "Marinho2019": {
+      "cites": [],
+      "cited_by": [
+        "WangS2025ISMR"
+      ]
+    },
+    "Avinash2019b": {
+      "cites": [],
+      "cited_by": [
+        "Marahrens2024Ultrasoundguided"
+      ]
+    },
+    "Banach2019": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Li2024GMMBasedHD"
+      ]
+    },
+    "Li2019": {
+      "cites": [],
+      "cited_by": [
+        "Huang2022ASP"
+      ]
+    },
+    "Gondokaryono2019": {
+      "cites": [],
+      "cited_by": [
+        "Ai2024",
+        "Haiderbhai2022RobustST",
+        "Kotian2026Simulation",
+        "Mahayana2026SVR",
+        "Muratore2026NailIt",
+        "Rajarajeswari2024",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Munawar2019a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Qian2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Richter2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Sundaresan2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ma2019b": {
+      "cites": [],
+      "cited_by": [
+        "Kim2025Speech",
+        "Ma2022Augmented",
+        "Pescio2026Artificial",
+        "Tan2026Ekfenhanced"
+      ]
+    },
+    "Shin2019b": {
+      "cites": [],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "Hu2026multiscale",
+        "Lu2022TowardIA",
+        "Moghani2024Sufia",
+        "Ou2023Simtoreal",
+        "Zhang2025HybridDR",
+        "tagliabue2022deliberation"
+      ]
+    },
+    "Haidegger2019a": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025AccuracyAA",
+        "Fan2024Learna",
+        "Kotian2026Simulation",
+        "Levendovics_2025",
+        "Lim2025Optimal",
+        "Lu2022AUM",
+        "Roberti2026Semantic",
+        "Schmidgall2025Willa"
+      ]
+    },
+    "Ficuciello2019a": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Moghani2024Sufia",
+        "Shkurti2025Improving",
+        "yu2024orbit"
+      ]
+    },
+    "Mikic2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Mariani2019a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Colleoni2019a": {
+      "cites": [],
+      "cited_by": [
+        "Lu2022AUM",
+        "Shankar2025Approacha"
+      ]
+    },
+    "Cheng2019a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Cheng2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhang2019d": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Dimitri2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhong2019": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Ou2023Simtoreal",
+        "Yilmaz2026Imitation"
+      ]
+    },
+    "Qian2019": {
+      "cites": [],
+      "cited_by": [
+        "Haiderbhai2022RobustST",
+        "Shaaban2026Cloudbaseda",
+        "Yao_2026"
+      ]
+    },
+    "Pique2019a": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Mahayana2026SVR",
+        "Yang2024",
+        "Yilmaz2022IJCARS",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Sozzi2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "DiFlumeri2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Nagy2019a": {
+      "cites": [],
+      "cited_by": [
+        "Levendovics_2025"
+      ]
+    },
+    "Pryor2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wu2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Saracino2019a": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal",
+        "WangS2025ISMR",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024"
+      ]
+    },
+    "Selvaggio2019a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hong2019c": {
+      "cites": [],
+      "cited_by": [
+        "Ai2024",
+        "Kim2024Multimodal",
+        "Kim2025Speech",
+        "Shaaban2026Cloudbaseda"
+      ]
+    },
+    "Rau2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "OSullivan2019a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wang2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Richter2019a": {
+      "cites": [],
+      "cited_by": [
+        "Fan2024Learna",
+        "Haiderbhai2022RobustST",
+        "Liu2025Dart",
+        "Long2022",
+        "Mahayana2026SVR",
+        "Ou2023Safe",
+        "Ou2024",
+        "Ou2025Cressimmpm",
+        "Ou_2025",
+        "yu2024orbit"
+      ]
+    },
+    "Thananjeyan2019c": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Stilli2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhang2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Nagy2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Dardona2019": {
+      "cites": [],
+      "cited_by": [
+        "Ai2024",
+        "Kim2024Multimodal",
+        "kossowsky2022predicting"
+      ]
+    },
+    "Nakawala2019a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "NagyneElek2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Schwaner2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hamedani2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ettorre2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Li2019a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Mariani2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Menegozzo2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Krishnan2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Selvaggio2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Moradi2019b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Tsai2019": {
+      "cites": [],
+      "cited_by": [
+        "itzkovich2022generalization"
+      ]
+    },
+    "Itzkovich2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Podolsky2019": {
+      "cites": [],
+      "cited_by": [
+        "Maguire2025RoboticAC"
+      ]
+    },
+    "Caccianiga2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Moccia2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "VanAmsterdam2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Nakawala2019": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Allan2018a": {
+      "cites": [],
+      "cited_by": [
+        "Ding2022",
+        "Fan2024Reinforcement",
+        "Lu2022AUM",
+        "Wu2025ICRA",
+        "Yang2025Instrumentsplattinga",
+        "Zhong2023Robotcamera"
+      ]
+    },
+    "Fontanelli2018e": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chu2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chalasani2018c": {
+      "cites": [],
+      "cited_by": []
+    },
+    "El-Saig2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Fontanelli2018d": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Song2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zevallos2018a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Alambeigi2018b": {
+      "cites": [],
+      "cited_by": [
+        "Retana2022Autonomous",
+        "Thach2024Defgoalnet"
+      ]
+    },
+    "Zhang2018": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal"
+      ]
+    },
+    "Zevallos2018b": {
+      "cites": [],
+      "cited_by": [
+        "Long2022"
+      ]
+    },
+    "Shahbazi2018b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wang2018c": {
+      "cites": [],
+      "cited_by": [
+        "Cartucho2024SurgT"
+      ]
+    },
+    "Fontanelli2018f": {
+      "cites": [],
+      "cited_by": [
+        "Lu2022AUM",
+        "Ou2024",
+        "Ou2025Cressimmpm",
+        "Rajarajeswari2024",
+        "Shaaban2026Cloudbaseda",
+        "Zhong2023Robotcamera",
+        "yu2024orbit"
+      ]
+    },
+    "Pachtrachai2018": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Lu2022AUM"
+      ]
+    },
+    "Foti2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Gordon2018a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Qian2018a": {
+      "cites": [],
+      "cited_by": [
+        "Shankar2025Approacha",
+        "Yao_2026"
+      ]
+    },
+    "DEttorre2018b": {
+      "cites": [],
+      "cited_by": [
+        "Chiu2023Realtime",
+        "Ho2025SurgIRLTL",
+        "Li2024OnTM",
+        "Liang2025Medic",
+        "Lu2022TowardIA",
+        "Marra2024MPCFS",
+        "Shkurti2025Improving"
+      ]
+    },
+    "Fard2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Alambeigi2018e": {
+      "cites": [],
+      "cited_by": [
+        "Lu2022TowardIA",
+        "Retana2022Autonomous",
+        "Thach2024Defgoalnet"
+      ]
+    },
+    "Bodenstedt2018": {
+      "cites": [],
+      "cited_by": [
+        "Wu2025ICRA"
+      ]
+    },
+    "Gu2018b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wang2018b": {
+      "cites": [],
+      "cited_by": [
+        "itzkovich2022generalization",
+        "sharon2025dataset"
+      ]
+    },
+    "Mariani2018a": {
+      "cites": [],
+      "cited_by": [
+        "rota2024implementation",
+        "rota2024performance"
+      ]
+    },
+    "Vantadori2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Xue2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Francis2018a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Quek2018": {
+      "cites": [],
+      "cited_by": [
+        "Vuong2025EffectsOW"
+      ]
+    },
+    "Sharon2018a": {
+      "cites": [],
+      "cited_by": [
+        "itzkovich2022generalization",
+        "zruya2022new"
+      ]
+    },
+    "Seita2018a": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Lu2022AUM",
+        "Lu2022TowardIA",
+        "Shankar2025Approacha"
+      ]
+    },
+    "Wu2018a": {
+      "cites": [],
+      "cited_by": [
+        "Khan2025DevelopmentOA",
+        "Martuscelli2026Dithering",
+        "Xu2025"
+      ]
+    },
+    "Li2018a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Mazomenos2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ji2018b": {
+      "cites": [],
+      "cited_by": [
+        "Ho2025SurgIRLTL",
+        "kossowsky2022predicting"
+      ]
+    },
+    "Penza2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kamikawa2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Shahbazi2018a": {
+      "cites": [],
+      "cited_by": [
+        "fan2022unity",
+        "sharon2025augmenting"
+      ]
+    },
+    "Nagy2018d": {
+      "cites": [],
+      "cited_by": [
+        "Kotian2026Simulation"
+      ]
+    },
+    "Selvaggio2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Abdelaal2018": {
+      "cites": [],
+      "cited_by": [
+        "fan2022unity",
+        "oquendo2024haptic",
+        "sharon2025augmenting"
+      ]
+    },
+    "Chalasani2018a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Enayati2018b": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025Online",
+        "Ou2024",
+        "Ou2025Cressimmpm",
+        "fan2022unity",
+        "oquendo2024haptic",
+        "rota2024implementation",
+        "sharon2025augmenting",
+        "zruya2022new"
+      ]
+    },
+    "Wang2018d": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Vagvolgyi2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ma2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Enayati2018a": {
+      "cites": [],
+      "cited_by": [
+        "itzkovich2022generalization"
+      ]
+    },
+    "Diodato2018a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Patel2018b": {
+      "cites": [],
+      "cited_by": [
+        "sharon2025augmenting"
+      ]
+    },
+    "Nagy2018e": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ozguner2018a": {
+      "cites": [],
+      "cited_by": [
+        "Chiu2023Realtime",
+        "Li2024OnTM",
+        "Shkurti2025Improving"
+      ]
+    },
+    "Ferguson2018c": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Marahrens2024Ultrasoundguided"
+      ]
+    },
+    "Moradi2018": {
+      "cites": [],
+      "cited_by": [
+        "Song2022Realtime"
+      ]
+    },
+    "Alambeigi2018f": {
+      "cites": [],
+      "cited_by": [
+        "Lu2022TowardIA",
+        "Ou2023Simtoreal",
+        "Retana2022Autonomous"
+      ]
+    },
+    "Stilli2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Salman2018b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Patel2018c": {
+      "cites": [],
+      "cited_by": [
+        "Fu2024MultiobjectiveCL",
+        "sharon2025augmenting"
+      ]
+    },
+    "Haouchine2018": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Hao2018a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Naidu2017": {
+      "cites": [],
+      "cited_by": [
+        "Abkhofte2025DeepLS"
+      ]
+    },
+    "Zhang2017e": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Lu2022AUM",
+        "Shkurti2025Improving",
+        "Wu2025ICRA",
+        "Zhong2023Robotcamera"
+      ]
+    },
+    "Enayati2017": {
+      "cites": [],
+      "cited_by": [
+        "oquendo2024haptic"
+      ]
+    },
+    "Anooshahpour2017": {
+      "cites": [],
+      "cited_by": [
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Sang2017c": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Fontanelli2017a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Eslamian2017": {
+      "cites": [],
+      "cited_by": [
+        "kossowsky2022predicting"
+      ]
+    },
+    "Vagvolgyi2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhang2017i": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Li2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kim2017": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal",
+        "Kim2025Speech",
+        "Ma2022Augmented"
+      ]
+    },
+    "Fard2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Penza2017": {
+      "cites": [],
+      "cited_by": [
+        "Long2022",
+        "Schmidgall2025Willa"
+      ]
+    },
+    "Sang2017b": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Yang2024",
+        "Yilmaz2022IJCARS",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Wang2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhang2017h": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wang2017a": {
+      "cites": [],
+      "cited_by": [
+        "Ma2022Augmented"
+      ]
+    },
+    "Kim2017a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Sharon2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Francis2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Fiorini2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Fontanelli2017b": {
+      "cites": [],
+      "cited_by": [
+        "Argin2024daVinciRK",
+        "Cui2022CaveatsOT",
+        "Ding2022",
+        "Mahayana2026SVR",
+        "Marra2024MPCFS",
+        "Shaaban2026Cloudbaseda",
+        "Tan2026Ekfenhanced",
+        "Yang2024",
+        "Yang2026Shaftintegrated",
+        "Yilmaz2022IJCARS",
+        "YilmazRAL2024",
+        "Zhang2026Dynamics",
+        "rota2024implementation"
+      ]
+    },
+    "Zhang2017d": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Thananjeyan2017b": {
+      "cites": [],
+      "cited_by": [
+        "Haiderbhai2025Sim2RealRC",
+        "Liang2025Medic",
+        "Marahrens2024Ultrasoundguided",
+        "Ou2023Simtoreal",
+        "Thach2024Defgoalnet",
+        "yu2024orbit"
+      ]
+    },
+    "Gandhi2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kim2017b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Zhang2017g": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Jackson2017": {
+      "cites": [],
+      "cited_by": [
+        "Lu2022TowardIA",
+        "Schorp2023Selfsupervised"
+      ]
+    },
+    "Penza2017a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ye2017a": {
+      "cites": [],
+      "cited_by": [
+        "Lin2023Semanticsuper"
+      ]
+    },
+    "Chen2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chow2017b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Haidegger2017": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Garcia-Peraza-Herrera2017a": {
+      "cites": [],
+      "cited_by": [
+        "Lin2023Semanticsuper"
+      ]
+    },
+    "Elek2017": {
+      "cites": [],
+      "cited_by": [
+        "Liang2025Medic"
+      ]
+    },
+    "Coad2017a": {
+      "cites": [],
+      "cited_by": [
+        "oquendo2024haptic",
+        "sharon2025augmenting",
+        "sharon2025dataset",
+        "zruya2022new"
+      ]
+    },
+    "Krishnan2017": {
+      "cites": [],
+      "cited_by": [
+        "Moghani2024Sufia",
+        "itzkovich2022generalization",
+        "yu2024orbit"
+      ]
+    },
+    "Liang2017b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Bouget2017": {
+      "cites": [],
+      "cited_by": [
+        "Pasini2022"
+      ]
+    },
+    "Wang2017b": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Schmidgall2025Willa",
+        "Zhong2023Robotcamera"
+      ]
+    },
+    "Kim2016": {
+      "cites": [],
+      "cited_by": [
+        "Kim2024Multimodal",
+        "Kim2025Speech"
+      ]
+    },
+    "Munawar2016b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "McKinley2016b": {
+      "cites": [],
+      "cited_by": [
+        "Marahrens2024Ultrasoundguided"
+      ]
+    },
+    "Sen2016": {
+      "cites": [],
+      "cited_by": [
+        "Zargarzadeh2026Gradual"
+      ]
+    },
+    "Ruszkowski2016": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Du2016a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kim2016a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Pachtrachai2016a": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Lu2022AUM",
+        "Schmidgall2025Willa",
+        "Shkurti2025Improving",
+        "Zhong2023Robotcamera"
+      ]
+    },
+    "Grammatikopoulou2016a": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT"
+      ]
+    },
+    "Liu2016": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ye2016": {
+      "cites": [],
+      "cited_by": [
+        "Cui2022CaveatsOT",
+        "Ding2022",
+        "Fan2024Reinforcement",
+        "Lu2022AUM",
+        "Wu2025ICRA",
+        "Yang2025Instrumentsplattinga",
+        "Zhong2023Robotcamera"
+      ]
+    },
+    "Elek2016": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Shahzada2016a": {
+      "cites": [],
+      "cited_by": [
+        "Yang2026Shaftintegrated"
+      ]
+    },
+    "Kaplan2016a": {
+      "cites": [],
+      "cited_by": [
+        "Chen2024Human"
+      ]
+    },
+    "Munawar2016a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Eslamian2016": {
+      "cites": [],
+      "cited_by": [
+        "kossowsky2022predicting"
+      ]
+    },
+    "Murali2016": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Garg2016b": {
+      "cites": [],
+      "cited_by": [
+        "Abkhofte2025DeepLS"
+      ]
+    },
+    "Che2016": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Wang2016": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chen2016a": {
+      "cites": [],
+      "cited_by": [
+        "Ou2023Simtoreal"
+      ]
+    },
+    "Shamaei2015b": {
+      "cites": [],
+      "cited_by": [
+        "Shkurti2025Improving"
+      ]
+    },
+    "Tong2015a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "McKinley2015b": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ferraguti2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Qian2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Khalaji2015a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Pratt2015c": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kumar2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "RuszkowskiHamlyn2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kim2015a": {
+      "cites": [],
+      "cited_by": [
+        "Muscolo2024Cabledriven",
+        "zruya2022new"
+      ]
+    },
+    "Vozar2015a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Allan2015": {
+      "cites": [],
+      "cited_by": [
+        "Fan2024Reinforcement"
+      ]
+    },
+    "Chen2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Takacs2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Murali2015c": {
+      "cites": [],
+      "cited_by": [
+        "Haiderbhai2022RobustST",
+        "Haiderbhai2025Sim2RealRC",
+        "Liang2025Medic",
+        "Schmidgall2025Willa",
+        "Shkurti2025Improving",
+        "Thach2024Defgoalnet",
+        "tagliabue2022deliberation",
+        "yu2024orbit"
+      ]
+    },
+    "Kazanzides2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ruszkowski2015a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Takacs2015a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Liu2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Vozar2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Leonard2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Jarc2015": {
+      "cites": [],
+      "cited_by": [
+        "oquendo2024haptic",
+        "sharon2025augmenting",
+        "zruya2022new"
+      ]
+    },
+    "Quek2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Ruszkowski2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Nisky2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Anooshahpour2015a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Schneider2015": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Kazanzides2014": {
+      "cites": [],
+      "cited_by": [
+        "Ai2024",
+        "Argin2024daVinciRK",
+        "Barragan2022Neurotechnological",
+        "Barragan2024ICRA",
+        "Chen2024Human",
+        "Chen2025AccuracyAA",
+        "Chiu2023Realtime",
+        "Connolly2026NoCancer",
+        "Cui2022CaveatsOT",
+        "Cui2025Forbidden",
+        "Ding2022",
+        "Ding2024towards",
+        "Ding2025Robusta",
+        "Duan2026Realtimea",
+        "Hansen_2026",
+        "Ho2025SurgIRLTL",
+        "Hu2025Pretraining",
+        "Hu2026exploration",
+        "Hu2026multiscale",
+        "Huang2022ASP",
+        "Jawad2024Deep",
+        "Khan2025DevelopmentOA",
+        "Kim2024Multimodal",
+        "Kim2025Speech",
+        "Kim2025Surgical",
+        "Li2024RealTimeGJ",
+        "Liang2025Medic",
+        "Liang2026Vivoa",
+        "Lim2023Physiological",
+        "Lim2025Optimal",
+        "Lin2023Semanticsuper",
+        "Liu2025Dart",
+        "Long2022",
+        "Long2025",
+        "Ma2022Augmented",
+        "Magnani2026ConsoleFree",
+        "Mahayana2026SVR",
+        "Marahrens2024Ultrasoundguided",
+        "Martuscelli2026Dithering",
+        "Mazzotta2026Preliminarya",
+        "Moghani2024Sufia",
+        "Moghani2025Sufiabc",
+        "Muratore2026NailIt",
+        "Nimal2025Vinci",
+        "Ou2023Safe",
+        "Ou2023Simtoreal",
+        "Ou2024",
+        "Ou2025Cressimmpm",
+        "Ou_2025",
+        "Pasini2022",
+        "Paul2025System",
+        "Pescio2026Artificial",
+        "Retana2022Autonomous",
+        "Schmidgall2025Willa",
+        "Schorp2023Selfsupervised",
+        "Shkurti2025Improving",
+        "Thach2024Defgoalnet",
+        "Vuong2025EffectsOW",
+        "Walsh2025Development",
+        "WangJ2025ISMR",
+        "WangS2025ISMR",
+        "Wu2025ICRA",
+        "Xu2025",
+        "Yang2022Semga",
+        "Yang2024",
+        "Yang2025Instrumentsplattinga",
+        "Yang2025TMRB",
+        "Yang2026Shaftintegrated",
+        "Yao_2026",
+        "Yilmaz2022IJCARS",
+        "Yilmaz2024IJCARS",
+        "YilmazRAL2024",
+        "Zhang2022",
+        "Zhang2024Achieving",
+        "Zhang2025HybridDR",
+        "Zhong2023Robotcamera",
+        "fan2022unity",
+        "itzkovich2022generalization",
+        "meli2025inductive",
+        "oquendo2024haptic",
+        "rota2024performance",
+        "sharon2025augmenting",
+        "sharon2025dataset",
+        "tagliabue2022deliberation",
+        "yu2024orbit",
+        "zruya2022new"
+      ]
+    },
+    "Mohareri2014": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Mahler2014b": {
+      "cites": [],
+      "cited_by": [
+        "Chen2025AccuracyAA",
+        "Li2024RealTimeGJ",
+        "Mahayana2026SVR"
+      ]
+    },
+    "Chen2014a": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Lee2014": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Chen2013": {
+      "cites": [],
+      "cited_by": [
+        "Elazzazi2022Natural",
+        "Shankar2025Approacha",
+        "Zhang2026Dynamics"
+      ]
+    },
+    "Xia2013": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Xia2012": {
+      "cites": [],
+      "cited_by": []
+    },
+    "Xia2011": {
+      "cites": [],
+      "cited_by": []
+    }
+  },
+  "review": {
+    "title_only_matches": [
+      {
+        "source_id": "Zhang2026Dynamics",
+        "candidate_target_id": "Gondokaryono2019",
+        "reference_title": "An Approach to Modeling Closed-Loop Kinematic Chain Mechanisms, Applied to Simulations of the da Vinci Surgical System",
+        "target_title": "An Approach to Modeling Closed-Loop Kinematic Chain Mechanisms, Applied to Simulations of the da Vinci Surgical System",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Zhang2026Dynamics",
+        "candidate_target_id": "Chrysilla2019",
+        "reference_title": "A Compliance Model to Improve the Accuracy of the da Vinci Research Kit (dVRK)",
+        "target_title": "A Compliance Model to Improve the Accuracy of the da Vinci Research Kit (dVRK)",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Zargarzadeh2026Gradual",
+        "candidate_target_id": "Ou2023RobotLI",
+        "reference_title": "Robot learning incorporating human interventions in the real world for autonomous surgical endoscopic camera control",
+        "target_title": "Robot Learning Incorporating Human Interventions in the Real World for Autonomous Surgical Endoscopic Camera Control",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Zargarzadeh2026Gradual",
+        "candidate_target_id": "Sen2016",
+        "reference_title": "Automating multi-throw multilateral surgical suturing with a mechanical needle guide and sequential convex optimization",
+        "target_title": "Automating multi-throw multilateral surgical suturing with a mechanical needle guide and sequential convex optimization",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Zargarzadeh2026Gradual",
+        "candidate_target_id": "Ou2024",
+        "reference_title": "A realistic surgical simulator for non-rigid and contact-rich manipulation in surgeries with the da vinci research kit",
+        "target_title": "A Realistic Surgical Simulator for Non-Rigid and Contact-Rich Manipulation in Surgeries with the da Vinci Research Kit",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Zargarzadeh2026Gradual",
+        "candidate_target_id": "Moghani2024Sufia",
+        "reference_title": "Sufia: language-guided augmented dexterity for robotic surgical assistants",
+        "target_title": "SuFIA: Language-Guided Augmented Dexterity for Robotic Surgical Assistants",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Martuscelli2026Dithering",
+        "candidate_target_id": "Zhou2025GravityCO",
+        "reference_title": "Gravity compensation of the dVRK-Si patient side manipulator based on dynamic model identification",
+        "target_title": "Gravity Compensation of the dVRK-Si Patient Side Manipulator based on Dynamic Model Identification",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Mahayana2026SVR",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Mahayana2026SVR",
+        "candidate_target_id": "Zhou2025GravityCO",
+        "reference_title": "Gravity compensation of the dVRK-si patient side manipulator based on dynamic model identification",
+        "target_title": "Gravity Compensation of the dVRK-Si Patient Side Manipulator based on Dynamic Model Identification",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Hu2026ImperfectDemos",
+        "candidate_target_id": "Pore2021Learning",
+        "reference_title": "Learning from demonstrations for autonomous soft-tissue retraction",
+        "target_title": "Learning from Demonstrations for Autonomous Soft-tissue Retraction",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "mocellin2026origrasp",
+        "candidate_target_id": "Liu2020a",
+        "reference_title": "The MUSHA Hand II: A Multifunctional Hand for Robot\u2010Assisted Laparoscopic Surgery",
+        "target_title": "The MUSHA Hand II: A Multi-Functional Hand for Robot-Assisted Laparoscopic Surgery",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Yang2026Shaftintegrated",
+        "candidate_target_id": "Abdelaal2025ForceAwareAR",
+        "reference_title": "Force-aware autonomous robotic surgery",
+        "target_title": "Force-Aware Autonomous Robotic Surgery",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "WangS2025ISMR",
+        "candidate_target_id": "Marinho2019",
+        "reference_title": "A unified framework for the teleoperation of surgical robots in constrained workspaces",
+        "target_title": "A unified framework for the teleoperation of surgical robots in constrained workspaces",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Ou_2025",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Ou_2025",
+        "candidate_target_id": "Ou2025Cressimmpm",
+        "reference_title": "CRESSim-MPM: A material point method library for surgical soft body simulation with cutting and suturing",
+        "target_title": "CRESSim\u2013MPM: A Material Point Method Library for Surgical Soft Body Simulation with Cutting and Suturing",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Wu2025ICRA",
+        "candidate_target_id": "Bodenstedt2018",
+        "reference_title": "Comparative evaluation of instrument segmentation and tracking methods in minimally invasive surgery",
+        "target_title": "Comparative evaluation of instrument segmentation and tracking methods in minimally invasive surgery",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Chen2025Online",
+        "candidate_target_id": "Enayati2018b",
+        "reference_title": "Robotic assistance-as-needed for enhanced visuomotor learning in surgical robotics training: An experimental study",
+        "target_title": "Robotic Assistance-as-Needed for Enhanced Visuomotor Learning in Surgical Robotics Training: An Experimental Study",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Chen2025Online",
+        "candidate_target_id": "Long2022",
+        "reference_title": "Integrating artificial intelligence and augmented reality in robotic surgery: An initial dvrk study using a surgical education scenario",
+        "target_title": "Integrating Artificial Intelligence and Augmented Reality in Robotic Surgery: An Initial dVRK Study Using a Surgical Education Scenario",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Chen2025Online",
+        "candidate_target_id": "Zhang2022HumanRobotSC",
+        "reference_title": "Human-robot shared control for surgical robot based on context-aware sim-to-real adaptation",
+        "target_title": "Human-Robot Shared Control for Surgical Robot Based on Context-Aware Sim-to-Real Adaptation",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Ou2025Cressimmpm",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-Sourced Reinforcement Learning Environments for Surgical Robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Ou2025Cressimmpm",
+        "candidate_target_id": "Yang2024EfficientPS",
+        "reference_title": "Efficient physically-based simulation of soft bodies in embodied environment for surgical robot",
+        "target_title": "Efficient Physically-based Simulation of Soft Bodies in Embodied Environment for Surgical Robot",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Liu2025Dart",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Liang2025Medic",
+        "candidate_target_id": "Liang2024Realtosim",
+        "reference_title": "Real-to-sim deformable object manipulation: Optimizing physics models with residual mappings for robotic surgery",
+        "target_title": "Real-to-Sim Deformable Object Manipulation: Optimizing Physics Models with Residual Mappings for Robotic Surgery",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Hu2025Pretraining",
+        "candidate_target_id": "Hashempour2020a",
+        "reference_title": "A data-set of piercing needle through deformable objects for deep learning from demonstrations",
+        "target_title": "A data-set of piercing needle through deformable objects for deep learning from demonstrations",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Kim2025Surgical",
+        "candidate_target_id": "yu2024orbit",
+        "reference_title": "Orbit-Surgical: An open-simulation framework for learning surgical augmented dexterity",
+        "target_title": "Orbit-surgical: An open-simulation framework for learning surgical augmented dexterity",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Kim2025Surgical",
+        "candidate_target_id": "Ou_2025",
+        "reference_title": "Learning autonomous surgical irrigation and suction with the Da Vinci Research Kit using reinforcement learning",
+        "target_title": "Learning Autonomous Surgical Irrigation and Suction With the da Vinci Research Kit Using Reinforcement Learning",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Schmidgall2025Willa",
+        "candidate_target_id": "Cui2022CaveatsOT",
+        "reference_title": "Caveats on the first-generation da Vinci Research Kit: Latent technical constraints and essential calibrations [Survey]",
+        "target_title": "Caveats on the First-Generation da Vinci Research Kit: Latent Technical Constraints and Essential Calibrations [Survey]",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Ou2024",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "oquendo2024haptic",
+        "candidate_target_id": "Enayati2017",
+        "reference_title": "A framework for assisted tele-operation with augmented reality",
+        "target_title": "A Framework for Assisted Tele-operation with Augmented Reality",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Ai2024",
+        "candidate_target_id": "Gondokaryono2019",
+        "reference_title": "An approach to modeling closed\u2010loop kinematic chain mechanisms, applied to simulations of the da vinci surgical system",
+        "target_title": "An Approach to Modeling Closed-Loop Kinematic Chain Mechanisms, Applied to Simulations of the da Vinci Surgical System",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Li2024OnTM",
+        "candidate_target_id": "Chiu2022Markerless",
+        "reference_title": "Markerless suture needle 6D pose tracking with robust uncertainty estimation for autonomous minimally invasive robotic surgery",
+        "target_title": "Markerless Suture Needle 6D Pose Tracking with Robust Uncertainty Estimation for Autonomous Minimally Invasive Robotic Surgery",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "yu2024orbit",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Cartucho2024SurgT",
+        "candidate_target_id": "Wang2022Autonomous",
+        "reference_title": "Towards autonomous control of surgical instruments using adaptive-fusion tracking and robot self-calibration",
+        "target_title": "Towards Autonomous Control of Surgical Instruments using Adaptive-Fusion Tracking and Robot Self-Calibration",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Cartucho2024SurgT",
+        "candidate_target_id": "Wang2018c",
+        "reference_title": "A unified controller for region-reaching and deforming of soft objects",
+        "target_title": "A Unified Controller for Region-reaching and Deforming of Soft Objects",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Cartucho2024SurgT",
+        "candidate_target_id": "Weld2022Regularising",
+        "reference_title": "Regularising disparity estimation via multi task learning with structured light reconstruction",
+        "target_title": "Regularising disparity estimation via multi task learning with structured light reconstruction",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Cartucho2024SurgT",
+        "candidate_target_id": "Zhan2020",
+        "reference_title": "Autonomous tissue scanning under free-form motion for intraoperative tissue characterisation",
+        "target_title": "Autonomous Tissue Scanning under Free-Form Motion for Intraoperative Tissue Characterisation",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Fan2024Learna",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Chiu2023Realtime",
+        "candidate_target_id": "Chiu2022Markerless",
+        "reference_title": "Markerless suture needle 6d pose tracking with robust uncertainty estimation for autonomous minimally invasive robotic surgery",
+        "target_title": "Markerless Suture Needle 6D Pose Tracking with Robust Uncertainty Estimation for Autonomous Minimally Invasive Robotic Surgery",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Chiu2023Realtime",
+        "candidate_target_id": "Richter2021",
+        "reference_title": "Robotic tool tracking under partially visible kinematic chain: A unified approach",
+        "target_title": "Robotic Tool Tracking under Partially Visible Kinematic Chain: A Unified Approach",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Lin2023Semanticsuper",
+        "candidate_target_id": "Garcia-Peraza-Herrera2017a",
+        "reference_title": "Toolnet: holistically-nested real-time segmentation of robotic surgical tools",
+        "target_title": "Toolnet: holistically-nested real-time segmentation of robotic surgical tools",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Ou2023Safe",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "zruya2022new",
+        "candidate_target_id": "Jarc2015",
+        "reference_title": "Robot-assisted surgery: an emerging platform for human neuroscience research",
+        "target_title": "Robot-assisted surgery: an emerging platform for human neuroscience research",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Lu2022AUM",
+        "candidate_target_id": "Lu2022TowardIA",
+        "reference_title": "Toward image-guided automated suture grasping under complex environments: A learning-enabled and optimization-based holistic framework",
+        "target_title": "Toward Image-Guided Automated Suture Grasping Under Complex Environments: A Learning-Enabled and Optimization-Based Holistic Framework",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Pasini2022",
+        "candidate_target_id": "Col2020",
+        "reference_title": "Scan: System for camera autonomous navigation in robotic-assisted surgery",
+        "target_title": "SCAN : System for Camera Autonomous Navigation in Robotic-Assisted Surgery",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Cui2022CaveatsOT",
+        "candidate_target_id": "Hwang2020a",
+        "reference_title": "Superhuman surgical peg transfer using depth-sensing and deep recurrent neural networks",
+        "target_title": "Superhuman Surgical Peg Transfer Using Depth-Sensing and Deep Recurrent Neural Networks",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "tagliabue2022deliberation",
+        "candidate_target_id": "Nagy2019",
+        "reference_title": "A dvrk-based framework for surgical subtask automation",
+        "target_title": "A DVRK-based framework for surgical subtask automation",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "itzkovich2022generalization",
+        "candidate_target_id": "Long2021Relational",
+        "reference_title": "Relational graph learning on visual and kinematics embeddings for accurate gesture recognition in robotic surgery",
+        "target_title": "Relational Graph Learning on Visual and Kinematics Embeddings for Accurate Gesture Recognition in Robotic Surgery",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Long2022",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "kossowsky2022predicting",
+        "candidate_target_id": "Eslamian2017",
+        "reference_title": "An autonomous camera system using the da Vinci research kit",
+        "target_title": "An Autonomous Camera System using the da Vinci Research Kit",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "kossowsky2022predicting",
+        "candidate_target_id": "Eslamian2016",
+        "reference_title": "Towards the implementation of an autonomous camera algorithm on the da Vinci platform",
+        "target_title": "Towards the Implementation of an Autonomous Camera Algorithm on the da Vinci Platform.",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Haiderbhai2022RobustST",
+        "candidate_target_id": "Richter2019a",
+        "reference_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "target_title": "Open-sourced reinforcement learning environments for surgical robotics",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      },
+      {
+        "source_id": "Retana2022Autonomous",
+        "candidate_target_id": "Alambeigi2020",
+        "reference_title": "A versatile data-driven framework for model-independent control of continuum manipulators interacting with obstructed environments with unknown geometry and stiffness",
+        "target_title": "A Versatile Data-Driven Framework for Model-Independent Control of Continuum Manipulators Interacting With Obstructed Environments With Unknown Geometry and Stiffness",
+        "reason": "accepted: exact unique normalized title; no reference DOI"
+      }
+    ],
+    "doi_title_conflicts": [
+      {
+        "source_id": "Tan2026Ekfenhanced",
+        "target_id": "Ma2020",
+        "reference_doi": "10.1109/lra.2020.2965863",
+        "reference_title": "Visual servo of a 6-DOF robotic stereo flexible endoscope based on da Vinci research kit (dVRK) system",
+        "target_title": "Visual Servo of a 6-DOF Robotic Stereo Flexible Endoscope Based on da Vincix Research Kit (dVRK) System"
+      }
+    ]
+  }
+}

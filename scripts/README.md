@@ -132,6 +132,32 @@ python3 scripts/enrich_metadata.py --reprocess
 
 ---
 
+### `extract_citations.py` — Update verified community cross-references
+
+Fetches reference lists from Crossref and finds citations to other publications
+in this database.  It is intentionally conservative: it writes a link only
+when the cited DOI exactly and uniquely matches a DOI in `publications.bib`,
+or when a reference without a DOI has an exact normalized title match to one
+and only one local entry.  Title matching is case-insensitive (for example,
+`Da Vinci` and `da Vinci` match); ambiguous titles are not added.
+
+```zsh
+# Inspect results first; no BibTeX changes are made by default
+python3 scripts/extract_citations.py --write-json
+
+# After reviewing citations.json, add verified DOI matches
+python3 scripts/extract_citations.py --apply --write-json
+```
+
+Temporary Crossref failures are not cached, so they are retried on the next
+run.  Applying an update retains existing links by default; use
+`--replace-existing` only after carefully reviewing a full replacement.
+After removing a publication, use `--apply --offline --prune-missing` to remove
+only citation keys that no longer have an entry, without fetching or changing
+other references.
+
+---
+
 ## Recommended workflow
 
 ```zsh

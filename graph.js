@@ -9,7 +9,8 @@ createApp({
             searchQuery: '',
             searchResults: [],
             showSearchResults: false,
-            minCitations: 5,
+            rankingMode: 'cited',
+            minConnections: 10,
             startYear: '',
             endYear: '',
             availableYears: [],
@@ -41,11 +42,17 @@ createApp({
         };
     },
     computed: {
-        topCitedInView() {
+        rankingLabel() {
+            return this.rankingMode === 'cited' ? 'Citations' : 'References';
+        },
+        topRankedInView() {
             if (!this.publications || this.publications.length === 0) return [];
+            const countFor = this.rankingMode === 'cited'
+                ? pub => pub.cited_by.length
+                : pub => pub.cites.length;
             return this.publications
                 .filter(p => this.activeNodeIds.has(p.id))
-                .sort((a, b) => b.cited_by.length - a.cited_by.length)
+                .sort((a, b) => countFor(b) - countFor(a))
                 .slice(0, 10);
         }
     },
@@ -182,8 +189,8 @@ createApp({
         },
 
         computeNodeSize(pub) {
-            const count = pub.cited_by.length;
-            // Base size 14, scale with square root of citations up to 42
+            const count = this.rankingMode === 'cited' ? pub.cited_by.length : pub.cites.length;
+            // Base size 14, scale with square root of the selected metric up to 42.
             return Math.max(14, Math.min(42, Math.round(14 + Math.sqrt(count) * 4.2)));
         },
 
@@ -200,9 +207,10 @@ createApp({
                 const y = parseInt(pub.year);
                 if (y < startY || y > endY) return;
 
-                // Threshold check: cited_by count or if minCitations <= 2, also include active citing papers
-                const meetsThreshold = pub.cited_by.length >= this.minCitations ||
-                    (this.minCitations <= 2 && pub.cites.length >= this.minCitations);
+                const count = this.rankingMode === 'cited'
+                    ? pub.cited_by.length
+                    : pub.cites.length;
+                const meetsThreshold = count >= this.minConnections;
 
                 if (meetsThreshold) {
                     filteredMap.set(pub.id, pub);
@@ -565,8 +573,11 @@ createApp({
             if (!pub) return;
 
             if (!this.activeNodeIds.has(id)) {
-                if (pub.cited_by.length < this.minCitations) {
-                    this.minCitations = Math.max(1, pub.cited_by.length);
+                const count = this.rankingMode === 'cited'
+                    ? pub.cited_by.length
+                    : pub.cites.length;
+                if (count < this.minConnections) {
+                    this.minConnections = Math.max(1, count);
                     this.applyFilters();
                 }
             }
@@ -614,9 +625,15 @@ createApp({
             this.showSearchResults = false;
         },
 
-        setMinCitations(val) {
-            if (this.minCitations === val) return;
-            this.minCitations = val;
+        setRankingMode(mode) {
+            if (this.rankingMode === mode) return;
+            this.rankingMode = mode;
+            this.applyFilters();
+        },
+
+        setMinConnections(val) {
+            if (this.minConnections === val) return;
+            this.minConnections = val;
             this.applyFilters();
         },
 
