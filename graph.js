@@ -20,6 +20,7 @@ createApp({
             visibleNodesCount: 0,
             visibleEdgesCount: 0,
             isPhysicsStabilizing: false,
+            stabilizationTimer: null,
             network: null,
             nodesDataSet: null,
             edgesDataSet: null,
@@ -356,16 +357,18 @@ createApp({
                     enabled: true,
                     solver: 'forceAtlas2Based',
                     forceAtlas2Based: {
-                        gravitationalConstant: -60,
-                        centralGravity: 0.015,
-                        springLength: 120,
+                        gravitationalConstant: -55,
+                        centralGravity: 0.025,
+                        springLength: 115,
                         springConstant: 0.06,
-                        damping: 0.4,
+                        damping: 0.45,
                         avoidOverlap: 0.35
                     },
+                    maxVelocity: 30,
+                    minVelocity: 0.8,
                     stabilization: {
                         enabled: true,
-                        iterations: 160,
+                        iterations: 800,
                         updateInterval: 25
                     }
                 };
@@ -390,10 +393,9 @@ createApp({
             const options = this.getNetworkOptions();
             this.network = new vis.Network(container, data, options);
 
-            this.isPhysicsStabilizing = true;
-            this.network.on('stabilizationIterationsDone', () => {
-                this.isPhysicsStabilizing = false;
-            });
+            this.network.on('stabilizationIterationsDone', () => this.finishStabilization());
+            this.network.on('stabilized', () => this.finishStabilization());
+            this.startStabilization();
 
             // Click event on node
             this.network.on('click', (params) => {
@@ -411,6 +413,31 @@ createApp({
                     this.showSearchResults = false;
                 }
             });
+        },
+
+        startStabilization() {
+            if (!this.network || this.layoutMode !== 'clusters') return;
+            if (this.stabilizationTimer) clearTimeout(this.stabilizationTimer);
+
+            this.isPhysicsStabilizing = true;
+            this.network.setOptions({ physics: { enabled: true } });
+            this.network.stabilize(800);
+
+            // ForceAtlas2 can continue moving a dense graph after its normal
+            // iteration budget.  Freeze it after twelve seconds so the view stays
+            // usable and does not consume the browser indefinitely.
+            this.stabilizationTimer = setTimeout(() => this.finishStabilization(), 12000);
+        },
+
+        finishStabilization() {
+            if (this.stabilizationTimer) {
+                clearTimeout(this.stabilizationTimer);
+                this.stabilizationTimer = null;
+            }
+            this.isPhysicsStabilizing = false;
+            if (this.network && this.layoutMode === 'clusters') {
+                this.network.setOptions({ physics: { enabled: false } });
+            }
         },
 
         selectNode(nodeId) {
@@ -662,9 +689,10 @@ createApp({
             this.network.setOptions(options);
 
             if (this.layoutMode === 'clusters') {
-                this.isPhysicsStabilizing = true;
-                this.network.stabilize(140);
+                this.startStabilization();
             } else {
+                if (this.stabilizationTimer) clearTimeout(this.stabilizationTimer);
+                this.stabilizationTimer = null;
                 this.isPhysicsStabilizing = false;
             }
 
