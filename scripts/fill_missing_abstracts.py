@@ -114,7 +114,9 @@ def parse_missing_abstracts(content):
 
 def request_json(path, *, params=None):
     """Request JSON with bounded retries for transient API failures."""
-    request_headers = {"User-Agent": "dVRK-Community-Publications/1.0"}
+    request_headers = {
+        "User-Agent": "dVRK-Community-Publications/1.0 (mailto:anton.deguet@jhu.edu)"
+    }
 
     for attempt in range(MAX_ATTEMPTS):
         try:
