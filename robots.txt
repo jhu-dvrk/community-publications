@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jhu-dvrk.github.io/community-publications/sitemap.xml

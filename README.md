@@ -4,7 +4,7 @@ Publications related to the [dVRK](https://github.com/jhu-dvrk/sawIntuitiveResea
 
 We hope dVRK users will update this database when they publish new work.  To update the database, please fork this repository, edit the `publications.bib` file and issue a pull request.
 
-There is also a (limited) web interface for the database: https://dvrk.lcsr.jhu.edu/community-publications/
+There is also a web interface for the database: https://jhu-dvrk.github.io/community-publications/
 
 # Custom fields 
 
