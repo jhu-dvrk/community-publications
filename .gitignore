@@ -3,3 +3,4 @@ cache/
 .vscode/
 __pycache__/
 *.py[cod]
+citations.json
