@@ -174,22 +174,26 @@ main {
 
 .stat-card {
     background: var(--card-bg);
-    padding: 0.75rem;
+    padding: 0.6rem 1rem;
     border-radius: 6px;
     box-shadow: var(--shadow);
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .stat-number {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--primary-color);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0;
 }
 
 .stat-label {
     color: var(--text-secondary);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }

@@ -37,7 +37,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="config.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=2">
 </head>
 
 <body>
@@ -48,14 +48,14 @@
                     <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
                     <h1>Community Publications</h1>
                 </div>
-                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications  • 
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications • {{ totalAuthors }} authors • 
                     Contribute  
                     <a href="https://github.com/jhu-dvrk/community-publications" target="_blank" rel="noopener noreferrer">https://github.com/jhu-dvrk/community-publications</a>
                 </p>
                 <div class="header-nav">
                     <a href="index.html" class="nav-btn">Publications</a>
                     <a href="analytics.html" class="nav-btn active">Analytics</a>
-                    <a href="graph.html" class="nav-btn">Graph</a>
+                    <a href="graph.html" class="nav-btn">Cross References</a>
                 </div>
             </div>
         </header>

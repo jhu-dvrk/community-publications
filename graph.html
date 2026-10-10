@@ -14,7 +14,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Citation Graph - dVRK Community Publications</title>
+    <title>Cross References - dVRK Community Publications</title>
     <meta name="description" content="Interactive citation and reference network visualization for publications using the da Vinci Research Kit (dVRK).">
     <link rel="canonical" href="https://jhu-dvrk.github.io/community-publications/graph.html">
     <link rel="icon" type="image/png" href="dvrk-logo.png">
@@ -22,14 +22,14 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jhu-dvrk.github.io/community-publications/graph.html">
-    <meta property="og:title" content="Citation Graph - dVRK Community Publications">
+    <meta property="og:title" content="Cross References - dVRK Community Publications">
     <meta property="og:description" content="Interactive citation and reference network visualization for publications using the da Vinci Research Kit (dVRK).">
     <meta property="og:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:url" content="https://jhu-dvrk.github.io/community-publications/graph.html">
-    <meta name="twitter:title" content="Citation Graph - dVRK Community Publications">
+    <meta name="twitter:title" content="Cross References - dVRK Community Publications">
     <meta name="twitter:description" content="Interactive citation and reference network visualization for publications using the da Vinci Research Kit (dVRK).">
     <meta name="twitter:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
 
@@ -37,7 +37,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
     <script src="config.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=2">
 </head>
 
 <body>
@@ -49,14 +49,14 @@
                     <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
                     <h1>Community Publications</h1>
                 </div>
-                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications  • 
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications • {{ totalAuthors }} authors • 
                     Contribute  
                     <a href="https://github.com/jhu-dvrk/community-publications" target="_blank" rel="noopener noreferrer">https://github.com/jhu-dvrk/community-publications</a>
                 </p>
                 <div class="header-nav">
                     <a href="index.html" class="nav-btn">Publications</a>
                     <a href="analytics.html" class="nav-btn">Analytics</a>
-                    <a href="graph.html" class="nav-btn active">Graph</a>
+                    <a href="graph.html" class="nav-btn active">Cross References</a>
                 </div>
             </div>
         </header>

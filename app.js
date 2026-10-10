@@ -142,6 +142,9 @@ createApp({
         totalAuthors() {
             return CONFIG.calculateTotalAuthors(this.filteredPublications);
         },
+        totalAuthorsAll() {
+            return CONFIG.calculateTotalAuthors(this.publications);
+        },
         yearRange() {
             return CONFIG.calculateYearRange(this.filteredPublications);
         },

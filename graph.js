@@ -43,6 +43,9 @@ createApp({
         };
     },
     computed: {
+        totalAuthors() {
+            return CONFIG.calculateTotalAuthors(this.publications);
+        },
         rankingLabel() {
             return this.rankingMode === 'cited' ? 'Citations' : 'References';
         },
