@@ -44,3 +44,8 @@ Common examples: `JHU` (Johns Hopkins University), `ICL` (Imperial College Londo
 The field is `dvrk_cites`. For example: `dvrk_cites={Kazanzides2014 and Chen2013}`.
 This field identifies which other publications in this database are referenced by this paper. Multiple citation keys are separated with "` and `". The web interface uses this field to show bidirectional references (`Refs` and `Cited by`) and allows one-click jumping between linked papers.
 
+## Date Added
+
+The field is `date_added`. For example: `date_added={2026-08-31}`.
+This field records the date (in `YYYY-MM-DD` ISO format) when the publication was added to this database. For existing publications, this is determined from the earliest Git commit in which the entry appeared.
+

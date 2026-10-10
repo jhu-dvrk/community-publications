@@ -21,6 +21,7 @@ Optional environment variables:
 """
 
 import argparse
+import datetime
 import json
 import os
 import re
@@ -156,6 +157,9 @@ def append_to_bib(paper, bib_path):
             if paper.get("abstract") and "abstract =" not in block_lower and "abstract=" not in block_lower:
                 clean_abs = " ".join(paper["abstract"].split())
                 bib_block += f",\n  abstract = {{{clean_abs}}}"
+            if "date_added =" not in block_lower and "date_added=" not in block_lower:
+                today = datetime.date.today().isoformat()
+                bib_block += f",\n  date_added = {{{today}}}"
             bib_block += "\n}\n"
         with open(bib_path, "a", encoding="utf-8") as f:
             f.write("\n")

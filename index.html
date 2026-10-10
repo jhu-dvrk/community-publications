@@ -125,14 +125,6 @@
                     <div class="stat-number">{{ totalAuthors }}</div>
                     <div class="stat-label">Authors</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ yearRange }}</div>
-                    <div class="stat-label">Year Range</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ totalInternalCitations }}</div>
-                    <div class="stat-label">Community Citations</div>
-                </div>
             </div>
 
             <!-- Publications List -->
@@ -145,11 +137,12 @@
                         {{ formatAuthors(pub.author) }}
                     </p>
 
-                    <p class="pub-venue" v-if="pub.journal || pub.booktitle">
-                        <strong>{{ pub.journal || pub.booktitle }}</strong>
+                    <p class="pub-venue" v-if="pub.journal || pub.booktitle || pub.year || pub.date_added">
+                        <strong v-if="pub.journal || pub.booktitle">{{ pub.journal || pub.booktitle }}</strong>
                         <span v-if="pub.volume"> Vol. {{ pub.volume }}</span>
                         <span v-if="pub.number">, No. {{ pub.number }}</span>
-                        <span class="pub-meta"> ({{ pub.year }}, {{ formatType(pub.type) }})</span>
+                        <span class="pub-meta" v-if="pub.year || pub.type"> ({{ pub.year }}, {{ formatType(pub.type) }})</span>
+                        <span class="pub-meta" v-if="pub.date_added"> • Added {{ pub.date_added }}</span>
                     </p>
 
                     <div class="pub-tags" v-if="pub.research_field">

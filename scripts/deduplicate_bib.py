@@ -248,7 +248,13 @@ def merge_entries(a: dict, b: dict) -> dict:
         value = value.strip() if isinstance(value, str) else value
         existing = base.get(field, "").strip() if isinstance(base.get(field), str) else ""
 
-        if field in UNION_FIELDS:
+        if field == "date_added":
+            # Keep earliest date_added
+            if not existing:
+                base[field] = value
+            elif value:
+                base[field] = min(existing, value)
+        elif field in UNION_FIELDS:
             # Take whichever is non-empty; prefer longer if both present
             if not existing:
                 base[field] = value
@@ -275,6 +281,7 @@ FIELD_ORDER = [
     "pages", "month", "publisher", "doi", "url", "ieeexplore",
     "semanticscholar", "arxiv", "pdf", "openaccesspdf",
     "research_field", "data_type", "dvrk_site", "abstract", "keywords",
+    "dvrk_cites", "date_added",
 ]
 
 

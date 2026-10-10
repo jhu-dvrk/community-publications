@@ -96,7 +96,8 @@ def cleanup_bib(file_path):
         'author', 'title', 'journal', 'booktitle', 'year', 'volume', 'number',
         'pages', 'month', 'publisher', 'doi', 'url', 'ieeexplore',
         'semanticscholar', 'arxiv', 'pdf', 'openaccesspdf',
-        'research_field', 'data_type', 'dvrk_site', 'abstract', 'keywords'
+        'research_field', 'data_type', 'dvrk_site', 'abstract', 'keywords',
+        'dvrk_cites', 'date_added'
     ]
 
     # Configure the parser to be flexible but maintain braces

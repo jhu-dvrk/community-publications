@@ -46,7 +46,8 @@ createApp({
                             year: tags.year || '',
                             research_field: tags.research_field ? tags.research_field.replace(/[{}]/g, '') : '',
                             data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
-                            dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : ''
+                            dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
+                            date_added: tags.date_added ? tags.date_added.replace(/[{}]/g, '') : ''
                         };
                     })
                     .sort((a, b) => parseInt(a.year) - parseInt(b.year));
