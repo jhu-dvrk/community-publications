@@ -43,8 +43,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="config.js?v=5"></script>
-    <link rel="stylesheet" href="styles.css?v=5">
+    <script src="config.js?v=6"></script>
+    <link rel="stylesheet" href="styles.css?v=6">
 </head>
 
 <body>
@@ -134,6 +134,166 @@
                         <canvas id="sitesChart"></canvas>
                     </div>
                 </div>
+
+                <!-- Inter-Site Collaboration Matrix (Full width) -->
+                <div class="chart-container full-width-chart collaboration-section">
+                    <div class="collab-header-bar">
+                        <div>
+                            <h2>Inter-Site Collaboration Matrix</h2>
+                            <p class="section-subtitle">Co-authored publications between dVRK research institutions</p>
+                        </div>
+                        <div class="collab-controls">
+                            <div class="collab-control-group">
+                                <label>Sites:</label>
+                                <div class="btn-group">
+                                    <button class="pill-btn" :class="{ 'active': matrixFilter === 'collaborating' }" @click="matrixFilter = 'collaborating'">
+                                        Collaborating ({{ collabKPIs.collaboratingCount }})
+                                    </button>
+                                    <button class="pill-btn" :class="{ 'active': matrixFilter === 'all' }" @click="matrixFilter = 'all'">
+                                        All ({{ collabKPIs.allSitesCount }})
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="collab-control-group">
+                                <label>Order:</label>
+                                <select v-model="matrixSort" class="matrix-sort-select">
+                                    <option value="collaborations">Most Collaborations</option>
+                                    <option value="total">Total Publications</option>
+                                    <option value="alphabetical">Alphabetical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary KPI Bar -->
+                    <div class="collab-stats-bar">
+                        <div class="collab-stat-item">
+                            <span class="collab-stat-value">{{ collabKPIs.jointPapersCount }}</span>
+                            <span class="collab-stat-desc">Joint Papers ({{ collabKPIs.jointPapersPercent }}% of total)</span>
+                        </div>
+                        <div class="collab-stat-item">
+                            <span class="collab-stat-value">{{ collabKPIs.collaboratingCount }}</span>
+                            <span class="collab-stat-desc">Collaborating Institutions</span>
+                        </div>
+                        <div class="collab-stat-item">
+                            <span class="collab-stat-value">{{ collabKPIs.topPair.name }}</span>
+                            <span class="collab-stat-desc">Top Partnership ({{ collabKPIs.topPair.count }} papers)</span>
+                        </div>
+                        <div class="collab-stat-item">
+                            <span class="collab-stat-value">{{ collabKPIs.topHub.name }}</span>
+                            <span class="collab-stat-desc">Top Collaborative Hub ({{ collabKPIs.topHub.count }} joint)</span>
+                        </div>
+                    </div>
+
+                    <!-- Matrix Scroll Container -->
+                    <div class="matrix-wrapper">
+                        <div class="matrix-scroll-container">
+                            <table class="collab-matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th class="matrix-corner-cell">
+                                            <span class="matrix-axis-label col-axis">Col →</span>
+                                            <span class="matrix-axis-label row-axis">Row ↓</span>
+                                        </th>
+                                        <th v-for="colSite in displayedSites" :key="'col-' + colSite" 
+                                            class="matrix-col-header"
+                                            :class="{ 'header-highlighted': hoveredCell && hoveredCell.col === colSite }"
+                                            :title="getSiteFullName(colSite) + (getSiteCountry(colSite) ? ' (' + getSiteCountry(colSite) + ')' : '')">
+                                            <span class="col-label-rot">{{ colSite }}</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="rowSite in displayedSites" :key="'row-' + rowSite">
+                                        <th class="matrix-row-header"
+                                            :class="{ 'header-highlighted': hoveredCell && hoveredCell.row === rowSite }"
+                                            :title="getSiteFullName(rowSite) + (getSiteCountry(rowSite) ? ' (' + getSiteCountry(rowSite) + ')' : '')">
+                                            {{ rowSite }}
+                                        </th>
+                                        <td v-for="colSite in displayedSites" :key="rowSite + '-' + colSite"
+                                            class="matrix-cell"
+                                            :class="getCellClasses(rowSite, colSite)"
+                                            :title="getCellTitle(rowSite, colSite)"
+                                            @mouseenter="onCellHover(rowSite, colSite)"
+                                            @mouseleave="onCellLeave"
+                                            @click="onCellClick(rowSite, colSite)">
+                                            <span class="cell-content">{{ getCellDisplay(rowSite, colSite) }}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Legend & Hint Footer -->
+                    <div class="matrix-footer-bar">
+                        <div class="matrix-legend">
+                            <span class="legend-label">Co-authored Papers:</span>
+                            <div class="legend-scale">
+                                <span class="legend-cell level-0">0</span>
+                                <span class="legend-cell level-1">1–2</span>
+                                <span class="legend-cell level-2">3–5</span>
+                                <span class="legend-cell level-3">6–8</span>
+                                <span class="legend-cell level-4">9–11+</span>
+                                <span class="legend-cell legend-diagonal">Diagonal: Total Papers</span>
+                            </div>
+                        </div>
+                        <div class="matrix-hint">
+                            💡 Click any cell with papers to inspect co-authored publications
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drill-down Modal for Joint Publications -->
+                <div v-if="selectedCollab" class="modal-overlay" @click.self="closeModal">
+                    <div class="modal-card">
+                        <div class="modal-header">
+                            <div>
+                                <h3 class="modal-title">
+                                    <span v-if="selectedCollab.isDiagonal">
+                                        🏛️ {{ selectedCollab.siteA }} Publications ({{ selectedCollab.papers.length }})
+                                    </span>
+                                    <span v-else>
+                                        🤝 {{ selectedCollab.siteA }} × {{ selectedCollab.siteB }} Joint Publications ({{ selectedCollab.papers.length }})
+                                    </span>
+                                </h3>
+                                <p class="modal-subtitle">
+                                    <span v-if="selectedCollab.isDiagonal">
+                                        {{ getSiteFullName(selectedCollab.siteA) }} • {{ getSiteCountry(selectedCollab.siteA) }}
+                                    </span>
+                                    <span v-else>
+                                        {{ getSiteFullName(selectedCollab.siteA) }} & {{ getSiteFullName(selectedCollab.siteB) }}
+                                    </span>
+                                </p>
+                            </div>
+                            <button class="modal-close-btn" @click="closeModal" title="Close (Esc)">✕</button>
+                        </div>
+                        <div class="modal-body">
+                            <div v-for="pub in selectedCollab.papers" :key="pub.id" class="modal-pub-item">
+                                <div class="modal-pub-title">
+                                    <a :href="'index.html#' + pub.id" target="_blank" title="View publication in database">
+                                        {{ pub.title }} ↗
+                                    </a>
+                                </div>
+                                <div class="modal-pub-author">{{ pub.author }}</div>
+                                <div class="modal-pub-meta">
+                                    <span class="modal-pub-year">{{ pub.year }}</span>
+                                    <span v-if="pub.journal" class="modal-pub-venue">• {{ pub.journal }}</span>
+                                    <span class="modal-pub-sites">• Sites: {{ pub.dvrk_site }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a v-if="selectedCollab.isDiagonal" :href="'index.html?site=' + selectedCollab.siteA" class="modal-action-link" target="_blank">
+                                🔍 View in Publications Search ({{ selectedCollab.siteA }})
+                            </a>
+                            <span v-else class="modal-action-note">
+                                {{ selectedCollab.papers.length }} co-authored publication{{ selectedCollab.papers.length > 1 ? 's' : '' }}
+                            </span>
+                            <button class="modal-btn" @click="closeModal">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -145,7 +305,7 @@
         </footer>
     </div>
 
-    <script src="analytics.js?v=5"></script>
+    <script src="analytics.js?v=6"></script>
 </body>
 
 </html>

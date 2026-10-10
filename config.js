@@ -6,6 +6,7 @@ const CONFIG = {
     FIELD_MAP: {},
     DATA_TYPE_MAP: {},
     SITE_MAP: {},
+    SITE_COUNTRY_MAP: {},
     FIELD_DESCRIPTIONS: {},
     DATA_TYPE_DESCRIPTIONS: {},
 
@@ -35,6 +36,9 @@ const CONFIG = {
             if (data.dvrk_site) {
                 data.dvrk_site.forEach(site => {
                     this.SITE_MAP[site.id] = site.name;
+                    if (site.country) {
+                        this.SITE_COUNTRY_MAP[site.id] = site.country;
+                    }
                 });
             }
             
