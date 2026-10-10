@@ -278,10 +278,14 @@ def merge_entries(a: dict, b: dict) -> dict:
 
 FIELD_ORDER = [
     "author", "title", "journal", "booktitle", "year", "volume", "number",
-    "pages", "month", "publisher", "doi", "url", "ieeexplore",
-    "semanticscholar", "arxiv", "pdf", "openaccesspdf",
-    "research_field", "data_type", "dvrk_site", "abstract", "keywords",
-    "dvrk_cites", "date_added",
+    "pages", "month", "publisher", "editor", "series", "collection",
+    "address", "organization", "issn", "isbn",
+    "doi", "url", "urldate", "ieeexplore",
+    "semanticscholar", "arxiv", "arxivid", "archiveprefix", "primaryclass", "eprint",
+    "pdf", "openaccesspdf", "howpublished", "pubstate", "date", "tppubtype",
+    "copyright", "language",
+    "research_field", "data_type", "dvrk_site", "dvrk_cites", "date_added",
+    "keywords", "abstract",
 ]
 
 

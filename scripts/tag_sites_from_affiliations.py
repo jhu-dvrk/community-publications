@@ -26,6 +26,19 @@ import os
 import re
 import argparse
 
+# Standardized field order for consistent layout across all scripts
+FIELD_ORDER = [
+    'author', 'title', 'journal', 'booktitle', 'year', 'volume', 'number',
+    'pages', 'month', 'publisher', 'editor', 'series', 'collection',
+    'address', 'organization', 'issn', 'isbn',
+    'doi', 'url', 'urldate', 'ieeexplore',
+    'semanticscholar', 'arxiv', 'arxivid', 'archiveprefix', 'primaryclass', 'eprint',
+    'pdf', 'openaccesspdf', 'howpublished', 'pubstate', 'date', 'tppubtype',
+    'copyright', 'language',
+    'research_field', 'data_type', 'dvrk_site', 'dvrk_cites', 'date_added',
+    'keywords', 'abstract',
+]
+
 # ---------------------------------------------------------------------------
 # Institution name → dVRK site ID mapping
 # Substrings matched case-insensitively. List multiple name variants per site.
@@ -443,6 +456,7 @@ def main(refresh_misses=False, dry_run=False):
         writer = BibTexWriter()
         writer.indent = '  '
         writer.order_entries_by = None
+        writer.display_order = FIELD_ORDER
         writer.add_trailing_comma = True
         with open('publications.bib', 'w', encoding='utf-8') as f:
             f.write(writer.write(db))

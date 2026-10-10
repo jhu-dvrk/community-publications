@@ -12,10 +12,69 @@ _MONTH_MAP = {
     'april':   'apr',  'may':      'may', 'june':  'jun',
     'july':    'jul',  'august':   'aug', 'september': 'sep',
     'october': 'oct',  'november': 'nov', 'december':  'dec',
+    'jan':     'jan',  'feb':      'feb', 'mar':   'mar',
+    'apr':     'apr',  'may':      'may', 'jun':   'jun',
+    'jul':     'jul',  'aug':      'aug', 'sep':   'sep',
+    'oct':     'oct',  'nov':      'nov', 'dec':   'dec',
     '1': 'jan', '2': 'feb',  '3': 'mar', '4': 'apr',
     '5': 'may', '6': 'jun',  '7': 'jul', '8': 'aug',
     '9': 'sep', '10': 'oct', '11': 'nov', '12': 'dec',
 }
+
+_MONTH_NUM = {
+    'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4,
+    'may': 5, 'jun': 6, 'jul': 7, 'aug': 8,
+    'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12,
+}
+
+# Standardized field order for consistent layout across all scripts
+FIELD_ORDER = [
+    'author', 'title', 'journal', 'booktitle', 'year', 'volume', 'number',
+    'pages', 'month', 'publisher', 'editor', 'series', 'collection',
+    'address', 'organization', 'issn', 'isbn',
+    'doi', 'url', 'urldate', 'ieeexplore',
+    'semanticscholar', 'arxiv', 'arxivid', 'archiveprefix', 'primaryclass', 'eprint',
+    'pdf', 'openaccesspdf', 'howpublished', 'pubstate', 'date', 'tppubtype',
+    'copyright', 'language',
+    'research_field', 'data_type', 'dvrk_site', 'dvrk_cites', 'date_added',
+    'keywords', 'abstract',
+]
+
+def extract_pub_date(entry):
+    """Extract (year, month, day) integers for chronological sorting."""
+    year_str = entry.get('year', '0').strip()
+    try:
+        year = int(year_str)
+    except ValueError:
+        year = 9999 if year_str.lower() == 'to appear' else 0
+
+    month = 0
+    day = 0
+
+    # 1. Check 'month' field
+    raw_month = entry.get('month', '').strip().strip('{}"\' ').lower()
+    if raw_month:
+        m_code = _MONTH_MAP.get(raw_month, raw_month)
+        if m_code in _MONTH_NUM:
+            month = _MONTH_NUM[m_code]
+
+    # 2. Check 'date' field (e.g. YYYY-MM-DD or YYYY-MM)
+    raw_date = entry.get('date', '').strip().strip('{}"\' ')
+    if raw_date:
+        parts = raw_date.split('-')
+        if len(parts) >= 2 and month == 0:
+            try:
+                month = int(parts[1])
+            except ValueError:
+                pass
+        if len(parts) >= 3 and day == 0:
+            try:
+                day = int(parts[2])
+            except ValueError:
+                pass
+
+    return (year, month, day)
+
 
 def normalize_months(content):
     """Replace bare/full month names with braced 3-letter equivalents.
@@ -91,19 +150,10 @@ def cleanup_bib(file_path):
         print(f"Error: {file_path} not found.")
         return
 
-    # Recommended field order for consistent layout
-    FIELD_ORDER = [
-        'author', 'title', 'journal', 'booktitle', 'year', 'volume', 'number',
-        'pages', 'month', 'publisher', 'doi', 'url', 'ieeexplore',
-        'semanticscholar', 'arxiv', 'pdf', 'openaccesspdf',
-        'research_field', 'data_type', 'dvrk_site', 'abstract', 'keywords',
-        'dvrk_cites', 'date_added'
-    ]
-
     # Configure the parser to be flexible but maintain braces
     parser = BibTexParser(common_strings=True)
     parser.ignore_nonstandard_types = False
-    
+
     with open(file_path, 'r', encoding='utf-8') as bibtex_file:
         raw_content = bibtex_file.read()
 
@@ -124,17 +174,12 @@ def cleanup_bib(file_path):
                 while '  ' in entry[field]:
                     entry[field] = entry[field].replace('  ', ' ')
 
-    # Sort entries: 1. Year (Descending), 2. Title (Ascending)
+    # Sort entries: Publication date descending (year, month, day), then title ascending
     def sort_key(entry):
-        year = entry.get('year', '0')
-        # If year is not a number (e.g., 'to appear'), handle it
-        try:
-            year_val = -int(year)
-        except ValueError:
-            year_val = -9999 if year.lower() == 'to appear' else 0
-            
+        y, m, d = extract_pub_date(entry)
         title = entry.get('title', '').lower()
-        return (year_val, title)
+        entry_id = entry.get('ID', '').lower()
+        return (-y, -m, -d, title, entry_id)
 
     bib_database.entries.sort(key=sort_key)
 

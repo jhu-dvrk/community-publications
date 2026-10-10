@@ -30,6 +30,19 @@ CACHE_PATH = "cache/reference_cache.json"
 BIB_PATH = "publications.bib"
 HEADERS = {'User-Agent': 'dVRK-Community-Citation-Extractor/1.0 (mailto:deguet@jhu.edu)'}
 
+# Standardized field order for consistent layout across all scripts
+FIELD_ORDER = [
+    'author', 'title', 'journal', 'booktitle', 'year', 'volume', 'number',
+    'pages', 'month', 'publisher', 'editor', 'series', 'collection',
+    'address', 'organization', 'issn', 'isbn',
+    'doi', 'url', 'urldate', 'ieeexplore',
+    'semanticscholar', 'arxiv', 'arxivid', 'archiveprefix', 'primaryclass', 'eprint',
+    'pdf', 'openaccesspdf', 'howpublished', 'pubstate', 'date', 'tppubtype',
+    'copyright', 'language',
+    'research_field', 'data_type', 'dvrk_site', 'dvrk_cites', 'date_added',
+    'keywords', 'abstract',
+]
+
 def load_cache():
     """Return successful cached lookups only.
 
@@ -287,6 +300,7 @@ def main(apply=False, write_json=False, preserve_existing=True, offline=False,
         writer = BibTexWriter()
         writer.indent = '  '
         writer.order_entries_by = None
+        writer.display_order = FIELD_ORDER
         writer.add_trailing_comma = True
         with open(BIB_PATH, 'w', encoding='utf-8') as f:
             f.write(writer.write(db))
