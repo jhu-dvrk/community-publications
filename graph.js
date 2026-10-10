@@ -61,6 +61,9 @@ createApp({
         }
     },
     methods: {
+        isDarkMode() {
+            return document.documentElement.getAttribute('data-theme') === 'dark';
+        },
         createNodeTooltip(pub) {
             const container = document.createElement('div');
             container.className = 'network-tooltip';
@@ -224,6 +227,12 @@ createApp({
             this.activeNodeIds = new Set(filteredMap.keys());
             this.defaultNodeColors = {};
 
+            const isDark = this.isDarkMode();
+            const fontColor = isDark ? '#f1f5f9' : '#1e293b';
+            const strokeColor = isDark ? '#0f172a' : '#ffffff';
+            const nodeBorderColor = isDark ? '#334155' : '#ffffff';
+            const edgeDefaultColor = isDark ? 'rgba(148, 163, 184, 0.35)' : 'rgba(156, 163, 175, 0.45)';
+
             filteredMap.forEach(pub => {
                 const color = this.getNodeColor(pub);
                 this.defaultNodeColors[pub.id] = color;
@@ -234,14 +243,14 @@ createApp({
                     size: this.computeNodeSize(pub),
                     color: {
                         background: color,
-                        border: '#ffffff',
+                        border: nodeBorderColor,
                         highlight: {
                             background: '#f97316',
-                            border: '#ffffff'
+                            border: nodeBorderColor
                         },
                         hover: {
                             background: '#fb923c',
-                            border: '#ffffff'
+                            border: nodeBorderColor
                         }
                     },
                     borderWidth: 1.5,
@@ -249,9 +258,9 @@ createApp({
                     font: {
                         size: 11,
                         face: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
-                        color: '#1e293b',
+                        color: fontColor,
                         strokeWidth: 2,
-                        strokeColor: '#ffffff'
+                        strokeColor: strokeColor
                     }
                 };
 
@@ -278,7 +287,7 @@ createApp({
                                     to: targetId,
                                     arrows: 'to',
                                     color: {
-                                        color: 'rgba(156, 163, 175, 0.45)',
+                                        color: edgeDefaultColor,
                                         highlight: '#2563eb',
                                         hover: '#3b82f6',
                                         inherit: false
@@ -463,6 +472,14 @@ createApp({
 
             // Update nodes: dim unrelated nodes
             const nodeUpdates = [];
+            const isDark = this.isDarkMode();
+            const nodeBorderColor = isDark ? '#334155' : '#ffffff';
+            const connectedFontColor = isDark ? '#f1f5f9' : '#1e293b';
+            const dimmedNodeBg = isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(226, 232, 240, 0.45)';
+            const dimmedNodeBorder = isDark ? 'rgba(51, 65, 85, 0.35)' : 'rgba(203, 213, 225, 0.4)';
+            const dimmedFont = isDark ? 'rgba(100, 116, 139, 0.35)' : 'rgba(148, 163, 184, 0.35)';
+            const dimmedEdgeColor = isDark ? 'rgba(51, 65, 85, 0.2)' : 'rgba(226, 232, 240, 0.25)';
+
             this.nodesDataSet.forEach(node => {
                 const isSelected = node.id === selectedId;
                 const isConnected = connectedNodeIds.has(node.id);
@@ -473,10 +490,10 @@ createApp({
                         borderWidth: 3,
                         color: {
                             background: '#ea580c',
-                            border: '#ffffff'
+                            border: nodeBorderColor
                         },
                         font: {
-                            color: '#0f172a',
+                            color: isDark ? '#ffffff' : '#0f172a',
                             size: 13
                         }
                     });
@@ -487,10 +504,10 @@ createApp({
                         borderWidth: 2,
                         color: {
                             background: origColor,
-                            border: '#ffffff'
+                            border: nodeBorderColor
                         },
                         font: {
-                            color: '#1e293b',
+                            color: connectedFontColor,
                             size: 11
                         }
                     });
@@ -499,11 +516,11 @@ createApp({
                         id: node.id,
                         borderWidth: 1,
                         color: {
-                            background: 'rgba(226, 232, 240, 0.45)',
-                            border: 'rgba(203, 213, 225, 0.4)'
+                            background: dimmedNodeBg,
+                            border: dimmedNodeBorder
                         },
                         font: {
-                            color: 'rgba(148, 163, 184, 0.35)',
+                            color: dimmedFont,
                             size: 10
                         }
                     });
@@ -542,7 +559,7 @@ createApp({
                         id: edge.id,
                         width: 0.7,
                         color: {
-                            color: 'rgba(226, 232, 240, 0.25)'
+                            color: dimmedEdgeColor
                         }
                     });
                 }
@@ -554,6 +571,11 @@ createApp({
             this.selectedPub = null;
             if (!this.nodesDataSet || !this.edgesDataSet) return;
 
+            const isDark = this.isDarkMode();
+            const fontColor = isDark ? '#f1f5f9' : '#1e293b';
+            const nodeBorderColor = isDark ? '#334155' : '#ffffff';
+            const edgeDefaultColor = isDark ? 'rgba(148, 163, 184, 0.35)' : 'rgba(156, 163, 175, 0.45)';
+
             // Reset all nodes to original colors
             const nodeUpdates = [];
             this.nodesDataSet.forEach(node => {
@@ -563,18 +585,18 @@ createApp({
                     borderWidth: 1.5,
                     color: {
                         background: origColor,
-                        border: '#ffffff',
+                        border: nodeBorderColor,
                         highlight: {
                             background: '#f97316',
-                            border: '#ffffff'
+                            border: nodeBorderColor
                         },
                         hover: {
                             background: '#fb923c',
-                            border: '#ffffff'
+                            border: nodeBorderColor
                         }
                     },
                     font: {
-                        color: '#1e293b',
+                        color: fontColor,
                         size: 11
                     }
                 });
@@ -588,7 +610,7 @@ createApp({
                     id: edge.id,
                     width: 1.2,
                     color: {
-                        color: 'rgba(156, 163, 175, 0.45)',
+                        color: edgeDefaultColor,
                         highlight: '#2563eb',
                         hover: '#3b82f6'
                     }
@@ -735,7 +757,13 @@ createApp({
             }
         }
     },
-    mounted() {
+    async mounted() {
+        await CONFIG.init();
+        window.addEventListener('dvrk-theme-changed', () => {
+            if (this.network) {
+                this.buildGraph();
+            }
+        });
         this.loadPublications();
     }
 }).mount('#app');

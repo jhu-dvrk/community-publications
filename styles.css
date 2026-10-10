@@ -17,6 +17,19 @@
     --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
+[data-theme="dark"] {
+    --primary-color: #3b82f6;
+    --secondary-color: #1d4ed8;
+    --accent-color: #60a5fa;
+    --bg-color: #0b1120;
+    --card-bg: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 4px 12px -1px rgba(0, 0, 0, 0.6);
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--bg-color);
@@ -88,11 +101,23 @@ main {
 
 .search-box {
     margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    min-width: 260px;
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .search-input {
     width: 100%;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
     font-size: 0.875rem;
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -103,6 +128,41 @@ main {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.search-clear-btn {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+    transition: all 0.15s ease;
+}
+
+.search-clear-btn:hover {
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.search-abstract-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.search-abstract-label input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: var(--primary-color);
 }
 
 .filters {
@@ -148,6 +208,14 @@ main {
     background: var(--text-primary);
 }
 
+.sort-select {
+    flex: 0 0 210px;
+    font-weight: 600;
+    border-color: #cbd5e1;
+    color: var(--text-primary);
+    background-color: #f8fafc;
+}
+
 .download-btn {
     padding: 0.5rem 1rem;
     background: var(--primary-color);
@@ -162,6 +230,14 @@ main {
 
 .download-btn:hover {
     background: var(--secondary-color);
+}
+
+.ris-download-btn {
+    background: #0284c7;
+}
+
+.ris-download-btn:hover {
+    background: #0369a1;
 }
 
 /* Statistics - Compact */
@@ -325,7 +401,6 @@ main {
 
 .cited-by-btn:hover,
 .cited-by-btn.active {
-    background: #b45309;
 }
 
 .citation-container {
@@ -439,7 +514,8 @@ main {
     transition: all 0.2s ease;
 }
 
-.bibtex-btn:hover {
+.bibtex-btn:hover,
+.bibtex-btn.active {
     background: var(--text-primary);
 }
 
@@ -449,6 +525,83 @@ main {
     background: #f8fafc;
     border: 1px solid var(--border-color);
     border-radius: 4px;
+}
+
+.code-container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.45rem;
+    margin-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.code-format-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.code-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.code-action-btn {
+    padding: 0.2rem 0.55rem;
+    font-size: 0.74rem;
+    font-weight: 500;
+    background: #e2e8f0;
+    color: var(--text-primary);
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.code-action-btn:hover {
+    background: #cbd5e1;
+}
+
+.inline-download-link {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.inline-download-link:hover {
+    background: rgba(37, 99, 235, 0.18);
+    border-color: rgba(37, 99, 235, 0.4);
+    text-decoration: none;
+}
+
+.abstract-container {
+    background: #f8fafc;
+}
+
+.abstract-text {
+    font-family: inherit;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--text-primary);
+    white-space: pre-wrap;
 }
 
 .bibtex-text {
@@ -587,6 +740,39 @@ footer a:hover {
     font-weight: 600;
     border-color: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.85rem;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.theme-toggle-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.theme-toggle-text {
+    font-size: 0.825rem;
 }
 
 .loading {
@@ -1346,4 +1532,236 @@ div.vis-tooltip {
 .network-tooltip .tooltip-site {
     color: #2563eb;
     font-weight: 600;
+}
+
+/* ==========================================================================
+   Dark Mode Component Styles
+   ========================================================================== */
+[data-theme="dark"] header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+}
+
+[data-theme="dark"] .search-input {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .filter-select {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .filter-select option {
+    background: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .sort-select {
+    background-color: #1e293b;
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .citation-container,
+[data-theme="dark"] .bibtex-container {
+    background: #0f172a !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .code-container-header {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .code-format-label {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .code-action-btn {
+    background: #334155;
+    color: var(--text-primary);
+    border-color: #475569;
+}
+
+[data-theme="dark"] .code-action-btn:hover {
+    background: #475569;
+}
+
+[data-theme="dark"] .inline-download-link {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.15);
+    border-color: rgba(96, 165, 250, 0.35);
+}
+
+[data-theme="dark"] .inline-download-link:hover {
+    background: rgba(96, 165, 250, 0.25);
+    border-color: rgba(96, 165, 250, 0.5);
+}
+
+[data-theme="dark"] .abstract-container {
+    background: #0f172a !important;
+}
+
+[data-theme="dark"] .citation-item {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .citation-item:hover {
+    background: #334155;
+}
+
+[data-theme="dark"] .bibtex-text {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .tag {
+    background: rgba(59, 130, 246, 0.18);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .tag-data {
+    background: rgba(14, 165, 233, 0.18);
+    color: #7dd3fc;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+[data-theme="dark"] .tag[style*="background-color: #f3e5f5"] {
+    background-color: rgba(168, 85, 247, 0.18) !important;
+    color: #d8b4fe !important;
+    border: 1px solid rgba(168, 85, 247, 0.3) !important;
+}
+
+[data-theme="dark"] .btn-group {
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .pill-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .pill-btn.active {
+    background: var(--card-bg);
+    color: var(--accent-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .toolbar-select {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .graph-search-input {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .graph-search-input:focus {
+    background: #0f172a;
+}
+
+[data-theme="dark"] .graph-search-dropdown {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .search-result-item {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .search-result-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .action-btn {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .action-btn:hover {
+    background: #334155;
+}
+
+[data-theme="dark"] .clear-btn {
+    background: rgba(220, 38, 38, 0.15);
+    border-color: rgba(220, 38, 38, 0.3);
+    color: #f87171;
+}
+
+[data-theme="dark"] .graph-canvas-container {
+    background: #0b1120;
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .hud-badge {
+    background: rgba(15, 23, 42, 0.85);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .zoom-btn {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .zoom-btn:hover {
+    background: #334155;
+}
+
+[data-theme="dark"] .key-badge {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.4);
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .year-badge {
+    background: #334155;
+    border-color: #475569;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .stat-card {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .nav-btn.active {
+    background: var(--card-bg);
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+[data-theme="dark"] .network-tooltip {
+    background: rgba(15, 23, 42, 0.95);
+    border-color: #334155;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .network-tooltip .tooltip-title {
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .network-tooltip .tooltip-author {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .network-tooltip .tooltip-meta {
+    color: #94a3b8;
+    border-top-color: #334155;
+}
+
+[data-theme="dark"] .network-tooltip .tooltip-meta strong {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .network-tooltip .tooltip-site {
+    color: #60a5fa;
 }

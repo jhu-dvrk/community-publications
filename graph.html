@@ -33,11 +33,18 @@
     <meta name="twitter:description" content="Interactive citation and reference network visualization for publications using the da Vinci Research Kit (dVRK).">
     <meta name="twitter:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
 
+    <script>
+        (function() {
+            const stored = localStorage.getItem('dvrk_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', stored || (prefersDark ? 'dark' : 'light'));
+        })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
-    <script src="config.js"></script>
-    <link rel="stylesheet" href="styles.css?v=2">
+    <script src="config.js?v=5"></script>
+    <link rel="stylesheet" href="styles.css?v=5">
 </head>
 
 <body>
@@ -57,6 +64,10 @@
                     <a href="index.html" class="nav-btn">Publications</a>
                     <a href="analytics.html" class="nav-btn">Analytics</a>
                     <a href="graph.html" class="nav-btn active">Cross References</a>
+                    <button class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+                        <span class="theme-toggle-icon">🌙</span>
+                        <span class="theme-toggle-text">Dark</span>
+                    </button>
                 </div>
             </div>
         </header>
@@ -323,7 +334,7 @@
         </main>
     </div>
 
-    <script src="graph.js"></script>
+    <script src="graph.js?v=5"></script>
 </body>
 
 </html>

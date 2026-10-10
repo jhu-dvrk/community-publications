@@ -33,10 +33,17 @@
     <meta name="twitter:description" content="Explore research publications, citation graphs, and analytics for the da Vinci Research Kit (dVRK) community.">
     <meta name="twitter:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
 
+    <script>
+        (function() {
+            const stored = localStorage.getItem('dvrk_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', stored || (prefersDark ? 'dark' : 'light'));
+        })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
-    <script src="config.js"></script>
-    <link rel="stylesheet" href="styles.css?v=2">
+    <script src="config.js?v=5"></script>
+    <link rel="stylesheet" href="styles.css?v=5">
 </head>
 
 <body>
@@ -55,6 +62,10 @@
                     <a href="index.html" class="nav-btn active">Publications</a>
                     <a href="analytics.html" class="nav-btn">Analytics</a>
                     <a href="graph.html" class="nav-btn">Cross References</a>
+                    <button class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+                        <span class="theme-toggle-icon">🌙</span>
+                        <span class="theme-toggle-text">Dark</span>
+                    </button>
                 </div>
             </div>
         </header>
@@ -63,11 +74,27 @@
             <!-- Search and Filter Section -->
             <div class="controls">
                 <div class="search-box">
-                    <input v-model="searchQuery" type="text"
-                        placeholder="Search publications by title, author, or keywords..." class="search-input">
+                    <div class="search-input-wrapper">
+                        <input v-model="searchQuery" type="text"
+                            placeholder="Search publications by title, author, venue, or keywords..." class="search-input">
+                        <button v-if="searchQuery" @click="searchQuery = ''" class="search-clear-btn" title="Clear search">✕</button>
+                    </div>
+                    <label class="search-abstract-label" title="Search inside publication abstracts for hardware components, surgical tasks, or methods">
+                        <input type="checkbox" v-model="searchInAbstract">
+                        <span>Search in abstracts</span>
+                    </label>
                 </div>
 
                 <div class="filters">
+                    <select v-model="sortBy" class="filter-select sort-select" title="Sort order">
+                        <option value="year_desc">📅 Date Published (Newest)</option>
+                        <option value="year_asc">📅 Date Published (Oldest)</option>
+                        <option value="date_added_desc">✨ Recently Added to DB</option>
+                        <option value="cites_desc">🌟 Most Community Citations</option>
+                        <option value="title_asc">🔤 Title (A–Z)</option>
+                        <option value="author_asc">👤 Author (A–Z)</option>
+                    </select>
+
                     <select v-model="startYear" class="filter-select year-select">
                         <option v-for="year in availableStartYears" :key="year" :value="year">
                             From {{ year }}
@@ -110,7 +137,9 @@
                     </select>
 
                     <button @click="resetFilters" class="reset-btn">Reset Filters</button>
-                    <button @click="downloadBibtex" class="download-btn">⬇ Download BibTeX ({{
+                    <button @click="downloadBibtex" class="download-btn">⬇ BibTeX ({{
+                        filteredPublications.length }})</button>
+                    <button @click="downloadAllRis" class="download-btn ris-download-btn" title="Download RIS file for Zotero, Mendeley, or EndNote">⬇ RIS ({{
                         filteredPublications.length }})</button>
                 </div>
             </div>
@@ -191,8 +220,11 @@
                         <button v-if="pub.abstract" @click="toggleAbstract(pub)" class="bibtex-btn">
                             {{ pub.showAbstract ? '✕ Hide Abstract' : '📝 Abstract' }}
                         </button>
-                        <button @click="toggleBibtex(pub)" class="bibtex-btn">
+                        <button @click="toggleBibtex(pub)" class="bibtex-btn" :class="{ 'active': pub.showBibtex }">
                             {{ pub.showBibtex ? '✕ Hide BibTeX' : '📋 BibTeX' }}
+                        </button>
+                        <button @click="toggleRis(pub)" class="bibtex-btn" :class="{ 'active': pub.showRis }" title="View inline RIS citation and download .ris">
+                            {{ pub.showRis ? '✕ Hide RIS' : '📄 RIS' }}
                         </button>
                         <button v-if="pub.cites && pub.cites.length > 0" @click="toggleCites(pub)" class="pub-link cite-btn" :class="{ 'active': pub.showCites }" :title="'View ' + pub.cites.length + ' dVRK papers referenced by this work'">
                             {{ pub.showCites ? '✕ Hide Refs' : '📚 Refs (' + pub.cites.length + ')' }}
@@ -202,12 +234,41 @@
                         </button>
                     </div>
 
-                    <div v-if="pub.showAbstract" class="bibtex-container" style="background: #f9fafb; border-color: #e5e7eb;">
-                        <p class="bibtex-text" style="white-space: pre-wrap; font-family: sans-serif;">{{ pub.abstract }}</p>
+                    <div v-if="pub.showAbstract" class="bibtex-container abstract-container">
+                        <div class="code-container-header">
+                            <span class="code-format-label">Abstract</span>
+                        </div>
+                        <p class="abstract-text">{{ pub.abstract }}</p>
                     </div>
 
                     <div v-if="pub.showBibtex" class="bibtex-container">
+                        <div class="code-container-header">
+                            <span class="code-format-label">BibTeX Entry</span>
+                            <div class="code-actions">
+                                <button @click="copyText(pub.bibtexText, pub, 'bibCopied')" class="code-action-btn" title="Copy BibTeX to clipboard">
+                                    {{ pub.bibCopied ? '✓ Copied!' : '📋 Copy' }}
+                                </button>
+                                <a href="#" @click.prevent="downloadSingleBibtex(pub)" class="inline-download-link" title="Download .bib file">
+                                    ⬇ Download .bib
+                                </a>
+                            </div>
+                        </div>
                         <pre class="bibtex-text">{{ pub.bibtexText }}</pre>
+                    </div>
+
+                    <div v-if="pub.showRis" class="bibtex-container">
+                        <div class="code-container-header">
+                            <span class="code-format-label">RIS Citation (EndNote / Zotero / Mendeley)</span>
+                            <div class="code-actions">
+                                <button @click="copyText(getRisText(pub), pub, 'risCopied')" class="code-action-btn" title="Copy RIS to clipboard">
+                                    {{ pub.risCopied ? '✓ Copied!' : '📋 Copy' }}
+                                </button>
+                                <a href="#" @click.prevent="downloadRis(pub)" class="inline-download-link" title="Download .ris file">
+                                    ⬇ Download .ris
+                                </a>
+                            </div>
+                        </div>
+                        <pre class="bibtex-text">{{ getRisText(pub) }}</pre>
                     </div>
 
                     <div v-if="pub.showCites" class="citation-container">
@@ -271,7 +332,7 @@
         </footer>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=5"></script>
 </body>
 
 </html>

@@ -5,6 +5,8 @@ createApp({
         return {
             publications: [],
             searchQuery: '',
+            searchInAbstract: false,
+            sortBy: 'year_desc',
             startYear: '',
             endYear: '',
             selectedType: '',
@@ -78,14 +80,20 @@ createApp({
 
             // Search filter
             if (this.searchQuery) {
-                const query = this.searchQuery.toLowerCase();
+                const query = this.searchQuery.toLowerCase().trim();
                 filtered = filtered.filter(pub => {
-                    return (
+                    const matchesBasic = (
                         pub.title?.toLowerCase().includes(query) ||
                         pub.author?.toLowerCase().includes(query) ||
                         pub.journal?.toLowerCase().includes(query) ||
-                        pub.booktitle?.toLowerCase().includes(query)
+                        pub.booktitle?.toLowerCase().includes(query) ||
+                        pub.id?.toLowerCase().includes(query)
                     );
+                    if (matchesBasic) return true;
+                    if (this.searchInAbstract && pub.abstract) {
+                        return pub.abstract.toLowerCase().includes(query);
+                    }
+                    return false;
                 });
             }
 
@@ -129,7 +137,46 @@ createApp({
                 });
             }
 
-            return filtered;
+            // Apply sorting
+            const sorted = [...filtered];
+            switch (this.sortBy) {
+                case 'year_asc':
+                    sorted.sort((a, b) => {
+                        const diff = CONFIG.getPublicationDateSortKey(a) - CONFIG.getPublicationDateSortKey(b);
+                        return diff !== 0 ? diff : (a.title || '').localeCompare(b.title || '');
+                    });
+                    break;
+                case 'date_added_desc':
+                    sorted.sort((a, b) => {
+                        const dateDiff = (b.date_added || '').localeCompare(a.date_added || '');
+                        if (dateDiff !== 0) return dateDiff;
+                        return CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
+                    });
+                    break;
+                case 'cites_desc':
+                    sorted.sort((a, b) => {
+                        const cA = a.cited_by ? a.cited_by.length : 0;
+                        const cB = b.cited_by ? b.cited_by.length : 0;
+                        if (cB !== cA) return cB - cA;
+                        return CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
+                    });
+                    break;
+                case 'title_asc':
+                    sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+                    break;
+                case 'author_asc':
+                    sorted.sort((a, b) => (a.author || '').localeCompare(b.author || ''));
+                    break;
+                case 'year_desc':
+                default:
+                    sorted.sort((a, b) => {
+                        const diff = CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
+                        return diff !== 0 ? diff : (a.title || '').localeCompare(b.title || '');
+                    });
+                    break;
+            }
+
+            return sorted;
         },
         paginatedPublications() {
             const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -179,6 +226,8 @@ createApp({
                             title: CONFIG.convertLatexToUnicode(tags.title || ''),
                             author: CONFIG.convertLatexToUnicode(tags.author || ''),
                             year: tags.year || '',
+                            month: tags.month || '',
+                            date: tags.date || '',
                             journal: CONFIG.convertLatexToUnicode(tags.journal || ''),
                             booktitle: CONFIG.convertLatexToUnicode(tags.booktitle || ''),
                             volume: tags.volume || '',
@@ -202,12 +251,18 @@ createApp({
                             showCites: false,
                             showCitedBy: false,
                             showBibtex: false,
+                            showRis: false,
                             showAbstract: false,
+                            bibCopied: false,
+                            risCopied: false,
                             copied: false,
                             isHighlighted: false
                         };
                     })
-                    .sort((a, b) => parseInt(b.year) - parseInt(a.year));
+                    .sort((a, b) => {
+                        const diff = CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
+                        return diff !== 0 ? diff : (a.title || '').localeCompare(b.title || '');
+                    });
 
                 // Populate publication map for fast lookup
                 this.publicationMap = {};
@@ -258,6 +313,16 @@ createApp({
         toggleBibtex(pub) {
             pub.showBibtex = !pub.showBibtex;
             if (pub.showBibtex) {
+                pub.showRis = false;
+                pub.showAbstract = false;
+                pub.showCites = false;
+                pub.showCitedBy = false;
+            }
+        },
+        toggleRis(pub) {
+            pub.showRis = !pub.showRis;
+            if (pub.showRis) {
+                pub.showBibtex = false;
                 pub.showAbstract = false;
                 pub.showCites = false;
                 pub.showCitedBy = false;
@@ -267,6 +332,7 @@ createApp({
             pub.showAbstract = !pub.showAbstract;
             if (pub.showAbstract) {
                 pub.showBibtex = false;
+                pub.showRis = false;
                 pub.showCites = false;
                 pub.showCitedBy = false;
             }
@@ -276,6 +342,7 @@ createApp({
             if (pub.showCites) {
                 pub.showCitedBy = false;
                 pub.showBibtex = false;
+                pub.showRis = false;
                 pub.showAbstract = false;
             }
         },
@@ -284,7 +351,66 @@ createApp({
             if (pub.showCitedBy) {
                 pub.showCites = false;
                 pub.showBibtex = false;
+                pub.showRis = false;
                 pub.showAbstract = false;
+            }
+        },
+        getRisText(pub) {
+            if (!pub.risText) {
+                pub.risText = CONFIG.generateRis(pub);
+            }
+            return pub.risText;
+        },
+        downloadSingleBibtex(pub) {
+            const blob = new Blob([pub.bibtexText], { type: 'application/x-bibtex;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${pub.id}.bib`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        },
+        downloadRis(pub) {
+            const risText = this.getRisText(pub);
+            const blob = new Blob([risText], { type: 'application/x-research-info-systems;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${pub.id}.ris`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        },
+        downloadAllRis() {
+            const risEntries = this.filteredPublications
+                .map(pub => this.getRisText(pub))
+                .join('\r\n\r\n');
+            const blob = new Blob([risEntries], { type: 'application/x-research-info-systems;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dvrk-publications-${this.filteredPublications.length}.ris`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        },
+        copyText(text, pub, flagKey) {
+            const onCopied = () => {
+                pub[flagKey] = true;
+                setTimeout(() => {
+                    pub[flagKey] = false;
+                }, 2000);
+            };
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(onCopied).catch(() => {
+                    this.fallbackCopyText(text, onCopied);
+                });
+            } else {
+                this.fallbackCopyText(text, onCopied);
             }
         },
         getPublicationById(id) {
@@ -356,6 +482,8 @@ createApp({
         },
         resetFilters() {
             this.searchQuery = '';
+            this.searchInAbstract = false;
+            this.sortBy = 'year_desc';
             if (this.publications.length > 0 && this.availableYears.length > 0) {
                 this.startYear = this.availableYears[this.availableYears.length - 1];
                 this.endYear = this.availableYears[0];

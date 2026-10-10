@@ -412,10 +412,36 @@ createApp({
                     }
                 }
             });
+        },
+        applyChartTheme(theme) {
+            const isDark = (theme || document.documentElement.getAttribute('data-theme')) === 'dark';
+            if (window.Chart) {
+                Chart.defaults.color = isDark ? '#94a3b8' : '#64748b';
+                Chart.defaults.borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)';
+            }
+            Object.values(this.charts).forEach(chart => {
+                if (chart) {
+                    if (chart.options && chart.options.scales) {
+                        Object.values(chart.options.scales).forEach(scale => {
+                            if (scale.ticks) scale.ticks.color = isDark ? '#94a3b8' : '#64748b';
+                            if (scale.grid) scale.grid.color = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+                        });
+                    }
+                    if (chart.options && chart.options.plugins && chart.options.plugins.legend) {
+                        chart.options.plugins.legend.labels = chart.options.plugins.legend.labels || {};
+                        chart.options.plugins.legend.labels.color = isDark ? '#cbd5e1' : '#334155';
+                    }
+                    chart.update();
+                }
+            });
         }
     },
     async mounted() {
         await CONFIG.init();
+        this.applyChartTheme();
+        window.addEventListener('dvrk-theme-changed', (e) => {
+            this.applyChartTheme(e.detail?.theme);
+        });
         this.loadPublications();
     }
 }).mount('#app');
