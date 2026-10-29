@@ -154,6 +154,14 @@ def append_to_bib(paper, bib_path):
                 bib_block += f",\n  arxiv = {{{paper['arxiv']}}}"
             if paper.get("dvrk_site") and "dvrk_site =" not in block_lower:
                 bib_block += f",\n  dvrk_site = {{{paper['dvrk_site']}}}"
+            pr = paper.get("peer_reviewed")
+            if not pr:
+                if paper.get("source") == "arXiv" or (paper.get("arxiv") and not paper.get("doi")):
+                    pr = "no"
+                else:
+                    pr = "yes"
+            if "peer_reviewed =" not in block_lower and "peer_reviewed=" not in block_lower:
+                bib_block += f",\n  peer_reviewed = {{{pr}}}"
             if paper.get("abstract") and "abstract =" not in block_lower and "abstract=" not in block_lower:
                 clean_abs = " ".join(paper["abstract"].split())
                 bib_block += f",\n  abstract = {{{clean_abs}}}"
@@ -336,6 +344,14 @@ def search_openalex(query, start_year, end_year, existing_dois, existing_titles,
                 lines.append("}")
                 fallback_bibtex = "\n".join(lines)
 
+            wtype = item.get("type", "")
+            if wtype == "preprint":
+                pr_status = "no"
+            elif wtype in ["dissertation", "thesis"]:
+                pr_status = "thesis"
+            else:
+                pr_status = "yes"
+
             new_papers.append({
                 "source": "OpenAlex",
                 "title": title,
@@ -350,6 +366,7 @@ def search_openalex(query, start_year, end_year, existing_dois, existing_titles,
                 "url": landing_url,
                 "abstract": abstract if abstract else None,
                 "dvrk_site": dvrk_site,
+                "peer_reviewed": pr_status,
             })
 
         cursor = data.get("meta", {}).get("next_cursor")
@@ -438,6 +455,14 @@ def search_crossref(query, start_year, end_year, existing_dois, existing_titles,
         year = pub[0] if pub else None
 
 
+        wtype = item.get("type", "")
+        if wtype == "posted-content":
+            pr_status = "no"
+        elif wtype in ["dissertation", "thesis"]:
+            pr_status = "thesis"
+        else:
+            pr_status = "yes"
+
         new_papers.append({
             "source": "CrossRef",
             "title": title,
@@ -450,6 +475,7 @@ def search_crossref(query, start_year, end_year, existing_dois, existing_titles,
             "ieeexplore": None,
             "arxiv": None,
             "url": item.get("URL"),
+            "peer_reviewed": pr_status,
         })
     return new_papers
 
@@ -549,6 +575,7 @@ def search_arxiv(query, start_year, end_year, existing_dois, existing_titles, re
             "ieeexplore": None,
             "arxiv": arxiv_url,
             "url": None,
+            "peer_reviewed": "no",
         })
     return new_papers
 
@@ -594,6 +621,7 @@ def search_semantic_scholar(query, years, existing_dois, existing_titles, reject
         if title.lower() in rejected_dois:
             continue
 
+        is_preprint = paper.get("isPreprint") or (paper.get("publicationTypes") == ["Preprint"])
         new_papers.append({
             "source": "Semantic Scholar",
             "title": title,
@@ -608,6 +636,7 @@ def search_semantic_scholar(query, years, existing_dois, existing_titles, reject
                 if (paper.get("externalIds") or {}).get("ArXiv") else None
             ),
             "url": None,
+            "peer_reviewed": "no" if is_preprint else "yes",
         })
     print(f"  -> {len(new_papers)} new results")
     return new_papers
@@ -663,6 +692,7 @@ def search_ieee_xplore(query, start_year, end_year, existing_dois, existing_titl
             "semanticscholar": None,
             "arxiv": None,
             "url": None,
+            "peer_reviewed": "yes",
         })
     print(f"  -> {len(new_papers)} new results")
     return new_papers

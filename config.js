@@ -7,8 +7,10 @@ const CONFIG = {
     DATA_TYPE_MAP: {},
     SITE_MAP: {},
     SITE_COUNTRY_MAP: {},
+    PEER_REVIEW_MAP: {},
     FIELD_DESCRIPTIONS: {},
     DATA_TYPE_DESCRIPTIONS: {},
+    PEER_REVIEW_DESCRIPTIONS: {},
 
     // Initialize configuration by loading custom_tags.json
     async init() {
@@ -39,6 +41,14 @@ const CONFIG = {
                     if (site.country) {
                         this.SITE_COUNTRY_MAP[site.id] = site.country;
                     }
+                });
+            }
+
+            // Populate PEER_REVIEW
+            if (data.peer_reviewed) {
+                data.peer_reviewed.forEach(item => {
+                    this.PEER_REVIEW_MAP[item.id] = item.name;
+                    this.PEER_REVIEW_DESCRIPTIONS[item.name] = item.description;
                 });
             }
             

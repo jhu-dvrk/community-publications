@@ -10,6 +10,7 @@ createApp({
             startYear: '',
             endYear: '',
             selectedType: '',
+            selectedPeerReviewed: '',
             selectedField: '',
             selectedDataType: '',
             selectedSite: '',
@@ -108,6 +109,11 @@ createApp({
             // Type filter
             if (this.selectedType) {
                 filtered = filtered.filter(pub => pub.type === this.selectedType);
+            }
+
+            // Peer-reviewed filter
+            if (this.selectedPeerReviewed) {
+                filtered = filtered.filter(pub => pub.peer_reviewed === this.selectedPeerReviewed);
             }
 
             // Field filter
@@ -243,6 +249,7 @@ createApp({
                             openaccesspdf: tags.openaccesspdf || '',
                             research_field: tags.research_field ? tags.research_field.replace(/[{}]/g, '') : '',
                             data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
+                            peer_reviewed: tags.peer_reviewed ? tags.peer_reviewed.replace(/[{}]/g, '').toLowerCase().trim() : '',
                             dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
                             date_added: tags.date_added ? tags.date_added.replace(/[{}]/g, '') : '',
                             bibtexText: bibtexEntries[entry.citationKey] || '',
@@ -492,6 +499,7 @@ createApp({
                 this.endYear = '';
             }
             this.selectedType = '';
+            this.selectedPeerReviewed = '';
             this.selectedField = '';
             this.selectedDataType = '';
             this.selectedSite = '';
@@ -556,6 +564,7 @@ createApp({
             if (!this.filteredPublications.some(p => p.id && p.id.toLowerCase() === targetId)) {
                 this.searchQuery = '';
                 this.selectedType = '';
+                this.selectedPeerReviewed = '';
                 this.selectedField = '';
                 this.selectedDataType = '';
                 this.selectedSite = '';

@@ -36,7 +36,7 @@ FIELD_ORDER = [
     'semanticscholar', 'arxiv', 'arxivid', 'archiveprefix', 'primaryclass', 'eprint',
     'pdf', 'openaccesspdf', 'howpublished', 'pubstate', 'date', 'tppubtype',
     'copyright', 'language',
-    'research_field', 'data_type', 'dvrk_site', 'dvrk_cites', 'date_added',
+    'research_field', 'data_type', 'peer_reviewed', 'dvrk_site', 'dvrk_cites', 'date_added',
     'keywords', 'abstract',
 ]
 

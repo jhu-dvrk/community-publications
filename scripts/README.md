@@ -158,6 +158,25 @@ other references.
 
 ---
 
+### `tag_peer_reviewed.py` — Tag peer-reviewed status & promote published preprints
+
+Scans `publications.bib` to assign `peer_reviewed = {yes}`, `peer_reviewed = {no}`, or `peer_reviewed = {thesis}`:
+- **`yes`**: Formally peer-reviewed journal articles, conference papers, and symposia (e.g. Hamlyn Symposium, CRAS).
+- **`no`**: Preprints (arXiv, Research Square, SSRN) and technical reports.
+- **`thesis`**: Doctoral and Master's theses.
+
+Additionally queries OpenAlex and CrossRef for preprint entries: when an arXiv paper has since been accepted and published in a conference (e.g. ICRA, IROS) or journal (e.g. RA-L, T-RO), it updates the entry's venue and DOI to the peer-reviewed version and sets `peer_reviewed = {yes}`. Title similarity checking is enforced to prevent mismatched bindings.
+
+```zsh
+# Dry run: preview tag assignments and promotions without modifying publications.bib
+python3 scripts/tag_peer_reviewed.py --dry-run
+
+# Run and update publications.bib
+python3 scripts/tag_peer_reviewed.py
+```
+
+---
+
 ## Recommended workflow
 
 ```zsh

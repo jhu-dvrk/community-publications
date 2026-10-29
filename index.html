@@ -115,6 +115,13 @@
                         <option value="misc">Other</option>
                     </select>
 
+                    <select v-model="selectedPeerReviewed" class="filter-select">
+                        <option value="">All Review Statuses</option>
+                        <option value="yes">Peer-Reviewed Only</option>
+                        <option value="no">Preprints / Unreviewed</option>
+                        <option value="thesis">Theses / Dissertations</option>
+                    </select>
+
                     <select v-model="selectedField" class="filter-select">
                         <option value="">All Research Areas</option>
                         <option v-for="field in availableFields" :key="field" :value="field">
@@ -173,6 +180,17 @@
                         <span class="pub-meta" v-if="pub.year || pub.type"> ({{ pub.year }}, {{ formatType(pub.type) }})</span>
                         <span class="pub-meta" v-if="pub.date_added"> • Added {{ pub.date_added }}</span>
                     </p>
+
+                    <div class="pub-tags" v-if="pub.peer_reviewed === 'no' || pub.peer_reviewed === 'thesis'">
+                        <span v-if="pub.peer_reviewed === 'no'" class="tag tag-preprint"
+                            title="Preprint / Working Paper — Not formally peer-reviewed">
+                            Preprint
+                        </span>
+                        <span v-if="pub.peer_reviewed === 'thesis'" class="tag tag-thesis"
+                            title="Thesis / Dissertation — Defended before an academic committee">
+                            Thesis
+                        </span>
+                    </div>
 
                     <div class="pub-tags" v-if="pub.research_field">
                         <span v-for="field in parseFields(pub.research_field)" :key="field"

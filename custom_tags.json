@@ -58,6 +58,23 @@
             "description": "All data associated with additional technologies that were used along with the dVRK, such as eye trackers, force sensors, different imaging technologies, etc."
         }
     ],
+    "peer_reviewed": [
+        {
+            "id": "yes",
+            "name": "Peer-Reviewed",
+            "description": "Formally peer-reviewed journal, conference, or symposium publication."
+        },
+        {
+            "id": "no",
+            "name": "Preprint / Unreviewed",
+            "description": "Preprint (arXiv, Research Square, SSRN) or technical report not yet peer-reviewed."
+        },
+        {
+            "id": "thesis",
+            "name": "Thesis / Dissertation",
+            "description": "Ph.D. dissertation or Master's thesis defended before an academic committee."
+        }
+    ],
     "dvrk_site": [
         { "id": "BGUN", "name": "Ben-Gurion University of the Negev", "country": "Israel" },
         { "id": "CMU", "name": "Carnegie Mellon University", "country": "USA" },

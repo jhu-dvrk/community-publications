@@ -32,6 +32,13 @@ The field is `data_type`.  For example: `data_type={RI and KD and SD and ED}`.  
 * `SD`: **System Data**, the data associated to the robot teleoperation states, as signals coming from foot pedals, head sensor for operator presence detection, etc.
 * `ED`: **External Data**, all the data associated with additional technologies that were used along with the dVRK, such as eye trackers, force sensors, different imaging technologies, etc. 
 
+## Peer-Review Status
+
+The field is `peer_reviewed`. For example: `peer_reviewed={yes}`. Possible values:
+* `yes`: **Peer-Reviewed** — archival journal articles, conference proceedings (ICRA, IROS, RSS, MICCAI), and symposia (Hamlyn Symposium, CRAS).
+* `no`: **Preprint / Unreviewed** — preprints (arXiv, Research Square, SSRN) and technical reports.
+* `thesis`: **Thesis / Dissertation** — doctoral dissertations and master's theses.
+
 ## Research Sites / Institutions
 
 The field is `dvrk_site`. For example: `dvrk_site={JHU and ICL}`.
