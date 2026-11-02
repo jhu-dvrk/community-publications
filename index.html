@@ -42,8 +42,8 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
-    <script src="config.js?v=6"></script>
-    <link rel="stylesheet" href="styles.css?v=6">
+    <script src="config.js?v=7"></script>
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 
 <body>
@@ -112,6 +112,7 @@
                         <option value="article">Journal Articles</option>
                         <option value="inproceedings">Conference Papers</option>
                         <option value="incollection">Book Chapters</option>
+                        <option value="phdthesis">Theses</option>
                         <option value="misc">Other</option>
                     </select>
 
@@ -170,11 +171,11 @@
                     <h3 class="pub-title">{{ pub.title }}</h3>
 
                     <p class="pub-authors" v-if="pub.author">
-                        {{ formatAuthors(pub.author) }}
+                        {{ pub.formattedAuthors || formatAuthors(pub.author) }}
                     </p>
 
-                    <p class="pub-venue" v-if="pub.journal || pub.booktitle || pub.year || pub.date_added">
-                        <strong v-if="pub.journal || pub.booktitle">{{ pub.journal || pub.booktitle }}</strong>
+                    <p class="pub-venue" v-if="pub.journal || pub.booktitle || pub.howpublished || pub.school || pub.year || pub.date_added">
+                        <strong v-if="pub.journal || pub.booktitle || pub.howpublished || pub.school">{{ pub.journal || pub.booktitle || pub.howpublished || pub.school }}</strong>
                         <span v-if="pub.volume"> Vol. {{ pub.volume }}</span>
                         <span v-if="pub.number">, No. {{ pub.number }}</span>
                         <span class="pub-meta" v-if="pub.year || pub.type"> ({{ pub.year }}, {{ formatType(pub.type) }})</span>
@@ -350,7 +351,7 @@
         </footer>
     </div>
 
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=7"></script>
 </body>
 
 </html>

@@ -112,25 +112,115 @@ def fetch_with_adaptive_delay(url, params, progress_prefix=""):
             
     return None
 
-def is_valid_match(title, result):
-    """Check if a Semantic Scholar result is a good match for the given title."""
-    res_title = result.get("title", "")
-    # Simple similarity score
-    similarity = difflib.SequenceMatcher(None, title.lower(), res_title.lower()).ratio()
-    
-    # Check for generic markers
+MASTHEAD_RE = re.compile(
+    r"(is published by the ieee|joint publication of the ieee|for membership and subscription|"
+    r"international conference on intelligent robots and systems.*(?:will be held|was held)|"
+    r"innovative preprint repository,\s*arxiv,\s*was created|"
+    r"guest editors\s*:.*professor of)",
+    re.IGNORECASE | re.DOTALL,
+)
+
+def normalize_compare_text(s):
+    if not s:
+        return ""
+    s = re.sub(r"[{}]", "", s)
+    s = re.sub(r"[^a-zA-Z0-9]+", " ", s.lower())
+    return " ".join(s.split())
+
+def extract_author_surnames(author_str):
+    surnames = set()
+    if not author_str:
+        return surnames
+    for raw in re.split(r"\s+and\s+", author_str, flags=re.IGNORECASE):
+        raw = re.sub(r"[{}]", "", raw).strip()
+        if not raw:
+            continue
+        last = raw.split(",")[0].strip() if "," in raw else (raw.split()[-1] if raw.split() else "")
+        for tok in normalize_compare_text(last).split():
+            if len(tok) >= 2:
+                surnames.add(tok)
+    return surnames
+
+def extract_bib_field(raw_entry, field_name):
+    """Extract a BibTeX field value handling nested curly braces and apostrophes safely."""
+    pattern = re.compile(r"(?im)^\s*" + re.escape(field_name) + r"\s*=\s*")
+    m = pattern.search(raw_entry)
+    if not m:
+        return None
+    pos = m.end()
+    if pos >= len(raw_entry):
+        return None
+    opener = raw_entry[pos]
+    if opener == "{":
+        depth = 1
+        pos += 1
+        start = pos
+        while pos < len(raw_entry) and depth > 0:
+            ch = raw_entry[pos]
+            if ch == "\\" and pos + 1 < len(raw_entry):
+                pos += 2
+                continue
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+            pos += 1
+        return raw_entry[start:pos - 1].strip() if depth == 0 else None
+    elif opener == '"':
+        depth = 0
+        pos += 1
+        start = pos
+        while pos < len(raw_entry):
+            ch = raw_entry[pos]
+            if ch == "\\" and pos + 1 < len(raw_entry):
+                pos += 2
+                continue
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth = max(0, depth - 1)
+            elif ch == '"' and depth == 0:
+                return raw_entry[start:pos].strip()
+            pos += 1
+        return None
+    else:
+        end_m = re.search(r"[,\r\n}]", raw_entry[pos:])
+        return raw_entry[pos:pos + end_m.start()].strip() if end_m else raw_entry[pos:].strip()
+
+def is_valid_match(title, result, bib_authors=""):
+    """Check if a Semantic Scholar result is a genuine match for the given title and authors."""
+    norm_title = normalize_compare_text(title)
+    norm_res = normalize_compare_text(result.get("title") or "")
+    if not norm_title or not norm_res:
+        return False, 0.0
+
+    # Guard against truncated or 1-word query collisions
+    similarity = difflib.SequenceMatcher(None, norm_title, norm_res).ratio()
+
+    # Check for generic proceedings/journal records
     publication_types = result.get("publicationTypes") or []
     is_generic = any(t in ["Conference", "Journal"] for t in publication_types)
-    
-    # High similarity might mean it actually IS the conference paper (sometimes tagged weirdly)
-    # But usually, papers are tagged "JournalArticle" or "ConferenceArticle"
+
     score = similarity
     if is_generic:
-        score -= 0.3 # Penalize generic entries
-    
-    return score > 0.7, score
+        score -= 0.3  # Penalize generic entries
 
-def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_days=180, reprocess=False):
+    # Require author surname overlap when both sides list authors
+    bib_surnames = extract_author_surnames(bib_authors)
+    res_authors = result.get("authors") or []
+    if bib_surnames and res_authors:
+        res_surnames = set()
+        for a in res_authors:
+            name = normalize_compare_text((a or {}).get("name") or "")
+            for tok in name.split():
+                if len(tok) >= 2:
+                    res_surnames.add(tok)
+        if res_surnames and not (bib_surnames & res_surnames) and similarity < 0.96:
+            return False, 0.0
+
+    return score > 0.78, score
+
+def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_days=180, reprocess=False, bib_authors=""):
     base_url = "https://api.semanticscholar.org/graph/v1/paper"
     
     # Try searching by DOI first if available
@@ -139,15 +229,11 @@ def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_day
         if os.path.exists(cache_path):
             data = load_cache(cache_path)
             if data:
-                # If reprocessing, we still want to validate the cached result
-                if reprocess:
-                    is_valid, score = is_valid_match(title, data)
-                    if not is_valid:
-                        # If cached DOI data is invalid (unlikely but possible if title doesn't match)
-                        return None
-                
-                if is_cache_valid(cache_path, max_cache_days) or reprocess:
+                is_valid, _ = is_valid_match(title, data, bib_authors)
+                if is_valid and (is_cache_valid(cache_path, max_cache_days) or reprocess):
                     return data
+                elif reprocess and not is_valid:
+                    return None
 
         if not reprocess:
             url = f"{base_url}/DOI:{doi}"
@@ -155,21 +241,23 @@ def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_day
             data = fetch_with_adaptive_delay(url, params, progress_prefix)
             if data:
                 save_cache(cache_path, data)
-                return data
+                is_valid, _ = is_valid_match(title, data, bib_authors)
+                if is_valid:
+                    return data
 
     # Fallback to search by title
-    if title:
+    if title and len(normalize_compare_text(title)) >= 12:
         cache_path = get_cache_path(f"title:{title.lower()}")
         if os.path.exists(cache_path):
             data = load_cache(cache_path)
             if data:
                 # Validate cached record
-                is_valid, score = is_valid_match(title, data)
+                is_valid, score = is_valid_match(title, data, bib_authors)
                 if is_valid:
                     if is_cache_valid(cache_path, max_cache_days) or reprocess:
                         return data
                 elif reprocess:
-                    # During reprocess, explicitely return None if cache is invalid
+                    # During reprocess, explicitly return None if cache is invalid
                     return None
 
         if not reprocess:
@@ -187,13 +275,13 @@ def get_semantic_scholar_data(title, doi=None, progress_prefix="", max_cache_day
                 highest_score = 0
                 
                 for result in results:
-                    is_valid, score = is_valid_match(title, result)
-                    if score > highest_score:
+                    is_valid, score = is_valid_match(title, result, bib_authors)
+                    if is_valid and score > highest_score:
                         highest_score = score
                         best_match = result
                 
                 # Threshold for accepting a match
-                if highest_score > 0.7:
+                if best_match and highest_score > 0.78:
                     save_cache(cache_path, best_match)
                     return best_match
                 else:
@@ -234,26 +322,20 @@ def enrich_bib(file_path, max_cache_days=180, reprocess=False):
         
         full_entry = "@" + raw
         
-        # Extract fields
-        # Extract fields robustly
-        title = ""
-        # Look for title = {Prop...} or title = "Prop..."
-        tm = re.search(r'(?i)\s+title\s*=\s*[{"\'](.+?)[}"\']', raw, re.DOTALL)
-        if tm:
-            title = tm.group(1)
-            # Remove LaTeX braces and double spaces
-            title = re.sub(r'[\{\}]', '', title)
-            title = re.sub(r'\s+', ' ', title).strip()
+        # Extract fields robustly using balanced-brace parser (handles nested {dVRK} and apostrophes)
+        raw_title = extract_bib_field(raw, "title") or ""
+        title = re.sub(r'[\{\}]', '', raw_title)
+        title = re.sub(r'\s+', ' ', title).strip()
+
+        raw_authors = extract_bib_field(raw, "author") or ""
+        doi = extract_bib_field(raw, "doi")
+        if doi:
+            doi = doi.strip()
         
-        doi = None
-        dm = re.search(r'(?i)\s+doi\s*=\s*[{"\'](.+?)[}"\']', raw)
-        if dm:
-            doi = dm.group(1).strip()
-        
-        sem_match = re.search(r'(?i)\s+semanticscholar\s*=', raw)
-        url_match = re.search(r'(?i)\s+url\s*=', raw)
-        abstract_match = re.search(r'(?i)\s+abstract\s*=', raw)
-        arxiv_match = re.search(r'(?i)\s+arxiv\s*=', raw)
+        sem_match = re.search(r'(?im)^\s*semanticscholar\s*=', raw)
+        url_match = re.search(r'(?im)^\s*url\s*=', raw)
+        abstract_match = re.search(r'(?im)^\s*abstract\s*=', raw)
+        arxiv_match = re.search(r'(?im)^\s*arxiv\s*=', raw)
         
         needs_sem = sem_match is None
         needs_doi = doi is None
@@ -265,7 +347,7 @@ def enrich_bib(file_path, max_cache_days=180, reprocess=False):
         
         if (needs_sem or needs_doi or needs_abs or needs_arxiv or (needs_url and not doi)) and title:
             # Fetch data (Adaptive delay handled inside)
-            data = get_semantic_scholar_data(title, doi, progress_msg + " ", max_cache_days, reprocess)
+            data = get_semantic_scholar_data(title, doi, progress_msg + " ", max_cache_days, reprocess, bib_authors=raw_authors)
             
             if data:
                 if needs_sem and data.get("url"):
@@ -276,7 +358,7 @@ def enrich_bib(file_path, max_cache_days=180, reprocess=False):
                     new_doi = data["externalIds"]["DOI"]
                     changes.append(f"  doi = {{{new_doi}}}")
                     
-                if needs_abs and data.get("abstract"):
+                if needs_abs and data.get("abstract") and not MASTHEAD_RE.search(data["abstract"]):
                     abstract = data["abstract"].replace("{", "\\{").replace("}", "\\}")
                     changes.append(f"  abstract = {{{abstract}}}")
 

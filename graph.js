@@ -81,7 +81,7 @@ createApp({
             if (pub.author) {
                 const authorEl = document.createElement('div');
                 authorEl.className = 'tooltip-author';
-                authorEl.textContent = pub.author;
+                authorEl.textContent = pub.formattedAuthors || pub.author;
                 container.appendChild(authorEl);
             }
 
@@ -108,14 +108,18 @@ createApp({
                         const tags = entry.entryTags;
                         const rawCites = tags.dvrk_cites ? tags.dvrk_cites.replace(/[{}]/g, '') : '';
                         const cites = rawCites ? rawCites.split(' and ').map(s => s.trim()).filter(Boolean) : [];
+                        const authorUnicode = CONFIG.convertLatexToUnicode(tags.author || '');
                         return {
                             id: entry.citationKey,
                             type: entry.entryType,
                             title: CONFIG.convertLatexToUnicode(tags.title || ''),
-                            author: CONFIG.convertLatexToUnicode(tags.author || ''),
+                            author: authorUnicode,
+                            formattedAuthors: CONFIG.formatAuthors(authorUnicode),
                             year: tags.year || '',
                             journal: CONFIG.convertLatexToUnicode(tags.journal || ''),
                             booktitle: CONFIG.convertLatexToUnicode(tags.booktitle || ''),
+                            howpublished: CONFIG.cleanHowPublished(tags.howpublished || ''),
+                            school: CONFIG.convertLatexToUnicode(tags.school || ''),
                             doi: tags.doi || '',
                             url: tags.url || '',
                             dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
@@ -665,7 +669,8 @@ createApp({
                 .filter(p => {
                     return p.id.toLowerCase().includes(q) ||
                         p.title.toLowerCase().includes(q) ||
-                        p.author.toLowerCase().includes(q);
+                        p.author.toLowerCase().includes(q) ||
+                        (p.formattedAuthors && p.formattedAuthors.toLowerCase().includes(q));
                 })
                 .slice(0, 8);
             this.showSearchResults = true;

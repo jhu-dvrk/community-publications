@@ -43,8 +43,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="config.js?v=6"></script>
-    <link rel="stylesheet" href="styles.css?v=6">
+    <script src="config.js?v=7"></script>
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 
 <body>
@@ -275,10 +275,10 @@
                                         {{ pub.title }} ↗
                                     </a>
                                 </div>
-                                <div class="modal-pub-author">{{ pub.author }}</div>
+                                <div class="modal-pub-author">{{ pub.formattedAuthors || pub.author }}</div>
                                 <div class="modal-pub-meta">
                                     <span class="modal-pub-year">{{ pub.year }}</span>
-                                    <span v-if="pub.journal" class="modal-pub-venue">• {{ pub.journal }}</span>
+                                    <span v-if="pub.venueDisplay || pub.journal" class="modal-pub-venue">• {{ pub.venueDisplay || pub.journal }}</span>
                                     <span class="modal-pub-sites">• Sites: {{ pub.dvrk_site }}</span>
                                 </div>
                             </div>
@@ -305,7 +305,7 @@
         </footer>
     </div>
 
-    <script src="analytics.js?v=6"></script>
+    <script src="analytics.js?v=7"></script>
 </body>
 
 </html>

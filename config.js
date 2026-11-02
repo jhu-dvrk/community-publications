@@ -199,6 +199,17 @@ const CONFIG = {
         return result;
     },
 
+    // Clean BibTeX howpublished field (unwrapping \url{...} and formatting bare arXiv URLs)
+    cleanHowPublished(raw) {
+        if (!raw) return '';
+        const unwrapped = raw.trim().replace(/^\\url\{(.+)\}$/i, '$1').trim();
+        const arxivMatch = unwrapped.match(/^https?:\/\/arxiv\.org\/(?:abs|pdf)\/(\d{4}\.\d{4,5}(?:v\d+)?)(?:\.pdf)?$/i);
+        if (arxivMatch) {
+            return `arXiv preprint arXiv:${arxivMatch[1]}`;
+        }
+        return this.convertLatexToUnicode(unwrapped);
+    },
+
     // Calculate year range from publications array
     calculateYearRange(publications) {
         if (!publications || publications.length === 0) return 'N/A';
@@ -207,18 +218,72 @@ const CONFIG = {
         return `${Math.min(...years)} - ${Math.max(...years)}`;
     },
 
-    // Calculate total unique authors from publications array
+    // Normalize a name token by stripping diacritics and punctuation
+    normalizeNameToken(str) {
+        if (!str) return '';
+        return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/ø/gi, 'o')
+            .replace(/ł/gi, 'l')
+            .replace(/ß/g, 'ss')
+            .toLowerCase()
+            .replace(/[^a-z0-9\s]/g, '')
+            .trim();
+    },
+
+    // Calculate total unique authors from publications array with name/initial disambiguation
     calculateTotalAuthors(publications) {
         if (!publications || publications.length === 0) return 0;
-        const authors = new Set();
+
+        const fullClusters = new Set();        // "normLast::firstGiven"
+        const fullByInitial = new Set();       // "normLast::firstInitial" covered by a full name
+        const initialOnly = new Set();         // "normLast::firstInitial" seen only as initial
+        const singleTokenAuthors = new Set();  // corporate / mononym authors
+
         publications.forEach(pub => {
-            if (pub.author) {
-                pub.author.split(' and ').forEach(author => {
-                    authors.add(author.trim());
-                });
+            if (!pub.author) return;
+            this.parseAuthorList(pub.author).forEach(({ first, last }) => {
+                const normLast = this.normalizeNameToken(last).replace(/\s+/g, '');
+                if (!normLast) return;
+
+                const givenTokens = (first || '')
+                    .split(/[\s\.\-]+/)
+                    .map(t => this.normalizeNameToken(t))
+                    .filter(Boolean);
+
+                if (givenTokens.length === 0) {
+                    singleTokenAuthors.add(normLast);
+                    return;
+                }
+
+                const firstGiven = givenTokens[0];
+                const firstInit = firstGiven[0];
+
+                if (firstGiven.length > 1) {
+                    fullClusters.add(`${normLast}::${firstGiven}`);
+                    fullByInitial.add(`${normLast}::${firstInit}`);
+                } else {
+                    initialOnly.add(`${normLast}::${firstInit}`);
+                }
+            });
+        });
+
+        let count = fullClusters.size;
+        initialOnly.forEach(initKey => {
+            if (!fullByInitial.has(initKey)) {
+                count++;
             }
         });
-        return authors.size;
+        singleTokenAuthors.forEach(lastKey => {
+            const matchedFull = Array.from(fullClusters).some(k => k.startsWith(`${lastKey}::`));
+            const matchedInit = Array.from(initialOnly).some(k => k.startsWith(`${lastKey}::`));
+            if (!matchedFull && !matchedInit) {
+                count++;
+            }
+        });
+
+        return count;
     },
 
     MONTH_NUM: {
@@ -253,23 +318,75 @@ const CONFIG = {
         return year * 10000 + month * 100 + day;
     },
 
-    // Parse BibTeX author string into array of { first, last, full }
+    // Surname particles kept attached to last name in "First Middle van Last" forms
+    SURNAME_PARTICLES: new Set(['van', 'von', 'de', 'del', 'della', 'di', 'da', 'dos', 'das', 'du', 'le', 'la', 'y', 'el', 'al']),
+
+    // Parse BibTeX author string into array of { first, last, suffix, full }
     parseAuthorList(authorString) {
         if (!authorString) return [];
-        return authorString.split(/\s+and\s+/i).map(raw => {
-            raw = raw.trim();
-            if (raw.includes(',')) {
-                const parts = raw.split(',').map(s => s.trim());
-                const last = parts[0];
-                const first = parts.slice(1).join(' ');
-                return { last, first, full: `${first} ${last}`.trim() };
-            } else {
-                const parts = raw.split(/\s+/);
-                const last = parts.pop() || '';
-                const first = parts.join(' ');
-                return { last, first, full: raw };
-            }
-        });
+        return authorString
+            .split(/\s+and\s+/i)
+            .map(s => s.trim())
+            .filter(Boolean)
+            .map(raw => {
+                if (raw.includes(',')) {
+                    const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+                    if (parts.length >= 3) {
+                        // BibTeX "von Last, Jr., First"
+                        const last = parts[0];
+                        const suffix = parts[1];
+                        const first = parts.slice(2).join(' ');
+                        return { last, first, suffix, full: `${first} ${last}, ${suffix}`.trim() };
+                    }
+                    const last = parts[0] || '';
+                    const first = parts.slice(1).join(' ');
+                    return { last, first, suffix: '', full: `${first} ${last}`.trim() };
+                } else {
+                    const parts = raw.split(/\s+/).filter(Boolean);
+                    if (parts.length <= 1) {
+                        return { last: raw, first: '', suffix: '', full: raw };
+                    }
+                    // Handle trailing suffix like "Jr." or "III" in "First Last Jr."
+                    let suffix = '';
+                    if (/^(jr\.?|sr\.?|ii|iii|iv)$/i.test(parts[parts.length - 1]) && parts.length >= 3) {
+                        suffix = parts.pop();
+                    }
+                    const lastParts = [parts.pop()];
+                    // Attach surname particles (e.g., "Beatrice Van Amsterdam", "Ferdinando Rodriguez y Baena")
+                    while (parts.length > 1 && this.SURNAME_PARTICLES.has(parts[parts.length - 1].toLowerCase())) {
+                        const particle = parts.pop();
+                        lastParts.unshift(particle);
+                        // Special case for Spanish/Italian "Rodriguez y Baena" where 'y' links two surnames
+                        if (particle.toLowerCase() === 'y' && parts.length > 1) {
+                            lastParts.unshift(parts.pop());
+                        }
+                    }
+                    const last = lastParts.join(' ');
+                    const first = parts.join(' ');
+                    const full = suffix ? `${first} ${last}, ${suffix}`.trim() : `${first} ${last}`.trim();
+                    return { last, first, suffix, full };
+                }
+            });
+    },
+
+    // Format BibTeX author string into consistent "First Last, First Last, and First Last" display
+    formatAuthors(authorString) {
+        const parsed = this.parseAuthorList(authorString);
+        if (parsed.length === 0) return '';
+        if (parsed.length === 1) return parsed[0].full;
+        if (parsed.length === 2) return `${parsed[0].full} and ${parsed[1].full}`;
+        const allButLast = parsed.slice(0, -1).map(a => a.full).join(', ');
+        return `${allButLast}, and ${parsed[parsed.length - 1].full}`;
+    },
+
+    // Normalized sort key ("last, first") for sorting publications by first author surname
+    getFirstAuthorSortKey(authorString) {
+        const parsed = this.parseAuthorList(authorString);
+        if (parsed.length === 0) return '';
+        const firstAuth = parsed[0];
+        const lastKey = this.normalizeNameToken(firstAuth.last);
+        const firstKey = this.normalizeNameToken(firstAuth.first);
+        return `${lastKey}, ${firstKey}`;
     },
 
     // Convert first/middle name(s) into initials (e.g. "Peter H." -> "P. H.")
@@ -358,7 +475,9 @@ const CONFIG = {
         const typeMap = {
             'article': 'JOUR',
             'inproceedings': 'CONF',
+            'conference': 'CONF',
             'incollection': 'CHAP',
+            'inbook': 'CHAP',
             'book': 'BOOK',
             'phdthesis': 'THES',
             'mastersthesis': 'THES',

@@ -31,7 +31,7 @@ from bibtexparser.bwriter import BibTexWriter
 
 # Standardized field order across all scripts
 FIELD_ORDER = [
-    'author', 'title', 'journal', 'booktitle', 'year', 'volume', 'number',
+    'author', 'title', 'journal', 'booktitle', 'school', 'year', 'volume', 'number',
     'pages', 'month', 'publisher', 'editor', 'series', 'collection',
     'address', 'organization', 'issn', 'isbn',
     'doi', 'url', 'urldate', 'ieeexplore',
@@ -64,6 +64,8 @@ PREPRINT_HOSTS = [
     '21203/rs',
     'ssrn',
     'chemrxiv',
+    '10.1101/',
+    'corr',
 ]
 
 def load_overrides():

@@ -29,7 +29,7 @@ _MONTH_NUM = {
 
 # Standardized field order for consistent layout across all scripts
 FIELD_ORDER = [
-    'author', 'title', 'journal', 'booktitle', 'year', 'volume', 'number',
+    'author', 'title', 'journal', 'booktitle', 'school', 'year', 'volume', 'number',
     'pages', 'month', 'publisher', 'editor', 'series', 'collection',
     'address', 'organization', 'issn', 'isbn',
     'doi', 'url', 'urldate', 'ieeexplore',

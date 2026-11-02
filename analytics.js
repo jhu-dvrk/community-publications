@@ -157,13 +157,18 @@ createApp({
                     .filter(entry => entry.entryTags && entry.entryTags.title && entry.entryTags.year)
                     .map(entry => {
                         const tags = entry.entryTags;
+                        const authorUnicode = CONFIG.convertLatexToUnicode(tags.author || '');
+                        const venuePrimary = CONFIG.convertLatexToUnicode(tags.journal || tags.booktitle || '');
+                        const venueFallback = CONFIG.cleanHowPublished(tags.howpublished || '') || CONFIG.convertLatexToUnicode(tags.school || '');
                         return {
                             id: entry.citationKey,
                             type: entry.entryType,
                             title: CONFIG.convertLatexToUnicode(tags.title ? tags.title.replace(/[{}]/g, '') : ''),
-                            author: CONFIG.convertLatexToUnicode(tags.author || ''),
+                            author: authorUnicode,
+                            formattedAuthors: CONFIG.formatAuthors(authorUnicode),
                             year: tags.year || '',
-                            journal: CONFIG.convertLatexToUnicode(tags.journal || tags.booktitle || ''),
+                            journal: venuePrimary,
+                            venueDisplay: venuePrimary || venueFallback,
                             doi: tags.doi ? tags.doi.replace(/[{}]/g, '') : '',
                             url: tags.url ? tags.url.replace(/[{}]/g, '') : '',
                             research_field: tags.research_field ? tags.research_field.replace(/[{}]/g, '') : '',

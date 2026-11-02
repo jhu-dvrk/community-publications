@@ -177,6 +177,20 @@ python3 scripts/tag_peer_reviewed.py
 
 ---
 
+### `sanitize_bib.py` — Audit and repair corrupted metadata, DOIs, abstracts, and venues
+
+Audits all entries in `publications.bib` against local Semantic Scholar cache, OpenAlex, and Crossref using strict title + author surname verification. Detects and repairs mismatched DOIs, polluted `arxiv` / `semanticscholar` URLs, duplicated or masthead-boilerplate abstracts, and missing venues.
+
+```zsh
+# Preview detected metadata issues and proposed repairs
+python3 scripts/sanitize_bib.py --dry-run
+
+# Apply repairs and write normalized publications.bib
+python3 scripts/sanitize_bib.py
+```
+
+---
+
 ## Recommended workflow
 
 ```zsh

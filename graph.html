@@ -43,8 +43,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
-    <script src="config.js?v=6"></script>
-    <link rel="stylesheet" href="styles.css?v=6">
+    <script src="config.js?v=7"></script>
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 
 <body>
@@ -217,9 +217,9 @@
                             </div>
 
                             <h3 class="sidebar-title">{{ selectedPub.title }}</h3>
-                            <p class="sidebar-authors">{{ selectedPub.author }}</p>
-                            <p class="sidebar-venue" v-if="selectedPub.journal || selectedPub.booktitle">
-                                <em>{{ selectedPub.journal || selectedPub.booktitle }}</em>
+                            <p class="sidebar-authors">{{ selectedPub.formattedAuthors || selectedPub.author }}</p>
+                            <p class="sidebar-venue" v-if="selectedPub.journal || selectedPub.booktitle || selectedPub.howpublished || selectedPub.school">
+                                <em>{{ selectedPub.journal || selectedPub.booktitle || selectedPub.howpublished || selectedPub.school }}</em>
                             </p>
 
                             <!-- Primary Action Links -->
@@ -334,7 +334,7 @@
         </main>
     </div>
 
-    <script src="graph.js?v=5"></script>
+    <script src="graph.js?v=7"></script>
 </body>
 
 </html>

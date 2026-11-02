@@ -86,8 +86,11 @@ createApp({
                     const matchesBasic = (
                         pub.title?.toLowerCase().includes(query) ||
                         pub.author?.toLowerCase().includes(query) ||
+                        pub.formattedAuthors?.toLowerCase().includes(query) ||
                         pub.journal?.toLowerCase().includes(query) ||
                         pub.booktitle?.toLowerCase().includes(query) ||
+                        pub.howpublished?.toLowerCase().includes(query) ||
+                        pub.school?.toLowerCase().includes(query) ||
                         pub.id?.toLowerCase().includes(query)
                     );
                     if (matchesBasic) return true;
@@ -108,7 +111,13 @@ createApp({
 
             // Type filter
             if (this.selectedType) {
-                filtered = filtered.filter(pub => pub.type === this.selectedType);
+                filtered = filtered.filter(pub => {
+                    const t = (pub.type || '').toLowerCase();
+                    if (this.selectedType === 'incollection') return t === 'incollection' || t === 'inbook';
+                    if (this.selectedType === 'inproceedings') return t === 'inproceedings' || t === 'conference';
+                    if (this.selectedType === 'phdthesis') return t === 'phdthesis' || t === 'mastersthesis';
+                    return t === this.selectedType;
+                });
             }
 
             // Peer-reviewed filter
@@ -171,7 +180,11 @@ createApp({
                     sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
                     break;
                 case 'author_asc':
-                    sorted.sort((a, b) => (a.author || '').localeCompare(b.author || ''));
+                    sorted.sort((a, b) => {
+                        const cmp = (a.authorSortKey || '').localeCompare(b.authorSortKey || '');
+                        if (cmp !== 0) return cmp;
+                        return CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
+                    });
                     break;
                 case 'year_desc':
                 default:
@@ -226,16 +239,21 @@ createApp({
                         const tags = entry.entryTags;
                         const rawCites = tags.dvrk_cites ? tags.dvrk_cites.replace(/[{}]/g, '') : '';
                         const cites = rawCites ? rawCites.split(' and ').map(s => s.trim()).filter(Boolean) : [];
+                        const authorUnicode = CONFIG.convertLatexToUnicode(tags.author || '');
                         return {
                             id: entry.citationKey,
-                            type: entry.entryType,
+                            type: (entry.entryType || '').toLowerCase(),
                             title: CONFIG.convertLatexToUnicode(tags.title || ''),
-                            author: CONFIG.convertLatexToUnicode(tags.author || ''),
+                            author: authorUnicode,
+                            formattedAuthors: CONFIG.formatAuthors(authorUnicode),
+                            authorSortKey: CONFIG.getFirstAuthorSortKey(authorUnicode),
                             year: tags.year || '',
                             month: tags.month || '',
                             date: tags.date || '',
                             journal: CONFIG.convertLatexToUnicode(tags.journal || ''),
                             booktitle: CONFIG.convertLatexToUnicode(tags.booktitle || ''),
+                            howpublished: CONFIG.cleanHowPublished(tags.howpublished || ''),
+                            school: CONFIG.convertLatexToUnicode(tags.school || ''),
                             volume: tags.volume || '',
                             number: tags.number || '',
                             pages: tags.pages || '',
@@ -443,17 +461,21 @@ createApp({
         },
         formatAuthors(authors) {
             if (!authors) return '';
-            // Split by ' and ' and join with ' and ' for display
-            return authors.split(' and ').join(' and ');
+            return CONFIG.formatAuthors(authors);
         },
         formatType(type) {
             const typeMap = {
                 'article': 'Journal',
                 'inproceedings': 'Conference',
+                'conference': 'Conference',
                 'incollection': 'Book Chapter',
+                'inbook': 'Book Chapter',
+                'phdthesis': 'Thesis',
+                'mastersthesis': 'Thesis',
+                'techreport': 'Tech Report',
                 'misc': 'Other'
             };
-            return typeMap[type] || type;
+            return typeMap[(type || '').toLowerCase()] || type;
         },
         parseFields(fields) {
             if (!fields) return [];
