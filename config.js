@@ -389,6 +389,59 @@ const CONFIG = {
         return `${lastKey}, ${firstKey}`;
     },
 
+    // Compare two authors (parsed objects or name strings) across BibTeX format/initial/diacritic variants
+    authorsMatch(authorA, authorB) {
+        const parseSingle = (input) => {
+            if (!input) return null;
+            if (typeof input === 'object' && input.last !== undefined) return input;
+            const list = this.parseAuthorList(this.convertLatexToUnicode(String(input)));
+            return list.length > 0 ? list[0] : null;
+        };
+
+        const a = parseSingle(authorA);
+        const b = parseSingle(authorB);
+        if (!a || !b) return false;
+
+        const normLastA = this.normalizeNameToken(a.last).replace(/\s+/g, '');
+        const normLastB = this.normalizeNameToken(b.last).replace(/\s+/g, '');
+        if (!normLastA || !normLastB || normLastA !== normLastB) return false;
+
+        const tokenizeGiven = (first) => (first || '')
+            .split(/[\s.\-]+/)
+            .map(t => this.normalizeNameToken(t))
+            .filter(Boolean);
+
+        const givenA = tokenizeGiven(a.first);
+        const givenB = tokenizeGiven(b.first);
+
+        // If either side is surname-only or mononym, surname match suffices
+        if (givenA.length === 0 || givenB.length === 0) return true;
+
+        // Handle compound/hyphenated given names (e.g., "Min-Ho" / "Min Ho" vs "Minho")
+        if (givenA.join('') === givenB.join('')) return true;
+
+        const fgA = givenA[0];
+        const fgB = givenB[0];
+        if (fgA.length === 1 || fgB.length === 1) {
+            if (fgA[0] !== fgB[0]) return false;
+        } else if (fgA !== fgB) {
+            return false;
+        }
+
+        // If both specify middle names/initials, verify middle compatibility
+        if (givenA.length >= 2 && givenB.length >= 2) {
+            const mgA = givenA[1];
+            const mgB = givenB[1];
+            if (mgA.length === 1 || mgB.length === 1) {
+                if (mgA[0] !== mgB[0]) return false;
+            } else if (mgA !== mgB) {
+                return false;
+            }
+        }
+
+        return true;
+    },
+
     // Convert first/middle name(s) into initials (e.g. "Peter H." -> "P. H.")
     getInitials(name) {
         if (!name) return '';

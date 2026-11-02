@@ -42,8 +42,8 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
-    <script src="config.js?v=7"></script>
-    <link rel="stylesheet" href="styles.css?v=7">
+    <script src="config.js?v=8"></script>
+    <link rel="stylesheet" href="styles.css?v=8">
 </head>
 
 <body>
@@ -150,6 +150,24 @@
                     <button @click="downloadAllRis" class="download-btn ris-download-btn" title="Download RIS file for Zotero, Mendeley, or EndNote">⬇ RIS ({{
                         filteredPublications.length }})</button>
                 </div>
+
+                <div v-if="activeFilterChips.length > 0" class="active-filters-bar">
+                    <span class="active-filters-label">Active filters:</span>
+                    <div class="active-filters-list">
+                        <button v-for="chip in activeFilterChips" :key="chip.key" type="button"
+                            class="active-filter-chip" :class="'chip-' + chip.kind"
+                            @click="chip.clear()"
+                            :title="'Remove ' + chip.prefix + ' filter'">
+                            <span class="chip-prefix">{{ chip.prefix }}:</span>
+                            <span class="chip-value">{{ chip.value }}</span>
+                            <span class="chip-remove" aria-hidden="true">✕</span>
+                        </button>
+                    </div>
+                    <button type="button" class="copy-filter-link-btn" :class="{ copied: filterLinkCopied }"
+                        @click="copyFilterLink" title="Copy shareable URL for the current filtered view">
+                        {{ filterLinkCopied ? '✓ Link Copied' : '🔗 Copy View Link' }}
+                    </button>
+                </div>
             </div>
 
             <!-- Statistics -->
@@ -170,8 +188,14 @@
                     :class="['publication-card', { 'pub-highlight': pub.isHighlighted }]">
                     <h3 class="pub-title">{{ pub.title }}</h3>
 
-                    <p class="pub-authors" v-if="pub.author">
-                        {{ pub.formattedAuthors || formatAuthors(pub.author) }}
+                    <p class="pub-authors" v-if="pub.authorsList && pub.authorsList.length">
+                        <template v-for="(auth, aIdx) in pub.authorsList" :key="aIdx">
+                            <button type="button" class="author-pill"
+                                :class="{ active: isAuthorSelected(auth) }"
+                                :aria-pressed="isAuthorSelected(auth)"
+                                :title="isAuthorSelected(auth) ? 'Clear author filter: ' + auth.full : 'Filter by author: ' + auth.full"
+                                @click="toggleAuthorFilter(auth.full)">{{ auth.full }}</button><span v-if="aIdx < pub.authorsList.length - 2">, </span><span v-else-if="aIdx === pub.authorsList.length - 2">{{ pub.authorsList.length > 2 ? ', and ' : ' and ' }}</span>
+                        </template>
                     </p>
 
                     <p class="pub-venue" v-if="pub.journal || pub.booktitle || pub.howpublished || pub.school || pub.year || pub.date_added">
@@ -183,35 +207,55 @@
                     </p>
 
                     <div class="pub-tags" v-if="pub.peer_reviewed === 'no' || pub.peer_reviewed === 'thesis'">
-                        <span v-if="pub.peer_reviewed === 'no'" class="tag tag-preprint"
-                            title="Preprint / Working Paper — Not formally peer-reviewed">
+                        <button v-if="pub.peer_reviewed === 'no'" type="button"
+                            class="tag tag-interactive tag-preprint"
+                            :class="{ active: selectedPeerReviewed === 'no' }"
+                            :aria-pressed="selectedPeerReviewed === 'no'"
+                            :title="selectedPeerReviewed === 'no' ? 'Preprint / Working Paper — Click to clear filter' : 'Preprint / Working Paper — Click to filter preprints'"
+                            @click="togglePeerReviewedFilter('no')">
                             Preprint
-                        </span>
-                        <span v-if="pub.peer_reviewed === 'thesis'" class="tag tag-thesis"
-                            title="Thesis / Dissertation — Defended before an academic committee">
+                        </button>
+                        <button v-if="pub.peer_reviewed === 'thesis'" type="button"
+                            class="tag tag-interactive tag-thesis"
+                            :class="{ active: selectedPeerReviewed === 'thesis' }"
+                            :aria-pressed="selectedPeerReviewed === 'thesis'"
+                            :title="selectedPeerReviewed === 'thesis' ? 'Thesis / Dissertation — Click to clear filter' : 'Thesis / Dissertation — Click to filter theses'"
+                            @click="togglePeerReviewedFilter('thesis')">
                             Thesis
-                        </span>
+                        </button>
                     </div>
 
                     <div class="pub-tags" v-if="pub.research_field">
-                        <span v-for="field in parseFields(pub.research_field)" :key="field"
-                            :title="getFieldDescription(field)" class="tag">
+                        <button v-for="field in parseFields(pub.research_field)" :key="field" type="button"
+                            class="tag tag-interactive"
+                            :class="{ active: selectedField === field }"
+                            :aria-pressed="selectedField === field"
+                            :title="(getFieldDescription(field) ? getFieldDescription(field) + ' — ' : '') + (selectedField === field ? 'Click to clear filter' : 'Click to filter by ' + field)"
+                            @click="toggleFieldFilter(field)">
                             {{ field }}
-                        </span>
+                        </button>
                     </div>
 
                     <div class="pub-tags" v-if="pub.data_type">
-                        <span v-for="dataType in parseDataTypes(pub.data_type)" :key="dataType"
-                            :title="getDataTypeDescription(dataType)" class="tag tag-data">
+                        <button v-for="dataType in parseDataTypes(pub.data_type)" :key="dataType" type="button"
+                            class="tag tag-interactive tag-data"
+                            :class="{ active: selectedDataType === dataType }"
+                            :aria-pressed="selectedDataType === dataType"
+                            :title="(getDataTypeDescription(dataType) ? getDataTypeDescription(dataType) + ' — ' : '') + (selectedDataType === dataType ? 'Click to clear filter' : 'Click to filter by ' + dataType)"
+                            @click="toggleDataTypeFilter(dataType)">
                             {{ dataType }}
-                        </span>
+                        </button>
                     </div>
 
                     <div class="pub-tags" v-if="pub.dvrk_site">
-                        <span v-for="site in parseSites(pub.dvrk_site)" :key="site.acronym"
-                            class="tag" style="background-color: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7;">
+                        <button v-for="site in parseSites(pub.dvrk_site)" :key="site.acronym" type="button"
+                            class="tag tag-interactive tag-site"
+                            :class="{ active: isSiteSelected(site) }"
+                            :aria-pressed="isSiteSelected(site)"
+                            :title="isSiteSelected(site) ? 'Click to clear site filter: ' + site.name : 'Click to filter by site: ' + site.name + ' (' + site.acronym + ')'"
+                            @click="toggleSiteFilter(site.acronym)">
                             {{ site.name }}
-                        </span>
+                        </button>
                     </div>
 
                     <div class="pub-footer">
@@ -351,7 +395,7 @@
         </footer>
     </div>
 
-    <script src="app.js?v=7"></script>
+    <script src="app.js?v=8"></script>
 </body>
 
 </html>
