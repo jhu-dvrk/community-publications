@@ -2,7 +2,7 @@
 
 Publications related to the [dVRK](https://github.com/jhu-dvrk/sawIntuitiveResearchKit/wiki).  Initial database created for article *Accelerating Surgical Robotics Research: Reviewing 10 Years of Research with the dVRK*  by *Claudia D'Ettorre, Andrea Mariani, Agostino Stilli, Ferdinando Rodriguez y Baena, Pietro Valdastri, Anton Deguet, Peter Kazanzides, Russell H. Taylor, Gregory S. Fischer, Simon P. DiMaio, Arianna Menciassi, Danail Stoyanov* ([arXiv](https://arxiv.org/abs/2104.09869)).
 
-We hope dVRK users will update this database when they publish new work.  To update the database, please fork this repository, edit the `publications.bib` file and issue a pull request.
+We hope dVRK users will update this database when they publish new work.  To update the database, please fork this repository, edit the `publications.bib` file and issue a pull request (you can optionally run `python3 scripts/update_bib.py --check` locally to validate your BibTeX entry; see [scripts/README.md](scripts/README.md) for maintainer tools).
 
 There is also a web interface for the database: https://jhu-dvrk.github.io/community-publications/
 

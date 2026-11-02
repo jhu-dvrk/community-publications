@@ -1,6 +1,6 @@
 # dVRK Publications Scripts
 
-Utility scripts for maintaining and updating `publications.bib`.
+Utility scripts for discovering, maintaining, and validating `publications.bib`.
 
 ## Setup
 
@@ -13,197 +13,88 @@ source .venv/bin/activate
 pip install -r scripts/requirements.txt
 ```
 
+## Streamlined Workflow
+
+Routine updates require only two commands:
+
+```zsh
+# 1. Discover and interactively accept/reject new dVRK papers
+#    (automatically runs update_bib.py at the end when papers are added)
+python3 scripts/find_new_papers.py --start-year 2026 --end-year 2026
+
+# 2. (Any time publications.bib is edited manually or via PR)
+#    Promote published preprints, backfill tags/abstracts/citations, validate & sort
+python3 scripts/update_bib.py
+```
+
+---
+
 ## Available Scripts
 
----
+### `find_new_papers.py` — Discover new publications
 
-### `find_new_papers.py` — Search for new papers
+Searches open scholarly catalogs for new dVRK / da Vinci Research Kit papers and walks through each candidate interactively (`[y]` add, `[n]` reject into `rejected_papers.json`, `[s]` skip, `[q]` quit).
 
-Searches multiple sources for new dVRK / da Vinci Research Kit papers, then
-walks you through each result interactively so you can add or reject it.
-
-**Sources searched (in order):**
-
-| Source | API key needed? | Notes |
+| Source | API key needed? | Default behavior |
 |---|---|---|
-| **OpenAlex** | No | Broadest open catalog; auto-tags abstracts and author `dvrk_site` affiliations |
-| **CrossRef** | No | Best for published journal/conference papers; uses polite pool |
-| **arXiv** | No | Best for preprints and open-access papers |
-| **Semantic Scholar** | Optional | Works without a key but heavily rate-limited; set `SEMANTIC_SCHOLAR_API_KEY` for reliable access |
-| **IEEE Xplore** | Yes | Set `IEEE_API_KEY` to enable |
-
-**Usage:**
+| **OpenAlex** | No | Always searched; includes abstracts and `dvrk_site` affiliations |
+| **Crossref** | No | Always searched (polite pool); filters out proceedings/container records |
+| **arXiv** | No | Always searched; covers preprints and open-access e-prints |
+| **Semantic Scholar** | Optional | Always searched (rate-limited without key; set `SEMANTIC_SCHOLAR_API_KEY` for faster runs) |
+| **IEEE Xplore** | Yes | Searched when `IEEE_API_KEY` is set |
 
 ```zsh
-# Search a specific year (most common use case)
+# Search a specific year
 python3 scripts/find_new_papers.py --start-year 2026 --end-year 2026
 
-# Search a range
-python3 scripts/find_new_papers.py --start-year 2024 --end-year 2026
-
-# With optional API keys for broader coverage
-SEMANTIC_SCHOLAR_API_KEY=your_key python3 scripts/find_new_papers.py --start-year 2026 --end-year 2026
-```
-
-**Interactive prompts:**
-- `y` — add to `publications.bib`
-- `n` — reject (saved to `rejected_papers.json` so it won't appear again)
-- `s` — skip (will appear again next run)
-- `q` — quit
-
-**Getting API keys (optional):**
-- **Semantic Scholar**: Apply at https://www.semanticscholar.org/product/api#api-key-form  
-  Set via `export SEMANTIC_SCHOLAR_API_KEY=your_key` (or add to your shell profile).
-- **IEEE Xplore**: Apply at https://developer.ieee.org/  
-  Set via `export IEEE_API_KEY=your_key`.
-
----
-
-### `cleanup_bib.py` — Normalise the bib file
-
-Sorts all entries (by year descending, then title ascending), standardises
-field ordering and indentation, renames legacy `dvrk_sites` → `dvrk_site`,
-and adds trailing commas. **Run this after any batch add.**
-
-```zsh
-python3 scripts/cleanup_bib.py
-# or with an explicit path:
-python3 scripts/cleanup_bib.py path/to/file.bib
+# Search a range without auto-running update_bib.py afterward
+python3 scripts/find_new_papers.py --start-year 2025 --end-year 2026 --no-update
 ```
 
 ---
 
-### `deduplicate_bib.py` — Find and remove duplicate entries
+### `update_bib.py` — Unified enrichment, cross-referencing, validation & formatting
 
-Detects entries that appear more than once (same DOI, near-identical title,
-or same author+year+similar title) and walks you through each suspected pair
-interactively.
-
-**Detection confidence levels:**
-
-| Level | Criterion | Action suggested |
-|---|---|---|
-| ⚠️ DOI match | Same DOI after normalisation | Almost certainly a duplicate |
-| 🔶 High similarity | Title similarity ≥ 0.92 | Very likely a duplicate |
-| 🔷 Moderate similarity | Title similarity ≥ 0.75 | Review carefully |
-
-**Interactive prompts:**
-- `1` — keep entry A, discard B
-- `2` — keep entry B, discard A
-- `m` — **merge**: combine both entries, keeping the best field values from each
-- `s` — skip (leave both in the file)
-- `q` — quit (saves changes made so far)
-
-A `.dedup-bak` backup is created before any changes are written.
+Single idempotent maintenance pipeline for `publications.bib`:
+1. **Hygiene & Fallbacks**: Normalizes months and DOIs, unescapes HTML entities in venues, sets `date_added` if missing, standardizes `@phdthesis` / `school` on theses, and ensures preprints have clean `howpublished` fallbacks.
+2. **Peer-Review Classification & Preprint Promotion**: Assigns `peer_reviewed` (`yes`, `no`, or `thesis`, honoring `peer_review_overrides.json`) and checks `peer_reviewed = {no}` preprints against Crossref and OpenAlex to promote newly published journal/conference papers (enforcing title similarity verification).
+3. **Incremental Affiliation, Venue & Abstract Backfill**: Queries OpenAlex (batched), Crossref, and arXiv only for entries missing `dvrk_site`, `abstract`, or venue, caching affiliation lookups in `cache/affiliation_cache.json`.
+4. **Community Cross-References (`dvrk_cites`)**: Fetches Crossref reference lists for newly added DOIs (`cache/reference_cache.json`), links exact unique DOIs and unambiguous exact titles, and prunes any removed citation keys.
+5. **Integrity Validation & Canonical Formatting**: Validates required fields, unique IDs/DOIs, `custom_tags.json` codes, and `dvrk_cites` targets, then writes canonically sorted, single-line-per-field BibTeX.
 
 ```zsh
-# Interactive mode (recommended)
-python3 scripts/deduplicate_bib.py
+# Full incremental update (recommended after manual edits or merging PRs)
+python3 scripts/update_bib.py
 
-# Report only — no changes written
+# Preview all promotions, backfills, and citation links without modifying files
+python3 scripts/update_bib.py --dry-run
+
+# Offline formatting, sorting, cached citation linking, and validation (0 network calls)
+python3 scripts/update_bib.py --offline
+
+# Read-only validation (used in GitHub Actions CI on Pull Requests)
+python3 scripts/update_bib.py --check
+
+# Strict maintainer check (also enforces canonical sort/format and all auto-fields)
+python3 scripts/update_bib.py --check --strict-format
+```
+
+---
+
+### `deduplicate_bib.py` — Interactive duplicate review & merge
+
+Scans `publications.bib` for entries sharing a normalized DOI or high title similarity (`≥ 0.75` by default). Merging or discarding an entry automatically redirects incoming `dvrk_cites` links to the surviving citation key.
+
+```zsh
+# Report suspected duplicates without modifying publications.bib
 python3 scripts/deduplicate_bib.py --dry-run
 
-# Lower the similarity threshold to catch more candidates
-python3 scripts/deduplicate_bib.py --min-sim 0.70
-```
-
-
----
-
-### `enrich_metadata.py` — Back-fill missing fields
-
-Walks every entry in `publications.bib` and fetches missing `doi`,
-`semanticscholar`, `abstract`, `arxiv`, and `url` fields from Semantic Scholar.
-Results are cached in `cache/` to avoid redundant API calls.
-
-```zsh
-# Normal run (uses cache, fetches missing data)
-python3 scripts/enrich_metadata.py
-
-# Force re-fetch (ignore cache age)
-python3 scripts/enrich_metadata.py --days 0
-
-# Re-apply cached data only (no network calls)
-python3 scripts/enrich_metadata.py --reprocess
-```
-
-> **Note:** This script works best with a `SEMANTIC_SCHOLAR_API_KEY` set.
-> Without one, it will be rate-limited and the run may take a very long time.
-
----
-
-### `extract_citations.py` — Update verified community cross-references
-
-Fetches reference lists from Crossref and finds citations to other publications
-in this database.  It is intentionally conservative: it writes a link only
-when the cited DOI exactly and uniquely matches a DOI in `publications.bib`,
-or when a reference without a DOI has an exact normalized title match to one
-and only one local entry.  Title matching is case-insensitive (for example,
-`Da Vinci` and `da Vinci` match); ambiguous titles are not added.
-
-```zsh
-# Inspect results first; no BibTeX changes are made by default
-python3 scripts/extract_citations.py --write-json
-
-# After reviewing citations.json, add verified DOI matches
-python3 scripts/extract_citations.py --apply --write-json
-```
-
-Temporary Crossref failures are not cached, so they are retried on the next
-run.  Applying an update retains existing links by default; use
-`--replace-existing` only after carefully reviewing a full replacement.
-After removing a publication, use `--apply --offline --prune-missing` to remove
-only citation keys that no longer have an entry, without fetching or changing
-other references.
-
----
-
-### `tag_peer_reviewed.py` — Tag peer-reviewed status & promote published preprints
-
-Scans `publications.bib` to assign `peer_reviewed = {yes}`, `peer_reviewed = {no}`, or `peer_reviewed = {thesis}`:
-- **`yes`**: Formally peer-reviewed journal articles, conference papers, and symposia (e.g. Hamlyn Symposium, CRAS).
-- **`no`**: Preprints (arXiv, Research Square, SSRN) and technical reports.
-- **`thesis`**: Doctoral and Master's theses.
-
-Additionally queries OpenAlex and CrossRef for preprint entries: when an arXiv paper has since been accepted and published in a conference (e.g. ICRA, IROS) or journal (e.g. RA-L, T-RO), it updates the entry's venue and DOI to the peer-reviewed version and sets `peer_reviewed = {yes}`. Title similarity checking is enforced to prevent mismatched bindings.
-
-```zsh
-# Dry run: preview tag assignments and promotions without modifying publications.bib
-python3 scripts/tag_peer_reviewed.py --dry-run
-
-# Run and update publications.bib
-python3 scripts/tag_peer_reviewed.py
+# Interactive review ([1] keep A, [2] keep B, [m] merge, [s] skip, [q] quit)
+python3 scripts/deduplicate_bib.py
 ```
 
 ---
 
-### `sanitize_bib.py` — Audit and repair corrupted metadata, DOIs, abstracts, and venues
+### `bib_utils.py` — Shared library
 
-Audits all entries in `publications.bib` against local Semantic Scholar cache, OpenAlex, and Crossref using strict title + author surname verification. Detects and repairs mismatched DOIs, polluted `arxiv` / `semanticscholar` URLs, duplicated or masthead-boilerplate abstracts, and missing venues.
-
-```zsh
-# Preview detected metadata issues and proposed repairs
-python3 scripts/sanitize_bib.py --dry-run
-
-# Apply repairs and write normalized publications.bib
-python3 scripts/sanitize_bib.py
-```
-
----
-
-## Recommended workflow
-
-```zsh
-# 1. Search for new papers and add them
-python3 scripts/find_new_papers.py --start-year 2026 --end-year 2026
-
-# 2. Normalise and sort the file
-python3 scripts/cleanup_bib.py
-
-# 3. (Optional) Back-fill any missing metadata
-python3 scripts/enrich_metadata.py
-
-# 4. Commit
-git add publications.bib rejected_papers.json
-git commit -m "Add 2026 dVRK papers"
-```
+Internal module providing `FIELD_ORDER`, `load_bib()`, `write_bib()`, `normalize_doi()`, `normalize_title()`, `title_similarity()`, `match_sites()`, and `load_custom_tags()` so all scripts share identical parsing and formatting rules.

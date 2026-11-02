@@ -86,6 +86,23 @@
   abstract = {In many teleoperation applications, collecting a large number of demonstrations as required for traditional probabilistic learning from demonstration (LfD) approaches may not be feasible. To still give operators the ability to intuitively create trajectories as Virtual Fixtures (VFs), we propose to leverage a motion prior in the learning process. Particularly, by using Linear Quadratic Tracking (LQT) on Riemannian manifolds to generate a task-specific motion prior, we can train a Riemannian Gaussian Mixture Model (RGMM) with few demonstrations while ensuring that the learned VF is geometry-aware and conforms to workspace boundaries. We evaluate the proposed approach in a minimally invasive surgery setting on the da Vinci Research Kit (dVRK). Results from a user study indicate that operators can quickly generate effective VFs from only 1-3 demonstrations, significantly reducing task completion time and error rates.},
 }
 
+@article{Algarni2026nested,
+  author = {Algarni, Ali and Alsolami, Abdulrahman Ali},
+  title = {Nested Phase-Specific Speed-Deficit Viability for Computer-Assisted Robotic Surgical Training Assessment},
+  year = {2026},
+  month = {sep},
+  publisher = {Springer Science and Business Media LLC},
+  doi = {10.21203/rs.3.rs-10580275/v1},
+  url = {http://dx.doi.org/10.21203/rs.3.rs-10580275/v1},
+  howpublished = {Research Square preprint},
+  research_field = {TR},
+  data_type = {KD},
+  peer_reviewed = {no},
+  dvrk_cites = {Rivas-Blanco2024InstrumentDA and Wang2018b},
+  date_added = {2026-10-24},
+  abstract = {This study introduces Nested Phase-Specific Speed-Deficit Viability (Nested PS-SDVI), an interpretable and leakage-controlled trajectory-level scoring method for dVRK kinematics. For each held-out operator, task-specific good-quality speed reference profiles are estimated across phase-normalized progress, and speed deficits are accumulated within phase-specific viable bounds. Robustness is enhanced via bounded score scaling, and candidate metric selection is performed using cross-validated statistical reliability. Technical validation used 46 ROSMA dVRK trials from three operators across Pea-on-a-Peg, Post-and-Sleeve, and Wire-Chaser I tasks. Nested PS-SDVI achieved high operator classification and ranking consistency while revealing interpretable phase-localized motion anomalies, establishing a rigorous basis for automated skill assessment in robot-assisted surgical training.},
+}
+
 @misc{Jin2026agrosuvide,
   author = {Jin, Shutong and Chen, Ziyang and Satish, Preethi and Shen, Meadow and Guthart, Gary and Pokorny, Florian T. and Goldberg, Ken},
   title = {{AGRO-SUVIDE}: Agentic Robotics for Surgical Viscoelastic Debridement},
@@ -228,7 +245,7 @@
   data_type = {KD and DD},
   peer_reviewed = {yes},
   dvrk_site = {JHU and VU and WPI},
-  dvrk_cites = {Anooshahpour2017 and Argin2024daVinciRK and Chen2013 and Chrysilla2019 and DEttorre2021 and Fontanelli2017b and Gondokaryono2019 and Khan2025DevelopmentOA and Lin2019 and Lin2021 and Nowakowski2024Learning and Pique2019a and Sang2017b and Tran2020 and Wang2019c and WuISMR2021a and Xu2025 and Yang2024 and Yang2025TMRB and Yilmaz2022IJCARS and Yilmaz2024IJCARS and YilmazRAL2024},
+  dvrk_cites = {Anooshahpour2017 and Argin2024daVinciRK and Chen2013 and Chrysilla2019 and DEttorre2021 and Fontanelli2017b and Gondokaryono2019 and Khan2025DevelopmentOA and Lin2019 and Lin2021 and Nowakowski2024Learning and Pique2019a and Sang2017b and Tran2020 and Wang2019c and WuISMR2021a and Xu2025 and Yang2024 and Yang2025TMRB and Yilmaz2022IJCARS and Yilmaz2024IJCARS and YilmazRAL2024 and Zhang2022},
   date_added = {2026-08-31},
   abstract = {Robot-assisted surgery is now well established in clinical practice and has become a key technology for modern minimally invasive procedures. The da Vinci Surgical System plays an important role in this area and, through the da Vinci Research Kit (dVRK), supports advances in surgical robotics research. However, one longstanding challenge is the accurate modeling of the da Vinci system’s complex dynamics, which is relevant to research in areas such as external force estimation and control. This paper provides a structured narrative review and classification of dynamic modeling methods for the da Vinci Surgical System. We cover model-based and learning-based methods and discuss hybrid approaches as an emerging research direction. We further identify the major technical challenges and promising directions for future research.},
 }
@@ -875,7 +892,7 @@
   doi = {10.1007/978-981-95-2901-8_9},
   url = {http://dx.doi.org/10.1007/978-981-95-2901-8_9},
   peer_reviewed = {yes},
-  dvrk_cites = {Attanasio2021Open and Chen2017 and Gondokaryono2019 and Haidegger2019a and Hu2023TowardsHC and Hwang2022Automating and McDonaldBowyer2023Organ and Nagy2018d and Ozguner2020 and Zhang2023AST},
+  dvrk_cites = {Attanasio2021Open and Chen2017 and Gondokaryono2019 and Haidegger2019a and Hu2023TowardsHC and Hwang2022Automating and McDonaldBowyer2023Organ and Munawar2016a and Nagy2018d and Ozguner2020 and Zhang2023AST},
   date_added = {2026-09-11},
   keywords = {dvrk_title_abstract},
 }
@@ -944,23 +961,6 @@
   peer_reviewed = {yes},
   dvrk_site = {UNITO},
   date_added = {2026-06-13},
-}
-
-@article{Algarni2026nested,
-  author = {Algarni, Ali and Alsolami, Abdulrahman Ali},
-  title = {Nested Phase-Specific Speed-Deficit Viability for Computer-Assisted Robotic Surgical Training Assessment},
-  year = {2026},
-  month = {Sept},
-  publisher = {Springer Science and Business Media LLC},
-  doi = {10.21203/rs.3.rs-10580275/v1},
-  url = {http://dx.doi.org/10.21203/rs.3.rs-10580275/v1},
-  howpublished = {Research Square preprint},
-  research_field = {TR},
-  data_type = {KD},
-  peer_reviewed = {no},
-  dvrk_cites = {Wang2018b},
-  date_added = {2026-10-24},
-  abstract = {This study introduces Nested Phase-Specific Speed-Deficit Viability (Nested PS-SDVI), an interpretable and leakage-controlled trajectory-level scoring method for dVRK kinematics. For each held-out operator, task-specific good-quality speed reference profiles are estimated across phase-normalized progress, and speed deficits are accumulated within phase-specific viable bounds. Robustness is enhanced via bounded score scaling, and candidate metric selection is performed using cross-validated statistical reliability. Technical validation used 46 ROSMA dVRK trials from three operators across Pea-on-a-Peg, Post-and-Sleeve, and Wire-Chaser I tasks. Nested PS-SDVI achieved high operator classification and ranking consistency while revealing interpretable phase-localized motion anomalies, establishing a rigorous basis for automated skill assessment in robot-assisted surgical training.},
 }
 
 @article{Connolly2026NoCancer,
@@ -1307,7 +1307,7 @@
   url = {http://dx.doi.org/10.1109/tmrb.2025.3589768},
   peer_reviewed = {yes},
   dvrk_site = {UA},
-  dvrk_cites = {Hashempour2020a and Kazanzides2014 and Lu2022TowardIA and Pore2021Learning and Richter2020 and xu2021surrol},
+  dvrk_cites = {Hashempour2020a and Kazanzides2014 and Lu2022TowardIA and Pore2021Learning and Richter2020 and Selvaggio2019a and xu2021surrol},
   date_added = {2026-09-11},
   keywords = {dvrk_fulltext_site},
   abstract = {Training robots to acquire surgical skills poses significant challenges, primarily due to the limited availability of comprehensive datasets and safety constraints that restrict real-time trial-and-error learning. Although human Activities of Daily Living (ADL) tasks differ substantially from surgical tasks, they encompass fundamental motor skills that can serve as a foundation for robot learning. Notably, skilled surgeons often develop their advanced surgical abilities by building upon these basic motor skills acquired through daily activities. Inspired by this progressive learning trajectory, we propose a novel surgical skill training framework that enables robots to learn basic motor skills from the ADL dataset and quickly adapt to advanced surgical skills. Specifically, we propose a unified predictive representation space, constructed using probabilistic successor features, which capture the dynamic patterns of motion primitives common to both ADL and surgical tasks. To investigate the transferability of skills from human ADL tasks to robotic surgical tasks, we conducted a mathematical analysis to evaluate transferable policies and performed simulation experiments to assess transfer performance. Furthermore, we validated the practicality and effectiveness of our method through real-world experiments. Results show that our method significantly reduces the need for extensive surgical datasets, and enables efficient learning in robotic surgical tasks.},
@@ -1328,6 +1328,7 @@
   semanticscholar = {https://www.semanticscholar.org/paper/e7ee00483b2a1437108b0fb7faa67af2b4a33ed2},
   arxiv = {https://arxiv.org/abs/2412.12238},
   peer_reviewed = {yes},
+  dvrk_site = {UIC},
   dvrk_cites = {Attanasio2020 and Colleoni2020 and Kazanzides2014 and Oh2023ComprehensiveRC and Rivas-Blanco2021a},
   date_added = {2026-02-14},
   abstract = {In recent years, the application of machine learning to minimally invasive surgery (MIS) has attracted considerable interest. Datasets are critical to the use of such techniques. This paper presents a unique dataset recorded during ex vivo pseudo-cholecystectomy procedures on pig livers using the da Vinci Research Kit (dVRK). Unlike existing datasets, it addresses a critical gap by providing comprehensive kinematic data, recordings of all pedal inputs, and offers a time-stamped record of the endoscope's movements. This expanded version also includes segmentation and keypoint annotations of images, enhancing its utility for computer vision applications. Contributed by seven surgeons with varied backgrounds and experience levels that are provided as a part of this expanded version, the dataset is an important new resource for surgical robotics research. It enables the development of advanced methods for evaluating surgeon skills, tools for providing better context awareness, and automation of surgical tasks. Our work overcomes the limitations of incomplete recordings and imprecise kinematic data found in other datasets. To demonstrate the potential of the dataset for advancing automation in surgical robotics, we introduce two models that predict clutch usage and camera activation, a 3D scene reconstruction example, and the results from our keypoint and segmentation models.},
@@ -2162,7 +2163,7 @@
   url = {http://dx.doi.org/10.1109/lra.2024.3488400},
   peer_reviewed = {yes},
   dvrk_site = {UWO},
-  dvrk_cites = {Chua2021Force and Fontanelli2017b and Kazanzides2014 and Pique2019a and Reyzabal2024Dafoes and Wang2019c and Wu2020Estimation and Yilmaz2020},
+  dvrk_cites = {Chua2021Force and Fontanelli2017b and Kazanzides2014 and Pique2019a and Reyzabal2024Dafoes and Wang2019c and Wu2020Estimation and Yilmaz2020 and Zhang2022},
   date_added = {2026-09-11},
   keywords = {dvrk_fulltext_site},
   abstract = {Accurately estimating tool-tissue interaction forces during robotics-assisted minimally invasive surgery is an important aspect of enabling haptics-based teleoperation. By collecting data regarding the state of a robot in a variety of configurations, neural networks can be trained to predict this interaction force. This paper extends existing work in this domain based on collecting one of the largest known ground truth force datasets for stationary as well as moving phantoms that replicate tissue motions found in clinical procedures. Existing methods, and a new transformer-based architecture, are evaluated to demonstrate the domain gap between stationary and moving phantom tissue data and the impact that data scaling has on each architecture's ability to generalize the force estimation task. It was found that temporal networks were more sensitive to the moving domain than single-sample Feed Forward Networks (FFNs) that were trained on stationary tissue data. However, the transformer approach results in the lowest Root Mean Square Error (RMSE) when evaluating networks trained on examples of both stationary and moving phantom tissue samples. The results demonstrate the domain gap between stationary and moving surgical environments and the effectiveness of scaling datasets for increased accuracy of interaction force prediction.},
@@ -2204,7 +2205,7 @@
   url = {http://dx.doi.org/10.1109/tmrb.2024.3468397},
   peer_reviewed = {yes},
   dvrk_site = {UL},
-  dvrk_cites = {Attanasio2020 and Avinash2019b and DEttorre2021 and Ferguson2018c and Kazanzides2014 and Marahrens2022Autonomous and McKinley2016b and Thananjeyan2017b},
+  dvrk_cites = {Attanasio2020 and Avinash2019b and DEttorre2021 and Ferguson2018c and Kazanzides2014 and Marahrens2022Autonomous and McKinley2016b and Pratt2015c and Thananjeyan2017b},
   date_added = {2026-09-11},
   keywords = {dvrk_fulltext_site},
   abstract = {While only a limited number of procedures have image guidance available during robotically guided surgery, they still require the surgeon to manually reference the obtained scans to their projected location on the tissue surface. While the surgeon may mark the boundaries on the organ surface via electrosurgery, the precise margin around the tumor is likely to remain variable and not guaranteed before a pathological analysis. This paper presents a first attempt to autonomously extract and mark tumor boundaries with a specified margin on the tissue surface. It presents a first concept for tool-tissue interaction control via Inertial Measurement Unit (IMU) sensor fusion and contact detection from the electrical signals of the Electrosurgical Unit (ESU), requiring no force sensing. We develop and assess our approach on Ultrasound (US) phantoms with anatomical surface geometries, comparing different strategies for projecting the tumor onto the surface and assessing its accuracy in repeated trials. Finally, we demonstrate the feasibility of translating the approach to an ex-vivo porcine liver. We achieve mean true positive rates above$\mathbf {0.84}$and false detection rates below$\mathbf {0.12}$compared to a tracked reference for each calculation and execution of the marking trajectory for dummy and ex-vivo experiments.},
@@ -2364,7 +2365,7 @@
   tppubtype = {article},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
-  dvrk_cites = {Chua2021Force and Chua2022Characterization and DEttorre2021 and Kazanzides2014 and Pique2019a and Sang2017b and Saracino2019a and Tran2020 and WuISMR2021a and Yilmaz2020 and Yilmaz2022IJCARS and YilmazRAL2024},
+  dvrk_cites = {Chua2021Force and Chua2022Characterization and DEttorre2021 and Kazanzides2014 and Pique2019a and Sang2017b and Saracino2019a and Tran2020 and WuISMR2021a and Yilmaz2020 and Yilmaz2022IJCARS and YilmazRAL2024 and Zhang2022},
   date_added = {2026-01-07},
   keywords = {dvrk},
 }
@@ -2439,6 +2440,7 @@
   research_field = {TR},
   data_type = {RI and KD and SD},
   peer_reviewed = {yes},
+  dvrk_site = {UIC},
   date_added = {2026-02-14},
   abstract = {In recent years, the potential applications of machine learning to Minimally Invasive Surgery (MIS) have spurred interest in data sets that can be used to develop data-driven tools. This paper introduces a novel dataset recorded during ex vivo pseudo-cholecystectomy procedures on pig livers, utilizing the da Vinci Research Kit (dVRK). Unlike current datasets, ours bridges a critical gap by offering not only full kinematic data but also capturing all pedal inputs used during the procedure and providing a time-stamped record of the endoscope's movements. Contributed by seven surgeons, this data set introduces a new dimension to surgical robotics research, allowing the creation of advanced models for automating console functionalities. Our work addresses the existing limitation of incomplete recordings and imprecise kinematic data, common in other datasets. By introducing two models, dedicated to predicting clutch usage and camera activation, we highlight the dataset's potential for advancing automation in surgical robotics. The comparison of methodologies and time windows provides insights into the models' boundaries and limitations.},
 }
@@ -2570,7 +2572,7 @@
   url = {http://dx.doi.org/10.1109/arso60199.2024.10557861},
   peer_reviewed = {yes},
   dvrk_site = {UNFII},
-  dvrk_cites = {Fontanelli2018f and Moccia2020 and Moccia2023AutonomousEC and Sallam2023PrototypeRO},
+  dvrk_cites = {Fontanelli2018f and Liu2015 and Moccia2020 and Moccia2023AutonomousEC and Sallam2023PrototypeRO},
   date_added = {2026-09-11},
   keywords = {dvrk_title_abstract},
   abstract = {Robot Assisted Minimally Invasive Surgery (RAMIS) has revolutionized surgical practices by reducing pain, hospital stays, and complications. However, current surgical robots struggle with autonomously managing complex tasks due to strict safety requirements. The Model Predictive Control (MPC) and the Control Barrier Function (CBF) framework are emerged as valuable approaches to determine control variables while satisfying numerous constraints. In this work, we compare them in the autonomous execution of suturing task according to the medical guidelines. The test involves a da Vinci Research Kit and in the first phase the end-effect targets a goal pose while avoiding a self-collision with the other tools. In the second phase, a planar circular trajectory is imposed to minimize the tissue stress and the robot-human interaction. The comparison demonstrates the robustness and adaptability of MPC in the surgical environment while highlighting the optimization capabilities of the CBF framework in terms of safety and computational efficiency at each time-step.},
@@ -2687,7 +2689,7 @@
   url = {http://dx.doi.org/10.1007/s11548-024-03108-z},
   peer_reviewed = {yes},
   dvrk_site = {JHU and VU},
-  dvrk_cites = {Kazanzides2014 and Lim2023Physiological and Puentes2023 and Wu2019},
+  dvrk_cites = {Büter2023EyeTF and Kazanzides2014 and Lim2023Physiological and Puentes2023 and Wu2019},
   date_added = {2026-09-11},
   keywords = {dvrk_title_abstract},
 }
@@ -2811,7 +2813,7 @@
   tppubtype = {article},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
-  dvrk_cites = {Black2020 and Chua2021Force and Chua2022Characterization and Chua2023Modular and Fontanelli2017b and Kazanzides2014 and Minelli2023TwoLayerBasedMB and Pique2019a and Sang2017b and Saracino2019a and Tran2020 and Yilmaz2020 and Yilmaz2022IJCARS},
+  dvrk_cites = {Black2020 and Chua2021Force and Chua2022Characterization and Chua2023Modular and Fontanelli2017b and Kazanzides2014 and Minelli2023TwoLayerBasedMB and Pique2019a and Sang2017b and Saracino2019a and Tran2020 and Yilmaz2020 and Yilmaz2022IJCARS and Zhang2022},
   date_added = {2026-01-07},
   keywords = {dvrk},
   abstract = {The da Vinci surgical robot introduced remote control of instruments, providing surgeons with increased dexterity and precision. A major drawback, however, is the loss of sense of touch due to a lack of kinesthetic coupling between the surgical field and the surgeon. This paper presents a framework for sensorless transparency optimized four channel teleoperation. It is sensorless because forces are estimated from existing actuator feedback, with a deep network for dynamics identification. Performance is further optimized by introducing robust acceleration control, with disturbance observers. Experiments performed on the da Vinci Research Kit (dVRK), an open research platform based on the clinically deployed robotic hardware, show improvements in control, force estimation and reflection. The significance is that we demonstrate that high-performance bilateral teleoperation is feasible in clinical systems, without hardware changes, and is available to the dVRK community through a software update.},
@@ -2904,6 +2906,7 @@
   doi = {10.1109/ichms59971.2024.10555713},
   peer_reviewed = {yes},
   dvrk_site = {UA},
+  dvrk_cites = {Kazanzides2014 and Penza2017 and Qian2019a},
   date_added = {2026-02-14},
   abstract = {Breast cancer is one of the leading causes of death in women, hence accurately locating and removing the tumor is crucial. Current wire and non-wire tumor localization methods are invasive and cause patient discomfort. While Robot-assisted surgery (RAS) has shown potential in enhancing accuracy, dexterity, and surgeon autonomy, the absence of 3D visualization of the tumor and the deformable nature of the breast have made it challenging for it to be used in breast surgeries extensively. In this paper, we propose a non-invasive augmented reality-based tumor localization and visualization system for robot-assisted breast surgeries. The system can superimpose an augmented tumor on the physical breast and estimate its position in response to various deformations in real-time intraoperatively while being displayed on the da Vinci Research Kit (dVRK) surgical console. The performance of the system is analyzed through experiments in two stages and results show sub-centimeter accuracy in tumor overlay and movement.},
 }
@@ -2917,6 +2920,8 @@
   pages = {39-44},
   doi = {10.1109/icarm62033.2024.10715796},
   peer_reviewed = {yes},
+  dvrk_site = {ICL},
+  dvrk_cites = {Ginesi2020 and Schwaner2021Autonomous and Zhang2022HumanRobotSC and Zhang2023AST},
   date_added = {2026-02-14},
   abstract = {Robots nowadays have been widely adopted in Minimally Invasive Surgery (MIS), and task autonomy is one of the key steps towards autonomous robotic surgery. In surgical tasks, the movements of every surgical instrument require high precision and accuracy with safety considerations, since abrupt movements may damage patients’ tissues or even lead to life-threatening conditions. With the aim of surgical task autonomy, the majority of the approaches depend on the use of keypoints where keypoints are usually defined by surgeons first, and the instrument movement trajectory could then be planned based on these keypoints. In this paper, Surgical Trajectory generation with VAE-Transformer (SurgTraj-VAETrans), a neural network model, is proposed to automatically generate trajectories for robotic surgical tasks by learning from the limited number of demonstrations. These demonstrations are performed by participants using da Vinci Research Kit (dVRK) on a specific surgical task. The results are evaluated by predefined metrics and compared with some well-known generative models. The result shows that the proposed model can generate reliable trajectories for surgical task purposes.},
 }
@@ -2945,6 +2950,7 @@
   doi = {10.1007/s11548-024-03150-x},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Büter2023EyeTF and Kazanzides2014 and Puentes2023 and Tong2015a},
   date_added = {2026-02-14},
 }
 
@@ -2987,6 +2993,7 @@
   doi = {10.1109/arso60199.2024.10557810},
   peer_reviewed = {yes},
   dvrk_site = {UNFII},
+  dvrk_cites = {Argin2024daVinciRK and Colleoni2020 and DEttorre2021 and Ferro2023ACD and Fontanelli2018d and Fontanelli2020 and Liu2016 and Moccia2020 and Nagy2019 and Rivas-Blanco2021a and Sallam2023PrototypeRO and VanAmsterdam2021},
   date_added = {2026-02-14},
   abstract = {Surgical activity knowledge is a fundamental skill for the automation of robot-assisted surgical interventions. Surgical robots need not only to recognize kinematic patterns that constitute the surgical tasks but also to provide physical interpretation to understand the surgical workflow. Data are essential for training robots to recognize the procedure being performed and eventually automatize it with a customized control strategy based on the specific sub-task. Moreover, the interaction of the robot with the environment plays a crucial role in safely performing complex tasks and operating with greater autonomy and precision. The open access design of the da Vinci Research Kit (dVRK) control architecture incentivizes and enables researchers to easily access and collect data. For these reasons, this work proposes a novel dataset based on the suturing task on dVRK from several surgeons with different skill levels. The dataset includes kinematics and interaction force data labeled with the surgical gestures part of the suture procedure.},
 }
@@ -3090,6 +3097,7 @@
   year = {2024},
   doi = {10.3390/app14093701},
   peer_reviewed = {yes},
+  dvrk_cites = {Attanasio2020 and Chen2017 and Colleoni2020 and Fontanelli2017b and Itzkovich2019 and Murali2016 and Rivas-Blanco2021a and Setti2019},
   date_added = {2026-02-14},
   abstract = {Large datasets play a crucial role in the progression of surgical robotics, facilitating advancements in the fields of surgical task recognition and automation. Moreover, public datasets enable the comparative analysis of various algorithms and methodologies, thereby assessing their effectiveness and performance. The ROSMA (Robotics Surgical Maneuvers) dataset provides 206 trials of common surgical training tasks performed with the da Vinci Research Kit (dVRK). In this work, we extend ROSMA dataset with two annotated subsets: ROSMAT24, which contains bounding box annotations for instrument detection, and ROSMAG40, which contains high and low level gesture annotations. We propose an annotation method that provides independent labels for the right-handed tool and the left-handed tool. For instrument identification, we validate our proposal with a YOLOv4 model in two experimental scenarios. We demonstrate the generalization capabilities of the network to detect instruments in unseen scenarios. For gesture segmentation, we propose two label categories: high-level annotations that describe gestures at a maneuvers level, and low-level annotations that describe gestures at a fine-grain level. To validate this proposal, we have designed a recurrent neural network based on a bidirectional long-short term memory layer. We present results for four cross-validation experimental setups, reaching up to a 77.35% mAP.},
 }
@@ -3133,7 +3141,7 @@
   semanticscholar = {https://www.semanticscholar.org/paper/394dfcba718cffe80cc84a0f58268bc94b66bbf9},
   peer_reviewed = {yes},
   dvrk_site = {UNFII},
-  dvrk_cites = {Bendikas2023Learninga and Chiu2021Bimanual and DEttorre2018b and DEttorre2021 and Ferro2023ACD and Fontanelli2017b and Liu2015 and Lu2020 and Lu2022TowardIA and Moccia2020 and Sallam2023PrototypeRO and Schwaner2021Autonomous and Sen2016 and Varier2020},
+  dvrk_cites = {Bendikas2023Learninga and Chiu2021Bimanual and DEttorre2018b and DEttorre2021 and Ferro2023ACD and Fontanelli2017b and Liu2015 and Liu2016 and Lu2020 and Lu2022TowardIA and Moccia2020 and Sallam2023PrototypeRO and Schwaner2021Autonomous and Sen2016 and Varier2020},
   date_added = {2026-02-14},
   abstract = {Robot-assisted surgery (RAS) requires effective control strategies to ensure safety and accuracy while respecting the physical limits of the robot during tasks such as suturing and tissue manipulation. Model Predictive Control (MPC), with its inherent capability to handle complex dynamic systems, predict the future response and enforce constraints, is well-suited for these tasks. In this paper, MPC is employed to automate the suturing stitch task by mapping the operational space trajectory to the joint space while ensuring compliance with system kinematics constraints and safety requirements. To address varying requirements during suturing sub-tasks, two different objective functions and their corresponding constraint sets are used. The proposed framework is implemented using the ACADO toolkit to solve the Optimal Control Problem (OCP) and ROS to connect ACADO to CoppeliaSim/DVRK. Validation through simulations in CoppeliaSim and real-time experiments on the DVRK demonstrated that our approach achieved a positional/orientational accuracy of less than <inline-formula> <tex-math notation="LaTeX">$1mm/4 ^\{\circ \}$ </tex-math></inline-formula> in simulations, and an error norm of approximately <inline-formula> <tex-math notation="LaTeX">$1.9mm$ </tex-math></inline-formula> in real world implementations, confirming its effectiveness in automating suturing task.},
 }
@@ -3791,7 +3799,7 @@
   tppubtype = {inproceedings},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
-  dvrk_cites = {Kazanzides2014 and Su2020a and Wu2018a},
+  dvrk_cites = {Kazanzides2014 and Su2020a and Wu2018a and Zhang2022},
   date_added = {2026-01-07},
   keywords = {dvrk},
   abstract = {The da Vinci Research Kit (dVRK) consists of open-source electronics and software that provides access to all levels of control but, until now, has relied primarily on an inner motor current control loop in analog hardware and an outer position control loop on the PC. In this work, we present a low-level velocity control loop, implemented on the FPGA, as an alternative to the PC-based (existing) position controller or (potential) velocity controller. The proposed velocity controller takes advantage of hardware-based measurement of the encoder period, which is inversely proportional to velocity. To avoid division on the FPGA, we implement closed loop control of the encoder period. Our implementation requires the controller gains to be adjusted based on the reference period; thus, the PC supplies both the reference period and the adjusted gains. We evaluate the proposed controller against a conventional implementation of a velocity control loop wrapped around the existing position control loop on the PC. The results demonstrate that the proposed controller yields improvements in tracking performance and disturbance rejection. The proposed velocity controller will be released open source to the dVRK community.},
@@ -4000,7 +4008,7 @@
   semanticscholar = {https://www.semanticscholar.org/paper/77877e028e5dace94f1f042c2a4e5e71e840c6a5},
   peer_reviewed = {yes},
   dvrk_site = {ICL},
-  dvrk_cites = {Kazanzides2014 and Munawar2019 and Munawar2022Open and Murali2015c and NagyneElek2019 and Pore2021Learning and Richter2020 and Zhang2022HumanRobotSC},
+  dvrk_cites = {Ginesi2019 and Kazanzides2014 and Munawar2019 and Munawar2022Open and Murali2015c and NagyneElek2019 and Pore2021Learning and Richter2020 and Zhang2022HumanRobotSC},
   date_added = {2026-02-14},
   abstract = {In recent years, Robot-Assisted Minimally Invasive Surgery (RAMIS) has been widely adopted worldwide due to its high precision, improved ergonomics and intuitive control. With the advances in artificial intelligence and surgical robot technologies, it is anticipated that the cognitive load on the surgeons could be relieved with a higher level of autonomy on surgical robots as well as simultaneously improving the precision of surgical robots' operations, minimising the risk of human errors and leading to safer operations. However, much research is still focused on task autonomy due to the complexity of the operations, and the limited clinical data on robotic surgery in some specific scenarios. Therefore, recent research has widely used simulated surgery scenarios to collect data to train artificial intelligence (AI) models. In this paper, we propose a method as a step towards conditional autonomy for robotic appendectomy. To achieve conditional autonomy, demonstration data was collected from human operators performing the appendectomy in a simulated robotic scene. The robotic instrument movements and trajectories for performing the appendectomy were learned from the demonstrated data. Once the surgeon specifies the location of the appendix, the proposed framework can carry out the appendectomy autonomously by using the dynamic motion primitives (DMP) generated from the learned surgical movements. Through the extensive validations in a simulated environment and on the da Vinci Research Kit (dVRK), we have shown that the proposed method can carry out the appendectomy procedure semi-automatically. Based on five metrics, it shows that the framework can reduce the total task path length, completion time and appendix stump length while maintaining a high degree of similarity to the demonstrated trajectory. This work demonstrated the feasibility of conditional autonomy in robotic surgeries.},
 }
@@ -4032,6 +4040,7 @@
   doi = {10.1007/978-3-031-63596-0_5},
   peer_reviewed = {yes},
   dvrk_site = {SU},
+  dvrk_cites = {Kazanzides2014 and Liang2017b and Lin2019},
   date_added = {2026-02-14},
   abstract = {Robotic skill learning has been increasingly studied but the demonstration collections are more challenging compared to collecting images/videos in computer vision and texts in natural language processing. This paper presents a skill learning paradigm by using intuitive teleoperation devices to generate high-quality human demonstrations efficiently for robotic skill learning in a data-driven manner. By using a reliable teleoperation interface, the da Vinci Research Kit (dVRK) master, a system called dVRK-Simulator-for-Demonstration (dS4D) is proposed in this paper. Various manipulation tasks show the system's effectiveness and advantages in efficiency compared to other interfaces. Using the collected data for policy learning has been investigated, which verifies the initial feasibility. We believe the proposed paradigm can facilitate robot learning driven by high-quality demonstrations and efficiency while generating them.},
 }
@@ -4076,6 +4085,7 @@
   pages = {332-338},
   doi = {10.1007/s40846-023-00800-4},
   peer_reviewed = {yes},
+  dvrk_cites = {Kazanzides2014 and Saracino2019a},
   date_added = {2026-02-14},
 }
 
@@ -4117,6 +4127,7 @@
   doi = {10.1117/12.3006476},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Puentes2023 and Wu2019},
   date_added = {2026-02-14},
   abstract = {Purpose: Metrics derived from eye-gaze-tracking and pupillometry show promise for cognitive load assessment, potentially enhancing training and patient safety through user-specific feedback in tele-robotic surgery. However, current eye-tracking solutions’ effectiveness in tele-robotic surgery is uncertain compared to everyday situations due to close-range interactions causing extreme pupil angles and occlusions. To assess the effectiveness of modern eye-gaze-tracking solutions in tele-robotic surgery, we compare the Tobii Pro 3 Glasses and Pupil Labs Core, evaluating their pupil diameter and gaze stability when integrated with the da Vinci Research Kit (dVRK). Methods: The study protocol includes a nine-point gaze calibration followed by pick-and-place task using the dVRK and is repeated three times. After a final calibration, users view a 3x3 grid of AprilTags, focusing on each marker for 10 seconds, to evaluate gaze stability across dVRK-screen positions with the L2-norm. Different gaze calibrations assess calibration’s temporal deterioration due to head movements. Pupil diameter stability is evaluated using the FFT from the pupil diameter during the pick-and-place tasks. Users perform this routine with both head-worn eye-tracking systems. Results: Data collected from ten users indicate comparable pupil diameter stability. FFTs of pupil diameters show similar amplitudes in high-frequency components. Tobii Glasses show more temporal gaze stability compared to Pupil Labs, though both eye trackers yield a similar 4cm error in gaze estimation without an outdated calibration. Conclusion: Both eye trackers demonstrate similar stability of the pupil diameter and gaze, when the calibration is not outdated, indicating comparable eye-tracking and pupillometry performance in tele-robotic surgery settings.},
 }
@@ -4175,6 +4186,7 @@
   pages = {2461 - 2469},
   doi = {10.1007/s11701-023-01676-x},
   peer_reviewed = {yes},
+  dvrk_cites = {DEttorre2021 and Kazanzides2014},
   date_added = {2026-02-14},
   abstract = {Conformity of tumour volumes and dose plans in prostate brachytherapy (BT) can be constrained by unwanted needle deflections, needle access restrictions and visualisation limitations. This work validates the feasibility of teleoperated robotic control of an active steerable needle using magnetic resonance (MR) for guidance. With this system, perturbations can be counteracted and critical structures can be circumvented to access currently inaccessible areas. The system comprises of (1) a novel steerable needle, (2) the minimally invasive robotics in an MR environment (MIRIAM) system, and (3) the daVinci Research Kit (dVRK). MR scans provide visual feedback to the operator controlling the dVRK. Needle steering is performed along curved trajectories to avoid the urethra towards targets (representing tumour tissue) in a prostate phantom with a targeting error of 1.2 ± 1.0 mm. This work shows the potential clinical applicability of active needle steering for prostate BT with a teleoperated robotic system in an MR environment.},
 }
@@ -4388,7 +4400,7 @@
   url = {http://dx.doi.org/10.1109/iros47612.2022.9981966},
   peer_reviewed = {yes},
   dvrk_site = {UCSD},
-  dvrk_cites = {Chiu2021Bimanual and DEttorre2018b and Kazanzides2014 and Li2020a and Lu2021Super and Ozguner2018a and Richter2021 and Sen2016 and Wilcox2021LearningTL},
+  dvrk_cites = {Chiu2021Bimanual and DEttorre2018b and Kazanzides2014 and Li2020a and Liu2016 and Lu2021Super and Ozguner2018a and Richter2021 and Sen2016 and Wilcox2021LearningTL},
   date_added = {2026-09-11},
   keywords = {dvrk_fulltext_site},
   abstract = {Suture needle localization is necessary for autonomous suturing. Previous approaches in autonomous suturing often relied on fiducial markers rather than markerless detection schemes for localizing a suture needle due to the in-consistency of markerless detections. However, fiducial markers are not practical for real-world applications and can often be occluded from environmental factors in surgery (e.g., blood). Therefore in this work, we present a robust tracking approach for estimating the 6D pose of a suture needle when using inconsistent detections. We define observation models based on suture needles' geometry that captures the uncertainty of the detections and fuse them temporally in a probabilistic fashion. In our experiments, we compare different permutations of the observation models in the suture needle localization task to show their effectiveness. Our proposed method outperforms previous approaches in localizing a suture needle. We also demonstrate the proposed tracking method in an autonomous suture needle regrasping task and ex vivo environments**The code is available at https://github.com/ucsdarclab/suture-needle-tracking..},
@@ -4569,7 +4581,7 @@
   data_type = {RI and KD},
   peer_reviewed = {yes},
   dvrk_site = {UCB},
-  dvrk_cites = {DEttorre2018b and Hwang2020 and Hwang2020Applying and Kazanzides2014 and Krishnan2019 and Mahler2014b and Murali2015c and Paradis2020a and Seita2018a and Sen2016 and Thananjeyan2017b and Thananjeyan2020 and Varier2020},
+  dvrk_cites = {DEttorre2018b and Hwang2020 and Hwang2020Applying and Kazanzides2014 and Krishnan2019 and Mahler2014b and Murali2015c and Paradis2020a and Seita2018a and Sen2016 and Sundaresan2019 and Thananjeyan2017b and Thananjeyan2020 and Varier2020},
   date_added = {2026-02-14},
   abstract = {Robotic Surgical Assistants (RSAs) are commonly used to perform minimally invasive surgeries by expert surgeons. However, long procedures filled with tedious and repetitive tasks such as suturing can lead to surgeon fatigue, motivating the automation of suturing. As visual tracking of a thin reflective needle is extremely challenging, prior work has modified the needle with nonreflective contrasting paint. As a step towards automation of a suturing subtask without modifying the needle, we propose HOUSTON: Handover of Unmodified, Surgical, Tool-Obstructed Needles, a problem and algorithm that uses a learned active sensing policy with a stereo camera to iteratively localize and align the needle into a visible and accessible pose for the other gripper. To compensate for robot positioning and needle perception errors, the algorithm then executes a high-precision grasping motion that uses multiple cameras. Physical experiments with the da Vinci Research Kit (dVRK) suggest a success rate of 96.7% on needles used in training, and 75 - 92.9% on needles unseen in training. On sequential handovers, HOUSTON successfully executes 32.4 handovers on average before failure. To our knowledge, this work is the first to study handover of unmodified surgical needles. See https: / /tinyurl. com/houston-surgery for additional materials including details about offline datasets and model architectures.},
 }
@@ -4586,7 +4598,7 @@
   tppubtype = {inproceedings},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
-  dvrk_cites = {Kazanzides2014},
+  dvrk_cites = {DEttorre2021 and Fontanelli2017a and Kazanzides2014 and Pique2019a and Sang2017b and Tran2020 and Wang2019c and Yilmaz2020 and Yilmaz2022IJCARS},
   date_added = {2026-01-07},
   keywords = {dvrk, machine-learning},
   abstract = {Present-day minimally-invasive surgical robots, such as the da Vinci®, cannot directly sense interaction between the robotic instruments and the patient anatomy. This includes the instrument grasping force and the 6 degree-of-freedom (DOF) force/torque (wrench) between the instrument and the environment. Previous works have investigated model-based or data-driven methods that use available measurements, such as joint positions, velocities and torques, to estimate either the grasping force or the 6 DOF wrench. This paper extends prior work by developing and evaluating a data-driven (learning-based) method to simultaneously estimate the grasping force and external wrench. This task is complicated by the mechanical coupling between the gripper and other wrist joints, but the network is able to simultaneously estimate external forces, torques, and gripper force with RMS errors of 1.4N, 0.04Nm, and 0.1N, respectively. In addition, transfer learning is shown to enable the neural network to quickly adapt to different instruments.},
@@ -4627,7 +4639,7 @@
   data_type = {KD},
   peer_reviewed = {yes},
   dvrk_site = {WPI},
-  dvrk_cites = {Chen2013 and Chen2017 and Kazanzides2014 and Munawar2019 and Richter2019a and Thananjeyan2017b and Varier2020 and xu2021surrol},
+  dvrk_cites = {Chen2013 and Chen2017 and Kazanzides2014 and Munawar2019 and Munawar2020 and Richter2019a and Selvaggio2019a and Thananjeyan2017b and Varier2020 and xu2021surrol},
   date_added = {2026-02-14},
   abstract = {Recently, Reinforcement Learning (RL) techniques have seen significant progress in the robotics domain. This can be attributed to robust simulation frameworks that offer realistic environments to train. However, there is a lack of platforms which offer environments that are conducive to medical robotic tasks. Having earlier designed the Asynchronous Multibody Framework (AMBF) - a real-time dynamics simulator well-suited for medical robotics tasks, we propose an open source AMBF-RL (ARL) toolkit to assist in designing control algorithms for these robots, as well as a module to collect and parse expert demonstration data. We validate ARL by attempting to partially automate the task of debris removal on the da Vinci Research Kit (dVRK) Patient Side Manipulator (PSM) in simulation by calculating the optimal policy using both Deep Deterministic Policy Gradient (DDPG) and Hindsight Experience Replay (HER) with DDPG. The trained policies are successfully transferred onto the physical dVRK PSM and tested. Finally, we draw a conclusion from the results and discuss our observations of the experiments conducted.},
 }
@@ -4664,7 +4676,7 @@
   url = {http://dx.doi.org/10.1109/lra.2022.3146900},
   peer_reviewed = {yes},
   dvrk_site = {JHU and VU and WPI},
-  dvrk_cites = {DEttorre2021 and Enayati2018b and Fontanelli2018f and Kazanzides2014 and Munawar2019 and Munawar2019a and Munawar2021 and Richter2019a and Richter2020 and Su2020a and Tagliabue2020 and Wu2021 and Wu2021Learning and xu2021surrol},
+  dvrk_cites = {DEttorre2021 and Enayati2018b and Fontanelli2018f and Kazanzides2014 and Munawar2019 and Munawar2019a and Munawar2020 and Munawar2021 and Richter2019a and Richter2020 and Su2020a and Tagliabue2020 and Wu2021 and Wu2021Learning and xu2021surrol},
   date_added = {2026-09-11},
   keywords = {dvrk_fulltext_site},
   abstract = {Automation has the potential to improve the standard of care but is difficult to realize due to perceptual challenges, especially in soft-tissue surgery. Machine learning can provide solutions, but typically requires large amounts of training data, which is time-consuming to collect. Even with shared platforms, hardware differences can prevent effective sharing of data between institutions. This letter proposes a standardized simulation platform for training and testing algorithms to control surgical robotic systems, which is built upon an open-source simulator, the Asynchronous Multi-Body Framework (AMBF), to enable quick prototyping of different scenes. An illustrative example of a suturing task on a phantom is presented and has formed the basis of a challenge, released to the community. The top-level contribution is the open-source release of a dynamic simulation environment that enables realistic suturing on a phantom, but supporting contributions include its extendable architectural design and a series of algorithmic optimizations to achieve real-time control and collision detection, realistic behavior of the needle and suture, and generation of multi-modal ground-truth data, including labeled depth data. These capabilities enable simulation-based surgical training and support research in machine learning for surgical scene perception and autonomous action.},
@@ -4768,7 +4780,7 @@
   data_type = {RI and KD},
   peer_reviewed = {yes},
   dvrk_site = {BGUN},
-  dvrk_cites = {Bahar2020 and Coad2017a and Enayati2018b and Jarc2015 and Kazanzides2014 and Kim2015a and Nisky2015 and Sharon2018a and Sharon2021},
+  dvrk_cites = {Bahar2020 and Coad2017a and Enayati2018b and Jarc2015 and Kazanzides2014 and Kim2015a and Nisky2015 and Sharon2018a and Sharon2021 and Sharon2021Combining},
   date_added = {2026-01-20},
   abstract = {Fine manipulation is important in dexterous tasks executed via teleoperation, including in robot-assisted surgery. Discovering fundamental laws of human movement can benefit the design and control of teleoperated systems, and the training of their users. These laws are formulated as motor invariants, such as the well-studied speed-curvature power law. However, while the majority of these laws characterize translational movements, fine manipulation requires controlling the orientation of objects as well. This subject has received little attention in human motor control studies. Here, we report a new power law linking the speed to the geometry in orientation control – humans rotate their hands with an angular speed that is exponentially related to the local change in the direction of rotation. We demonstrate this law in teleoperated tasks performed by surgeons using surgical robotics research platforms. Additionally, we show that the law’s parameters change slowly with the surgeons’ training, and are robust within participants across task segments and repetitions. The fact that this power law is a robust motor invariant suggests that it may be an outcome of sensorimotor control. It also opens questions about the nature of this control and how it can be harnessed for better control of human-teleoperated robotic systems.},
 }
@@ -4834,7 +4846,7 @@
   data_type = {KD},
   peer_reviewed = {yes},
   dvrk_site = {POLIMI},
-  dvrk_cites = {Abdelaal2018 and Enayati2018b and Kazanzides2014 and Ma2020 and Shahbazi2018a and Wang2019c and xu2021surrol},
+  dvrk_cites = {Abdelaal2018 and Enayati2018b and Kazanzides2014 and Ma2020 and Munawar2020 and Shahbazi2018a and Wang2019c and xu2021surrol},
   date_added = {2026-01-03},
   abstract = {The development of the Robot-Assisted Minimally Invasive Surgery (RAMIS) imposes an increasing demand for surgical training platforms, especially low-cost simulation-based surgical training through the creation of new open-source modules. For this goal, a da Vinci Surgical robot simulator based on Unity Physics Engine is developed. The simulator is integrated with da Vinci Research Kit (dVRK), robot kinematic models and multiple sensors. The Robot Operating System (ROS) interface is embedded for better integration with ROS based software components. The simulator can provide interactive information such as haptic feedback with master input devices. An application of a virtual fixture is implemented to test and verify the performance of the simulator. The results show that the simulator has high expansibility and support interactive training tasks well.},
 }
@@ -4864,7 +4876,7 @@
   doi = {10.1109/mra.2023.3310863},
   peer_reviewed = {yes},
   dvrk_site = {ICL},
-  dvrk_cites = {Banach2019 and Cai2021 and Cartucho2021Enhanced and Chrysilla2019 and DEttorre2021 and Ferguson2018c and Fontanelli2017b and Grammatikopoulou2016a and Hwang2020 and Hwang2020Applying and Hwang2020a and Kazanzides2014 and Moccia2020 and Ozguner2020 and Pachtrachai2016a and Pachtrachai2018 and Richter2019b and Richter2021 and Roberti2020b and Seita2018a and Wang2017b and Wang2019c and Wang2022Autonomous and Wilcox2021LearningTL and Ye2016 and Yilmaz2020 and Zhang2017e and Zhong2019 and Zhong2020},
+  dvrk_cites = {Banach2019 and Cai2021 and Cartucho2021Enhanced and Chrysilla2019 and DEttorre2021 and Ferguson2018c and Fontanelli2017b and Grammatikopoulou2016a and Hwang2020 and Hwang2020Applying and Hwang2020a and Kazanzides2014 and Moccia2020 and Ozguner2020 and Pachtrachai2016a and Pachtrachai2018 and Richter2019b and Richter2021 and Roberti2020b and Seita2018a and Sundaresan2019 and Wang2017b and Wang2019c and Wang2022Autonomous and Wilcox2021LearningTL and Ye2016 and Yilmaz2020 and Zhang2017e and Zhong2019 and Zhong2020},
   date_added = {2025-12-10},
   abstract = {Telesurgical robotic systems provide a well-established form of assistance in the operating theater, with evidence of growing uptake in recent years. Until now, the da Vinci surgical system (Intuitive Surgical Inc., Sunnyvale, CA, USA) has been the most widely adopted robot of this kind, with more than 6,700 systems in current clinical use worldwide [1]. To accelerate research on robotic-assisted surgery, the retired first-generation da Vinci robots have been redeployed for research use as da Vinci Research Kits (dVRKs), which have been distributed to research institutions around the world to support both training and research in the sector. In the past ten years, a great amount of research on the dVRK has been carried out across a vast range of research topics. During this extensive and distributed process, common technical issues have been identified that were buried deep within the dVRK research and development architecture and were found to be common in dVRK user feedback, regardless of the breadth and disparity of research directions identified. This article gathers and analyzes the most significant of these, with a focus on the technical constraints of the first-generation dVRK, which both existing and prospective users should be aware of before embarking upon dVRK-related research. The hope is that this review will aid users in identifying and addressing common limitations of the systems promptly, thus helping to accelerate progress in the field.},
 }
@@ -4936,7 +4948,7 @@
   url = {https://doi.org/10.1109/bhi56158.2022.9926849},
   peer_reviewed = {yes},
   dvrk_site = {ICL},
-  dvrk_cites = {Chiu2021Bimanual and Munawar2019 and Nagy2019 and Zhang2022HumanRobotSC},
+  dvrk_cites = {Chiu2021Bimanual and Ginesi2019 and Munawar2019 and Nagy2019 and Zhang2022HumanRobotSC},
   date_added = {2026-09-11},
   keywords = {dvrk_title_abstract},
   abstract = {In the field of robotic surgery, Robot-Assisted Minimally Invasive Surgery(RAMIS) has shown its great potential of benefiting both surgeons and patients in the past few decades of research and practice. The current trend of RAMIS targets towards a higher level of autonomy in carrying out surgical tasks. However, most real RAMIS tasks still rely on manual control, thus the performance mostly depends on the dexterity of the surgeon. Their fatigue or small errors could cause life-threatening damages to the patients, especially high-workload surgeons. Since corrections and errors are inevitable in manual control, the actual tool paths in real operations are often deviated from ideal trajectories. For robot Learning from Demonstrations(LfD), these sub-optimal paths would eventually affect the robot's learning performance. Therefore, much research is being explored in enhancing the performance of robot-generated instrument tool paths and at the same time reducing the reliance on manual manipulation demonstrations in surgical robot learning. In this paper, both Reinforcement Learning and Learning from Demonstration are used to generate a smooth moving trajectory without the use of manual robotic control kinematics data. Two tasks, peg transfer and pattern cutting, were chosen to verify the performance. The method was trained and validated in simulations, namely Asynchronous Multi-Body Framework (AMBF) and Moveit. Then da Vinci Research Kit is used to validate the real case performance. The results have shown that this path generation framework could automate given repetitive surgical tasks, and potentially adapted to other surgical tasks.},
@@ -5014,6 +5026,8 @@
   pages = {1-8},
   doi = {10.1109/biorob52689.2022.9925380},
   peer_reviewed = {yes},
+  dvrk_site = {ISS},
+  dvrk_cites = {Enayati2018b and Fard2018 and Kazanzides2014 and Wang2018b},
   date_added = {2026-02-14},
   abstract = {Surgical movements have an important stylistic quality that individuals without formal surgical training can use to identify expertise. In our prior work, we sought to characterize quantitative metrics associated with surgical style and developed a near-real-time detection framework for stylistic deficiencies using a commercial haptic device. In this paper, we implement bimanual stylistic detection on the da Vinci Research Kit (dVRK) and focus on one stylistic deficiency, "Anxious", which may describe movements under stressful conditions. Our goal is to potentially correct these "Anxious" movements by exploring the effects of three different types of haptic cues (time-variant spring, damper, and spring-damper feedback) on performance during a basic surgical training task using the da Vinci Research Kit (dVRK). Eight subjects were recruited to complete peg transfer tasks using a randomized order of haptic cues and with baseline trials between each task. Overall, all cues lead to a significant improvement over baseline economy of volume and time-variant spring haptic cues lead to significant improvements in reducing the classified "Anxious" movements and also corresponded with significantly lower path length and economy of volume for the non-dominant hand. This work is the first step in evaluating our stylistic detection model on a surgical robot and could lay the groundwork for future methods to actively and adaptively reduce the negative effect of stress in the operating room.},
 }
@@ -5196,7 +5210,7 @@
   url = {http://dx.doi.org/10.1109/case49439.2021.9551569},
   peer_reviewed = {yes},
   dvrk_site = {UV},
-  dvrk_cites = {Bombieri2020 and DEttorre2018b and Kazanzides2014 and Murali2015c and Seita2018a and Sen2016 and Thananjeyan2017b and Thananjeyan2019c},
+  dvrk_cites = {Bombieri2020 and DEttorre2018b and Kazanzides2014 and Liu2015 and Murali2015c and Seita2018a and Sen2016 and Thananjeyan2017b and Thananjeyan2019c},
   date_added = {2026-09-11},
   keywords = {dvrk_fulltext_site},
   abstract = {In the future, surgical robots will grant the option of executing surgical tasks autonomously, supervised by the surgeon. We propose a simple framework for learning surgical action primitives that can be used as building blocks for composing more elaborate surgical tasks. Our method is based on Learning from Demonstration (LfD) as this allows us to exploit existing expert knowledge from recordings of surgical procedures. We demonstrate that we can learn needle manipulation actions from human demonstration, constructing an action library which is used to autonomously execute part of a surgical suturing task. Actions are learned from single demonstrations and we use Dynamic Movement Primitives (DMPs) to encode low-level Cartesian space trajectories. Our method is experimentally validated in a non-clinical setting, where we show that learned actions can be generalized to previously unseen conditions. Experiments show a 81 % task success rate for moderate variations from the initial conditions of the demonstration with a mean needle insertion error of 3.8 mm.},
@@ -5295,7 +5309,7 @@
   url = {http://dx.doi.org/10.1109/icra48506.2021.9561673},
   peer_reviewed = {yes},
   dvrk_site = {UCSD},
-  dvrk_cites = {DEttorre2018b and Fontanelli2018d and Fontanelli2018f and Kazanzides2014 and Li2020a and Richter2019a and Sen2016 and Varier2020},
+  dvrk_cites = {DEttorre2018b and Fontanelli2018d and Fontanelli2018f and Kazanzides2014 and Li2020a and Liu2015 and Liu2016 and Richter2019a and Sen2016 and Sundaresan2019 and Varier2020},
   date_added = {2026-09-11},
   keywords = {dvrk_fulltext_site},
   abstract = {Regrasping a suture needle is an important yet time-consuming process in suturing. To bring efficiency into regrasping, prior work either designs a task-specific mechanism or guides the gripper toward some specific pick-up point for proper grasping of a needle. Yet, these methods are usually not deployable when the working space is changed. Therefore, in this work, we present rapid trajectory generation for bimanual needle regrasping via reinforcement learning (RL). Demonstrations from a sampling-based motion planning algorithm is incorporated to speed up the learning. In addition, we propose the ego-centric state and action spaces for this bimanual planning problem, where the reference frames are on the end-effectors instead of some fixed frame. Thus, the learned policy can be directly applied to any feasible robot configuration. Our experiments in simulation show that the success rate of a single pass is 97%, and the planning time is 0.0212s on average, which outperforms other widely used motion planning algorithms. For the real-world experiments, the success rate is 73.3% if the needle pose is reconstructed from an RGB image, with a planning time of 0.0846s and a run time of 5.1454s. If the needle pose is known beforehand, the success rate becomes 90.5%, with a planning time of 0.0807s and a run time of 2.8801s.},
@@ -5530,7 +5544,7 @@
   data_type = {RI and KD and ED},
   peer_reviewed = {yes},
   dvrk_site = {UBC},
-  dvrk_cites = {Fontanelli2018f and Kazanzides2014 and Li2020a and Murali2015c and Selvaggio2018 and Sen2016},
+  dvrk_cites = {Fontanelli2018f and Kazanzides2014 and Li2020a and Murali2015c and Selvaggio2018 and Selvaggio2019a and Sen2016},
   date_added = {2021-07-01},
   abstract = {Robots can perform multiple tasks in parallel. This work is about leveraging this capability in automating multilateral surgical subtasks. In particular, we explore, in a simulation study, the benefits of considering this parallelism capability in developing execution models for autonomous robotic surgery. We apply our work to two surgical subtask categories: (i) coupled-motion subtasks, where multiple robot arms share the same resources to perform the subtask, and (ii) decoupled-motion subtasks, where each robot arm executes its part of the task independently from the others. We propose and develop parallel execution models for the surgical debridement subtask, a representative of the first category, and the multi-throw suturing subtask, a representative of the second one. Comparing these parallel execution models to the state-of-the-art ones shows significant reductions in the subtasks completion time by at least 40%. In 20 trials, our results show that our proposed model for the surgical debridement subtask, that uses hierarchical concurrent state machines, provides a parallel execution framework that is efficient while greatly reducing collisions between the arms compared to a naive parallel execution model without coordination. We also show how applying parallelism can lead to execution models that go beyond the normal practice of human surgeons. We finally propose the notion of “automation for surgical manual execution” where we argue that autonomous robotic surgery research can be used as a tool for surgeons to discover novel manual execution models that can significantly improve their surgical practice.},
 }
@@ -5701,6 +5715,8 @@
   volume = {17},
   doi = {10.1002/rcs.2275},
   peer_reviewed = {yes},
+  dvrk_site = {CUHK},
+  dvrk_cites = {Hwang2020 and Lin2019 and Wang2019c},
   date_added = {2026-02-14},
   abstract = {Background The hysteretic forces arising from the electric cables that externally run along the robotic joints are the main disturbance to the precise parameter estimation of gravity compensation model, for the Master Tool Manipulator (MTM) of the da Vinci Research Kit (dVRK). Because such nonlinear disturbance forces and the gravitational forces are often hybrid and in the same magnitude. Methods A strategy is proposed to separate these two hybrid forces, and model them by individual learning‐based algorithms. A specially designed Elastic Hysteresis Neural Network model is employed to capture the hysteresis nature of disturbance forces. Results The experimental results show that our proposed strategy has higher compensation accuracy (78.64%–93.32%), and fewer real samples are required for model estimation (100 samples for each joint). Conclusions Our proposed gravity compensation strategy for the MTM of the dVRK shows great improvement over existing state‐of‐the‐arts methods through conducted comparative experiments.},
 }
@@ -5735,7 +5751,7 @@
   research_field = {RE},
   peer_reviewed = {yes},
   dvrk_site = {JHU and ISS and UCL and WPI},
-  dvrk_cites = {Abdelaal2018 and Abdelaal2020 and Abdelaal2021 and Alambeigi2018b and Alambeigi2018e and Alambeigi2018f and Allan2015 and Allan2018a and Anooshahpour2015a and Anooshahpour2017 and Attanasio2020 and Attanasio2021 and Avinash2019b and Bahar2020 and Banach2019 and Black2020 and Bombieri2020 and Bouget2017 and Brancadoro2020 and Caccianiga2020 and Caccianiga2021 and Cai2021 and Chalasani2018a and Chalasani2018c and Che2016 and Chen2013 and Chen2014a and Chen2015 and Chen2016a and Chen2017 and Cheng2019b and Chow2017b and Chrysilla2019 and Chu2018 and Chua2020 and Coad2017a and Col2020 and Colleoni2019a and Colleoni2020 and DEttorre2018b and Dardona2019 and Diodato2018a and Du2016a and Elek2016 and Elek2017 and Enayati2018a and Enayati2018b and Eslamian2016 and Eslamian2017 and Eslamian2020 and Ettorre2019b and Fard2017 and Fard2018 and Ferguson2018c and Ferraguti2015 and Ferro2019a and Ficuciello2019a and Fontanelli2017a and Fontanelli2017b and Fontanelli2018d and Fontanelli2018e and Fontanelli2018f and Fontanelli2020 and Francis2017 and Francis2018a and Gandhi2017 and Garg2016b and Ginesi2020 and Gondokaryono2019 and Gordon2018a and Grammatikopoulou2016a and Gu2018b and Haidegger2017 and Haidegger2019a and Hao2018a and Haouchine2018 and Hong2019c and Hoque2020 and Huan2020 and Hwang2020 and Itzkovich2019 and Jackson2017 and Jarc2015 and Ji2018b and Jo2020 and Kamikawa2018 and Kaplan2016a and Kazanzides2014 and Kazanzides2015 and Khalaji2015a and Kim2015a and Kim2016 and Kim2016a and Kim2017 and Kim2017b and Krishnan2017 and Krishnan2019 and Kumar2015 and Lee2014 and Leonard2015 and Leporini2020 and Li2017 and Li2018a and Li2019 and Li2019a and Li2020 and Li2020a and Li2020c and Liang2017b and Lin2019 and Lin2021 and Liu2015 and Liu2020a and Lu2020 and Ma2018 and Ma2019b and Ma2020 and Mahler2014b and Mariani2018a and Mariani2020 and Mariani2020a and Marinho2019 and McKinley2015b and McKinley2016b and Mikic2019 and Minelli2020 and Moccia2019 and Moccia2020 and Mohareri2014 and Moradi2018 and Moradi2019b and Munawar2016b and Munawar2019 and Munawar2019a and Munawar2021 and Murali2015c and Murali2016 and Nagy2018d and Nagy2019 and Nagy2019a and NagyneElek2021 and Naidu2017 and Nakawala2019 and Nakawala2019a and Nisky2015 and OSullivan2019a and Orosco2020 and Ozguner2018a and Ozguner2020 and Pachtrachai2016a and Pachtrachai2018 and Pandya2019a and Penza2017 and Penza2018 and Penza2020 and Podolsky2019 and Pryor2019 and Qian2015 and Qian2019a and Qian2019b and Qian2020 and Quek2015 and Quek2018 and Rau2019 and Richter2019b and Richter2020 and Roberti2020b and Ruszkowski2015a and Ruszkowski2016 and Salman2018b and Sang2017b and Sang2017c and Saracino2019a and Saracino2020 and Schneider2015 and Seita2018a and Seita2020a and Selvaggio2018 and Selvaggio2019 and Sen2016 and Shahbazi2018a and Shahbazi2018b and Shahzada2016a and Shamaei2015b and Sharon2018a and Sharon2021 and Shin2019b and Song2018 and Song2019 and Sozzi2019 and Stilli2019b and Su2020a and Tagliabue2020 and Tagliabue2021 and Takacs2015 and Takacs2015a and Thananjeyan2017b and Thananjeyan2020 and Thananjeyan2021 and Tong2015a and Tsai2019 and Vagvolgyi2017 and Vagvolgyi2018 and VanAmsterdam2019 and VanAmsterdam2021 and Varier2020 and Vozar2015a and Wang2017 and Wang2017a and Wang2017b and Wang2018b and Wang2018c and Wang2018d and Wang2019c and Wang2020 and Wang2020a and Wu2018a and Wu2019 and Wu2020 and Wu2020a and Wu2021 and Xue2018 and Ye2016 and Yilmaz2020 and Zhan2020 and Zhang2017e and Zhang2017g and Zhang2017h and Zhang2017i and Zhang2018 and Zhang2019d and Zhang2020 and Zhang2020a and Zhao2021 and Zhong2019 and Zhong2020},
+  dvrk_cites = {Abdelaal2018 and Abdelaal2020 and Abdelaal2021 and Alambeigi2018b and Alambeigi2018e and Alambeigi2018f and Allan2015 and Allan2018a and Anooshahpour2015a and Anooshahpour2017 and Attanasio2020 and Attanasio2021 and Avinash2019b and Bahar2020 and Banach2019 and Black2020 and Bombieri2020 and Bouget2017 and Brancadoro2020 and Caccianiga2020 and Caccianiga2021 and Cai2021 and Chalasani2018a and Chalasani2018c and Che2016 and Chen2013 and Chen2014a and Chen2015 and Chen2016a and Chen2017 and Cheng2019a and Cheng2019b and Chow2017b and Chrysilla2019 and Chu2018 and Chua2020 and Coad2017a and Col2020 and Colleoni2019a and Colleoni2020 and DEttorre2018b and Dardona2019 and Diodato2018a and Du2016a and Elek2016 and Elek2017 and Enayati2018a and Enayati2018b and Eslamian2016 and Eslamian2017 and Eslamian2020 and Ettorre2019b and Fard2017 and Fard2018 and Ferguson2018c and Ferraguti2015 and Ferro2019a and Ficuciello2019a and Fontanelli2017a and Fontanelli2017b and Fontanelli2018d and Fontanelli2018e and Fontanelli2018f and Fontanelli2020 and Francis2017 and Francis2018a and Gandhi2017 and Garg2016b and Ginesi2019 and Ginesi2020 and Gondokaryono2019 and Gordon2018a and Grammatikopoulou2016a and Gu2018b and Haidegger2017 and Haidegger2019a and Hamedani2019 and Hao2018a and Haouchine2018 and Hong2019c and Hoque2020 and Huan2020 and Hwang2020 and Itzkovich2019 and Jackson2017 and Jarc2015 and Ji2018b and Jo2020 and Kamikawa2018 and Kaplan2016a and Kazanzides2014 and Kazanzides2015 and Khalaji2015a and Kim2015a and Kim2016 and Kim2016a and Kim2017 and Kim2017a and Kim2017b and Krishnan2017 and Krishnan2019 and Kumar2015 and Lee2014 and Leonard2015 and Leporini2020 and Li2017 and Li2018a and Li2019 and Li2019a and Li2020 and Li2020a and Li2020c and Liang2017b and Lin2019 and Lin2021 and Liu2015 and Liu2016 and Liu2020a and Lu2020 and Ma2018 and Ma2019b and Ma2020 and Mahler2014b and Mariani2018a and Mariani2020 and Mariani2020a and Marinho2019 and McKinley2015b and McKinley2016b and Mikic2019 and Minelli2020 and Moccia2019 and Moccia2020 and Mohareri2014 and Moradi2018 and Moradi2019b and Munawar2016a and Munawar2016b and Munawar2019 and Munawar2019a and Munawar2020 and Munawar2021 and Murali2015c and Murali2016 and Nagy2018d and Nagy2019 and Nagy2019a and NagyneElek2021 and Naidu2017 and Nakawala2019 and Nakawala2019a and Nisky2015 and OSullivan2019a and Orosco2020 and Ozguner2018a and Ozguner2020 and Pachtrachai2016a and Pachtrachai2018 and Pandya2019a and Penza2017 and Penza2018 and Penza2020 and Podolsky2019 and Pryor2019 and Qian2015 and Qian2019a and Qian2019b and Qian2020 and Quek2015 and Quek2018 and Rau2019 and Richter2019b and Richter2020 and Roberti2020b and Ruszkowski2015a and Ruszkowski2016 and Salman2018b and Sang2017b and Sang2017c and Saracino2019a and Saracino2020 and Schneider2015 and Seita2018a and Seita2020a and Selvaggio2018 and Selvaggio2019 and Selvaggio2019a and Sen2016 and Shahbazi2018a and Shahbazi2018b and Shahzada2016a and Shamaei2015b and Sharon2018a and Sharon2021 and Shin2019b and Song2018 and Song2019 and Sozzi2019 and Stilli2019b and Su2020a and Sundaresan2019 and Tagliabue2020 and Tagliabue2021 and Takacs2015 and Takacs2015a and Thananjeyan2017b and Thananjeyan2020 and Thananjeyan2021 and Tong2015a and Tsai2019 and Vagvolgyi2017 and Vagvolgyi2018 and VanAmsterdam2019 and VanAmsterdam2021 and Varier2020 and Vozar2015 and Vozar2015a and Wang2016 and Wang2017 and Wang2017a and Wang2017b and Wang2018b and Wang2018c and Wang2018d and Wang2019b and Wang2019c and Wang2020 and Wang2020a and Wu2018a and Wu2019 and Wu2020 and Wu2020a and Wu2021 and Xue2018 and Ye2016 and Yilmaz2020 and Zevallos2018a and Zhan2020 and Zhang2017e and Zhang2017g and Zhang2017h and Zhang2017i and Zhang2018 and Zhang2019d and Zhang2020 and Zhang2020a and Zhao2021 and Zhong2019 and Zhong2020},
   date_added = {2025-12-10},
   keywords = {Robots;Surgery;Automation;Cameras;Robot vision systems;Instruments;Tools},
   abstract = {Robotic-assisted surgery is now well established in clinical practice and has become the gold-standard clinical treatment option for several clinical indications. The field of robotic-assisted surgery is expected to grow substantially in the next decade, with a range of new robotic devices emerging to address unmet clinical needs across different specialties. A vibrant surgical robotics research community is pivotal for conceptualizing such new systems as well as for developing and training the engineers and scientists to translate them into practice. The da Vinci Research Kit (dVRK), an academic and industry collaborative effort to repurpose decommissioned da Vinci surgical systems [Intuitive Surgical Inc. (ISI), California, USA] as a research platform for surgical robotics research, has been a key initiative for addressing a barrier to entry for new research groups in surgical robotics. In this article, we present an extensive review of the publications that have been facilitated by the dVRK over the past decade. We classify research efforts into different categories and outline some of the major challenges and needs for the robotics community to maintain and build upon this initiative.},
@@ -5770,7 +5786,7 @@
   semanticscholar = {https://www.semanticscholar.org/paper/3f2b07fd67179c4181a096f245248696a510db43},
   peer_reviewed = {yes},
   dvrk_site = {UCL},
-  dvrk_cites = {DEttorre2018b and Ferguson2018c and Schneider2015 and Stilli2019b and Wang2019c and Wang2020a and Zhan2020},
+  dvrk_cites = {DEttorre2018b and Ferguson2018c and Pratt2015c and Schneider2015 and Stilli2019b and Wang2019c and Wang2020a and Zhan2020 and Zhang2017d},
   date_added = {2025-12-15},
   abstract = {Robotic-assisted partial nephrectomy (RAPN) is a tissue-preserving approach to treating renal cancer, where ultrasound (US) imaging is used for intra-operative identification of tumour margins and localisation of blood vessels. With the da Vinci Surgical System (Sunnyvale, CA), the US probe is inserted through an auxiliary access port, grasped by the robotic tool and moved over the surface of the kidney. Images from US probe are displayed separately to the surgical site video within the surgical console leaving the surgeon to interpret and co-registers information which is challenging and complicates the procedural workflow. We introduce a novel software architecture to support a hardware soft robotic rail designed to automate intra-operative US acquisition. As a preliminary step towards complete task automation, we automatically grasp the rail and position it on the tissue surface so that the surgeon is then able to manipulate manually the US probe along it. A preliminary clinical study, involving five surgeons, was carried out to evaluate the potential performance of the system. Results indicate that the proposed semi-autonomous approach reduced the time needed to complete a US scan compared to manual tele-operation. Procedural automation can be an important workflow enhancement functionality in future robotic surgery systems. We have shown a preliminary study on semi-autonomous US imaging, and this could support more efficient data acquisition.},
 }
@@ -5806,7 +5822,7 @@
   data_type = {KD},
   peer_reviewed = {yes},
   dvrk_site = {UV},
-  dvrk_cites = {Attanasio2020 and Ginesi2020 and Kazanzides2014 and Nagy2019 and Nakawala2019 and Shin2019b and Tagliabue2020 and Tagliabue2021 and Wu2020},
+  dvrk_cites = {Attanasio2020 and Ginesi2019 and Ginesi2020 and Kazanzides2014 and Nagy2019 and Nakawala2019 and Shin2019b and Tagliabue2020 and Tagliabue2021 and Wu2020},
   date_added = {2026-01-01},
   abstract = {Autonomy in robot-assisted surgery is essential to reduce surgeons’ cognitive load and eventually improve the overall surgical outcome. A key requirement for autonomy in a safety-critical scenario as surgery lies in the generation of interpretable plans that rely on expert knowledge. Moreover, the Autonomous Robotic Surgical System (ARSS) must be able to reason on the dynamic and unpredictable anatomical environment, and quickly adapt the surgical plan in case of unexpected situations. In this paper, we present a modular Framework for Robot-Assisted Surgery (FRAS) in deformable anatomical environments. Our framework integrates a logic module for task-level interpretable reasoning, a biomechanical simulation that complements data from real sensors, and a situation awareness module for context interpretation. The framework performance is evaluated on simulated soft tissue retraction, a common surgical task to remove the tissue hiding a region of interest. Results show that the framework has the adaptability required to successfully accomplish the task, handling dynamic environmental conditions and possible failures, while guaranteeing the computational efficiency required in a real surgical scenario. The framework is made publicly available.},
 }
@@ -5877,7 +5893,7 @@
   data_type = {KD and SD and ED},
   peer_reviewed = {yes},
   dvrk_site = {UCB},
-  dvrk_cites = {Chiu2021Bimanual and DEttorre2018b and Huang2021b and Hwang2020 and Hwang2020Applying and Kazanzides2014 and Mahler2014b and Murali2015c and Seita2018a and Sen2016 and Thananjeyan2017b and Thananjeyan2020 and Thananjeyan2021 and Zhong2019},
+  dvrk_cites = {Chiu2021Bimanual and DEttorre2018b and Huang2021b and Hwang2020 and Hwang2020Applying and Kazanzides2014 and Mahler2014b and Murali2015c and Seita2018a and Sen2016 and Sundaresan2019 and Thananjeyan2017b and Thananjeyan2020 and Thananjeyan2021 and Zhong2019},
   date_added = {2021-07-01},
   abstract = {Assisting surgeons with automation of surgical subtasks is challenging due to backlash, hysteresis, and variable tensioning in cable-driven robots. These issues are exacerbated as surgical instruments are changed during an operation. In this work, we propose a framework for automation of high- precision surgical subtasks by learning local, sample-efficient, accurate, closed-loop policies that use visual feedback instead of robot encoder estimates. This framework, which we call deep Intermittent Visual Servoing (IVS), switches to a learned visual servo policy for high-precision segments of repetitive surgical tasks while relying on a coarse open-loop policy for the segments where precision is not necessary. We train the policy using only 180 human demonstrations that are roughly 2 seconds each. Results on a da Vinci Research Kit suggest that combining the coarse policy with half a second of corrections from the learned policy during each high-precision segment improves the success rate on the Fundamentals of Laparoscopic Surgery peg transfer task from 72.9% to 99.2%, 31.3% to 99.2%, and 47.2% to 100.0% for 3 instruments with differing cable properties. In the contexts we studied, IVS attains the highest published success rates for automated surgical peg transfer and is significantly more reliable than previous techniques when instruments are changed. Supplementary material is available at https://tinyurl.com/ivs-icra.},
 }
@@ -6018,7 +6034,7 @@
   data_type = {RI and KD},
   peer_reviewed = {yes},
   dvrk_site = {UV},
-  dvrk_cites = {Ginesi2020 and Murali2016 and Nagy2019 and Roberti2020b and VanAmsterdam2019},
+  dvrk_cites = {Ginesi2019 and Ginesi2020 and Murali2016 and Nagy2019 and Roberti2020b and VanAmsterdam2019},
   date_added = {2026-01-01},
   abstract = {Robot-assisted surgery is an established clinical practice. The automatic identification of surgical actions is needed for a range of applications, including performance assessment of trainees and surgical process modeling for autonomous execution and monitoring. However, supervised action identification is not feasible, due to the burden of manually annotating recordings of potentially complex and long surgical executions. Moreover, often few example executions of a surgical procedure can be recorded. This letter proposes a novel fast algorithm for unsupervised identification of surgical actions in a standard surgical training task, the ring transfer, executed with da Vinci Research Kit. Exploiting kinematic and semantic visual features automatically extracted from a very limited dataset of executions, we are able to significantly outperform state-of-the-art results on a dataset of non-expert executions (58% vs. 24% F1-score), and improve performance in the presence of noise, short actions and non-homogeneous workflows, i.e. non repetitive action sequences.},
 }
@@ -6097,7 +6113,7 @@
   url = {http://dx.doi.org/10.1109/ismr48331.2020.9312948},
   peer_reviewed = {yes},
   dvrk_site = {UCB},
-  dvrk_cites = {Alambeigi2018b and DEttorre2018b and Garg2016b and Ji2018b and Kazanzides2014 and Li2020a and Mahler2014b and McKinley2016b and Murali2015c and Murali2016 and Patel2018b and Patel2018c and Richter2019a and Seita2018a and Sen2016 and Shin2019b and Thananjeyan2017b and Thananjeyan2020 and Zhong2019},
+  dvrk_cites = {Alambeigi2018b and DEttorre2018b and Garg2016b and Ji2018b and Kazanzides2014 and Li2020a and Mahler2014b and McKinley2016b and Murali2015c and Murali2016 and Patel2018b and Patel2018c and Richter2019a and Seita2018a and Sen2016 and Shin2019b and Sundaresan2019 and Thananjeyan2017b and Thananjeyan2020 and Zhong2019},
   date_added = {2026-09-11},
   keywords = {dvrk_title_abstract},
   abstract = {Recent advances in depth-sensing have significantly increased accuracy, resolution, and frame rate, as shown in the 1920x1200 resolution and 13 frames per second Zivid RGBD camera. In this study, we explore the potential of depth sensing for efficient and reliable automation of surgical subtasks. We consider a monochrome (all red) version of the peg transfer task from the Fundamentals of Laparoscopic Surgery training suite implemented with the da Vinci Research Kit (dVRK). We use calibration techniques that allow the imprecise, cable-driven da Vinci to reduce error from 4-5mm to 1-2mm in the task space. We report experimental results for a handover-free version of the peg transfer task, performing 20 and 5 physical episodes with single- and bilateral-arm setups, respectively. Results over 236 and 49 total block transfer attempts for the single- and bilateral-arm peg transfer cases suggest that reliability can be attained with 86.9% and 78.0% for each individual block, with respective block transfer speeds of 10.02 and 5.72 seconds. Supplementary material is available at https://sites.google.com/view/peg-transfer.},
@@ -6350,6 +6366,7 @@
   data_type = {DD and ED},
   peer_reviewed = {yes},
   dvrk_site = {WPI},
+  dvrk_cites = {Kazanzides2014 and Munawar2019 and Munawar2019a},
   date_added = {2021-07-01},
   abstract = {We present an open-source framework that provides a low barrier to entry for real-time simulation, visualization, and interactive manipulation of user-specifiable soft-bodies, environments, and robots (using a human-readable front-end interface). The simulated soft-bodies can be interacted by a variety of input interface devices including commercially available haptic devices, game controllers, and the Master Tele-Manipulators (MTMs) of the da Vinci Research Kit (dVRK) with real-time haptic feedback. We propose this framework for carrying out multi-user training, user-studies, and improving the control strategies for manipulation problems. In this paper, we present the associated challenges to the development of such a framework and our proposed solutions. We also demonstrate the performance of this framework with examples of soft-body manipulation and interaction with various input devices.},
 }
@@ -6365,6 +6382,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Gordon2018a and Kazanzides2014 and Li2020},
   date_added = {2021-07-01},
   abstract = {This paper presents a dynamic constraint formulation to provide protective virtual fixtures of 3D anatomical structures from polygon mesh representations. The proposed approach can anisotropically limit the tool motion of surgical robots without any assumption of the local anatomical shape close to the tool. Using a bounded search strategy and Principle Directed tree, the proposed system can run efficiently at 180 Hz for a mesh object containing 989,376 triangles and 493,460 vertices. The proposed algorithm has been validated in both simulation and skull cutting experiments. The skull cutting experiment setup uses a novel piezoelectric bone cutting tool designed for the da Vinci research kit. The result shows that the virtual fixture assisted teleoperation has statistically significant improvements in the cutting path accuracy and penetration depth control. The code has been made publicly available at https://github.com/mli0603/PolygonMeshVirtualFixture.},
 }
@@ -6380,7 +6398,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {UV},
-  dvrk_cites = {Haidegger2019a and Hwang2020Applying and Nagy2019 and Roberti2020b and Sen2016},
+  dvrk_cites = {Ginesi2019 and Haidegger2019a and Hwang2020Applying and Nagy2019 and Roberti2020b and Sen2016},
   date_added = {2021-07-01},
   abstract = {The use of robots in minimally invasive surgery has improved the quality of standard surgical procedures. So far, only the automation of simple surgical actions has been investigated by researchers, while the execution of structured tasks requiring reasoning on the environment and the choice among multiple actions is still managed by human surgeons. In this paper, we propose a framework to implement surgical task automation. The framework consists of a task-level reasoning module based on answer set programming, a low-level motion planning module based on dynamic movement primitives, and a situation awareness module. The logic-based reasoning module generates explainable plans and is able to recover from failure conditions, which are identified and explained by the situation awareness module interfacing to a human supervisor, for enhanced safety. Dynamic Movement Primitives allow to replicate the dexterity of surgeons and to adapt to obstacles and changes in the environment. The framework is validated on different versions of the standard surgical training peg-and-ring task.},
 }
@@ -6415,7 +6433,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {ICL},
-  dvrk_cites = {Kazanzides2014 and Zhang2017d and Zhang2017h and Zhang2017i},
+  dvrk_cites = {Kazanzides2014 and Pratt2015c and Zhang2017d and Zhang2017h and Zhang2017i},
   date_added = {2021-07-01},
   abstract = {In Minimally Invasive Surgery (MIS), tissue scanning with imaging probes is required for subsurface visualisation to characterise the state of the tissue. However, scanning of large tissue surfaces in the presence of motion is a challenging task for the surgeon. Recently, robot-assisted local tissue scanning has been investigated for motion stabilisation of imaging probes to facilitate the capturing of good quality images and reduce the surgeon’s cognitive load. Nonetheless, these approaches require the tissue surface to be static or translating with periodic motion. To eliminate these assumptions, we propose a visual servoing framework for autonomous tissue scanning, able to deal with free-form tissue motion. The 3D structure of the surgical scene is recovered, and a feature-based method is proposed to estimate the motion of the tissue in real-time. The desired scanning trajectory is manually defined on a reference frame and continuously updated using projective geometry to follow the tissue motion and control the movement of the robotic arm. The advantage of the proposed method is that it does not require the learning of the tissue motion prior to scanning and can deal with free-form motion. We deployed this framework on the da Vinci®surgical robot using the da Vinci Research Kit (dVRK) for Ultrasound tissue scanning. Our framework can be easily extended to other probe-based imaging modalities.},
 }
@@ -6434,7 +6452,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {CWRU},
-  dvrk_cites = {Allan2015 and DEttorre2018b and Hao2018a and Jackson2017 and Kazanzides2014 and Liu2015 and Ozguner2018a and Pachtrachai2016a and Seita2018a and Wang2017b and Zhang2017e},
+  dvrk_cites = {Allan2015 and DEttorre2018b and Hao2018a and Jackson2017 and Kazanzides2014 and Liu2015 and Liu2016 and Ozguner2018a and Pachtrachai2016a and Seita2018a and Wang2017b and Zhang2017e},
   date_added = {2021-07-01},
   abstract = {The development of autonomous or semiautonomous surgical robots stands to improve the performance of existing teleoperated equipment but requires fine hand-eye calibration between the free-moving endoscopic camera and patient-side manipulator arms (PSMs). A novel method of solving this problem for the da Vinci robotic surgical system and kinematically similar systems is presented. First, a series of image-processing and optical-tracking operations are performed to compute the coordinate transformation between the endoscopic camera view frame and an optical-tracking marker permanently affixed to the camera body. Then, the kinematic properties of the PSM are exploited to compute the coordinate transformation between the kinematic base frame of the PSM and an optical marker permanently affixed thereto. Using these transformations, it is then possible to compute the spatial relationship between the PSM and the endoscopic camera using only one tracker snapshot of the two markers. The effectiveness of this calibration is demonstrated by successfully guiding the PSM end-effector to points of interest identified through the camera. Additional tests on a surgical task, namely, grasping a surgical needle, are also performed to validate the proposed method. The resulting visually guided robot positioning accuracy is better than the earlier hand-eye calibration results reported in the literature for the da Vinci system while supporting the intraoperative update of the calibration and requiring only devices that are already commonly used in the surgical environment. Note to Practitioners—The problem of hand-eye calibration for the da Vinci robotic surgical system and kinematically similar systems is addressed in this article. Existing approaches have insufficient accuracy to automate low-level surgical subtasks and often require external patterns or subjective human intervention, none of which are applicable to practical robotic minimally invasive surgery (RMIS) scenarios. This article breaks down the calibration procedure into systematic steps to reduce error accumulation. Most of the time-consuming steps are performed offline, allowing them to be retained between movements. Each time the passive joints of the manipulator or the endoscope move, all that needs to be done is to refresh the transformation between the fixed markers. This key idea enables intraoperative updates of the hand-eye calibration to be performed online without sacrificing precision. The calibration method presented here demonstrates that the achieved accuracy is sufficient for automating basic surgical manipulation tasks, such as grasping a suturing needle. The hand-eye calibration will be incorporated into a visually guided manipulation framework to perform high-precision autonomous surgical tasks.},
 }
@@ -6556,7 +6574,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {UCB},
-  dvrk_cites = {Alambeigi2018f and DEttorre2018b and Garg2016b and Hwang2020Applying and Kazanzides2014 and Mahler2014b and Murali2015c and Seita2018a and Seita2020a and Shin2019b and Thananjeyan2017b and Wang2018c and Zhong2019},
+  dvrk_cites = {Alambeigi2018f and DEttorre2018b and Garg2016b and Hwang2020Applying and Kazanzides2014 and Mahler2014b and Murali2015c and Seita2018a and Seita2020a and Shin2019b and Sundaresan2019 and Thananjeyan2017b and Wang2018c and Zhong2019},
   date_added = {2021-07-01},
   abstract = {Automation of surgical subtasks using cable-driven robotic surgical assistants (RSAs) such as Intuitive Surgical's da Vinci Research Kit (dVRK) is challenging due to imprecision in control from cable-related effects such as cable stretching and hysteresis. We propose a novel approach to efficiently calibrate such robots by placing a 3D printed fiducial coordinate frames on the arm and end-effector that is tracked using RGBD sensing. To measure the coupling and history-dependent effects between joints, we analyze data from sampled trajectories and consider 13 approaches to modeling. These models include linear regression and LSTM recurrent neural networks, each with varying temporal window length to provide compensatory feedback. With the proposed method, data collection of 1800 samples takes 31 minutes and model training takes under 1 minute. Results on a test set of reference trajectories suggest that the trained model can reduce the mean tracking error of physical robot from 2.96 mm to 0.65 mm. Results on the execution of open-loop trajectories of the FLS peg transfer surgeon training task suggest that the best model increases success rate from 39.4% to 96.7%, producing performance comparable to that of an expert surgical resident. Supplementary materials, including code and 3D-printable models, are available at https://sites.google.com/berkeley.edu/surgical-calibration.},
 }
@@ -6855,6 +6873,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Chen2017 and Eslamian2020 and Hong2019c and Kazanzides2014 and Kim2017 and Ma2019b and Ma2020 and Mariani2020a and Song2019},
   date_added = {2021-07-01},
   abstract = {Robot-Assisted systems for Minimally Invasive Surgery enhance the surgeon capability, however, direct control over both the surgical tools and the endoscope results in an increased workload that leads to longer operation times. This work investigates the introduction of SCAN (System for Camera Autonomous Navigation) to overcome this limitation. An experimental study involving 12 participants was carried out with the da Vinci Research Kit. Each user tested two novel camera control modalities, autonomous and semi-autonomous, as well as the current manual control of the camera, while carrying out a dry-lab task. Among the camera control modalities, the autonomous navigation achieved better objective performances and the highest user confidence. Moreover, the autonomous control (along with the semi-autonomous one) was able to optimize some metrics related to the robotic surgery workflow.},
 }
@@ -6904,6 +6923,7 @@
   data_type = {RI and KD and DD and SD and ED},
   peer_reviewed = {yes},
   dvrk_site = {UV},
+  dvrk_cites = {Kazanzides2014 and Murali2015c and Nagy2018e and Qian2019 and Richter2019a and Shin2019b and Thananjeyan2017b},
   date_added = {2021-07-01},
   abstract = {Reinforcement Learning (RL) methods have demonstrated promising results for the automation of subtasks in surgical robotic systems. Since many trial and error attempts are required to learn the optimal control policy, RL agent training can be performed in simulation and the learned behavior can be then deployed in real environments. In this work, we introduce an open-source simulation environment providing support for position based dynamics soft bodies simulation and state-of-the-art RL methods. We demonstrate the capabilities of the proposed framework by training an RL agent based on Proximal Policy Optimization in fat tissue manipulation for tumor exposure during a nephrectomy procedure. Leveraging on a preliminary optimization of the simulation parameters, we show that our agent is able to learn the task on a virtual replica of the anatomical environment. The learned behavior is robust to changes in the initial end-effector position. Furthermore, we show that the learned policy can be directly deployed on the da Vinci Research Kit, which is able to execute the trajectories generated by the RL agent. The proposed simulation environment represents an essential component for the development of next-generation robotic systems, where the interaction with the deformable anatomical environment is involved.},
 }
@@ -7227,6 +7247,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {UV},
+  dvrk_cites = {Sen2016},
   date_added = {2021-07-01},
   abstract = {Robotic surgery has significantly improved the quality of surgical procedures. In the past, researches have been focused on automating simple surgical actions. However, there exists no scalable framework for automation in surgery. In this paper, we present a knowledge-based modular framework for the automation of articulated surgical tasks, for example, with multiple coordinated actions. The framework is consisted of ontology, providing entities for surgical automation and rules for task planning, and “dynamic movement primitives” as adaptive motion planner as to replicate the dexterity of surgeons. To validate our framework, we chose a paradigmatic scenario of a peg-and-ring task, a standard training exercise for novice surgeons which presents many challenges of real surgery, e.g. grasping and transferring. Experiments show the validity of the framework and its adaptability to faulty events. The modular architecture is expected to generalize to different tasks and platforms.},
 }
@@ -7278,6 +7299,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {WPI},
+  dvrk_cites = {Wang2019c},
   date_added = {2021-07-01},
   abstract = {Robot Dynamic Simulators offer convenient implementation and testing of physical robots, thus accelerating research and development. While existing simulators support most real-world robots with serially linked kinematic and dynamic chains, they offer limited or conditional support for complex closed-loop robots. On the other hand, many of the underlying physics computation libraries that these simulators employ support closed-loop kinematic chains and redundant mechanisms. Such mechanisms are often utilized in surgical robots to achieve constrained motions (e.g., the remote center of motion (RCM)). To deal with such robots, we propose a new simulation framework based on a front-end description format and a robust real-time dynamic simulator. Although this study focuses on surgical robots, the proposed format and simulator are applicable to any type of robot. In this manuscript, we describe the philosophy and implementation of the front-end description format and demonstrate its performance and the simulator’s capabilities using simulated models of real-world surgical robots.},
 }
@@ -7298,7 +7320,7 @@
   data_type = {KD and DD},
   peer_reviewed = {yes},
   dvrk_site = {CUHK and JHU},
-  dvrk_cites = {Fontanelli2017b and Kazanzides2014 and Wang2019c},
+  dvrk_cites = {Fontanelli2017b and Kazanzides2014 and Munawar2016a and Wang2016 and Wang2019c},
   date_added = {2021-07-01},
   abstract = {External disturbance forces caused by nonlinear springy electrical cables in the master tool manipulator (MTM) of the da Vinci Research Kit (dVRK) limits the usage of the existing gravity compensation methods. Significant motion drifts at the MTM tip are often observed when the MTM is located far from its identification trajectory, preventing the usage of these methods for the entire workspace reliably. In this letter, we propose a general and systematic framework to address the problems of the gravity compensation for the MTM of the dVRK. Particularly, high-order polynomial models were used to capture the highly nonlinear disturbance forces and integrated with the multi-step least square estimation framework. This method allows us to identify the parameters of both the gravitational and disturbance forces for each link sequentially, preventing residual error passing among the links of the MTM with uneven mass distribution. A corresponding gravity compensation controller was developed to compensate the gravitational and disturbance forces. The method was validated with extensive experiments in the majority of the manipulator's workspace, showing significant performance enhancements over existing methods. Finally, a deliverable software package in MATLAB and C++ was integrated with dVRK and published in the dVRK community for open-source research and development.},
 }
@@ -7458,7 +7480,7 @@
   data_type = {KD and DD},
   peer_reviewed = {yes},
   dvrk_site = {WPI},
-  dvrk_cites = {Kazanzides2014 and Murali2015c and Sen2016 and Shamaei2015b},
+  dvrk_cites = {Kazanzides2014 and Munawar2016a and Murali2015c and Sen2016 and Shamaei2015b},
   date_added = {2021-07-01},
   abstract = {Surgical robots for laparoscopy consist of several patient side slave manipulators that are controlled via surgeon operated master telemanipulators. Commercial surgical robots do not perform any sub-tasks - even of repetitive or noninvasive nature - autonomously or provide intelligent assistance. While this is primarily due to safety and regulatory reasons, the state of such automation intelligence also lacks the reliability and robustness for use in high-risk applications. Recent developments in continuous control using Artificial Intelligence and Reinforcement Learning have prompted growing research interest in automating mundane sub-tasks. To build on this, we present an inspired Asynchronous Framework which incorporates realtime dynamic simulation - manipulable with the masters of a surgical robot and various other input devices - and interfaces with learning agents to train and potentially allow for the execution of shared sub-tasks. The scope of this framework is generic to cater to various surgical (as well as non-surgical) training and control applications. This scope is demonstrated by examples of multi-user and multi-manual applications which allow for realistic interactions by incorporating distributed control, shared task allocation and a well-defined communication pipe-line for learning agents. These examples are discussed in conjunction with the design philosophy, specifications, system-architecture and metrics of the Asynchronous Framework and the accompanying Simulator. We show the stability of Simulator while achieving real-time dynamic simulation and interfacing with several haptic input devices and a training agent at the same time.},
 }
@@ -7494,6 +7516,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {UCSD},
+  dvrk_cites = {Hao2018a and Kazanzides2014 and Qian2018a and Seita2018a and Ye2016},
   date_added = {2021-07-01},
   abstract = {Surgical robots offer the exciting potential for remote telesurgery, but advances are needed to make this technology efficient and accurate to ensure patient safety. Achieving these goals is hindered by the deleterious effects of latency between the remote operator and the bedside robot. Predictive displays have found success in overcoming these effects by giving the operator immediate visual feedback. However, previously developed predictive displays can not be directly applied to telesurgery due to the unique challenges in tracking the 3D geometry of the surgical environment. In this paper, we present the first predictive display for teleoperated surgical robots. The predicted display is stereoscopic, utilizes Augmented Reality (AR) to show the predicted motions alongside the complex tissue found in-situ within surgical environments, and overcomes the challenges in accurately tracking slave-tools in real-time. We call this a Stereoscopic AR Predictive Display (SARPD). To test the SARPD's performance, we conducted a user study with ten participants on the da Vinci® Surgical System. The results showed with statistical significance that using SARPD decreased time to complete task while having no effect on error rates when operating under delay.},
 }
@@ -7510,6 +7533,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {UCB},
+  dvrk_cites = {DEttorre2018b and Garg2016b and Kazanzides2014 and Liang2017b and Mahler2014b and McKinley2016b and Munawar2016a and Pachtrachai2016a and Seita2018a and Sen2016 and Thananjeyan2019c},
   date_added = {2021-07-01},
   abstract = {We consider the surgical subtask of automated extraction of embedded suturing needles from silicone phantoms and propose a four-step algorithm consisting of calibration, needle segmentation, grasp planning, and path planning. We implement autonomous extraction of needles using the da Vinci Research Kit (dVRK). The proposed calibration method yields an average of 1.3mm transformation error between the dVRK end-effector and its overhead endoscopic stereo camera compared to 2.0mm transformation error using a standard rigid body transformation. In 143/160 images where a needle was detected, the needle segmentation algorithm planned appropriate grasp points with an accuracy of 97.20% and planned an appropriate pull trajectory to achieve extraction in 85.31% of images. For images segmented with >50% confidence, no errors in grasp or pull prediction occurred. In images segmented with 25-50% confidence, no erroneous grasps were planned, but a misdirected pull was planned in 6.45% of cases. In 100 physical trials, the dVRK successfully grasped needles in 75% of cases, and fully extracted needles in 70.7% of cases where a grasp was secured.},
 }
@@ -7812,7 +7836,7 @@
   data_type = {RI and KD and DD and SD and ED},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
-  dvrk_cites = {Kazanzides2014 and Vagvolgyi2017 and Vagvolgyi2018 and Vozar2015a and Xia2012 and Xia2013},
+  dvrk_cites = {Kazanzides2014 and Vagvolgyi2017 and Vagvolgyi2018 and Vozar2015 and Vozar2015a and Xia2012 and Xia2013},
   date_added = {2021-07-01},
   abstract = {On-orbit servicing of satellites is complicated by the fact that almost all existing satellites were not designed to be serviced. This creates a number of challenges, one of which is to cut and partially remove the protective thermal blanketing that encases a satellite prior to performing the servicing operation. A human operator on Earth can perform this task telerobotically, but must overcome difficulties presented by the multi-second round-trip telemetry delay between the satellite and the operator and the limited, or even obstructed, views from the available cameras.This paper reports the results of ground-based experiments with trained NASA robot teleoperators to compare our recently-reported augmented virtuality visualization to the conventional camera-based visualization. We also compare the master console of a da Vinci surgical robot to the conventional teleoperation interface. The results show that, for the cutting task, the augmented virtuality visualization can improve operator performance compared to the conventional visualization, but that operators are more proficient with the conventional control interface than with the da Vinci master console.},
 }
@@ -7863,6 +7887,7 @@
   data_type = {KD and DD},
   peer_reviewed = {yes},
   dvrk_site = {UNFII},
+  dvrk_cites = {DEttorre2018b and Fontanelli2017b and Fontanelli2018d and Fontanelli2018f and Kazanzides2014 and Liu2015 and Liu2016 and Selvaggio2018 and Sen2016},
   date_added = {2021-07-01},
   abstract = {During suturing tasks performed with minimally invasive surgical robots, configuration singularities and joint limits often force surgeons to interrupt the task and re-grasp the needle using dual-arm movements. This yields an increased operator's cognitive load, time-to-completion and performance degradation. In this paper, we propose a haptic-guided shared control method for grasping the needle with the Patient Side Manipulator (PSM) of the da Vinci robot avoiding such issues. We suggest a cost function consisting of (i) the distance from robot joint limits and (ii) the task-oriented manipulability along the suturing trajectory. Evaluating the cost and its gradient on the needle grasping manifold allows us to obtain the optimal grasping pose for joint-limit and singularity free robot movements during suturing. We compute force cues and display them through the Master Tool Manipulator (MTM) to guide the surgeon towards the optimal grasp. As such, our system helps the operator to choose a grasping configuration that allows the robot to avoid joint limits and singularities during post-grasp suturing movements. We show the effectiveness of the proposed haptic-guided shared control method during suturing using both simulated and real experiments. The results illustrate that our approach significantly improves the performance in terms of needle re-grasping.},
 }
@@ -7933,6 +7958,7 @@
   research_field = {IM},
   data_type = {RI},
   peer_reviewed = {yes},
+  dvrk_cites = {Ye2017a},
   date_added = {2021-07-01},
   abstract = {In minimally invasive surgery, smoke generated by such as electrocautery and laser ablation deteriorates image quality severely. This creates discomfortable view for the surgeon which may increase surgical risk and degrade the performance of computer assisted surgery algorithms such as segmentation, reconstruction, tracking, etc. Therefore, real-time smoke removal is required to keep a clear field of view. In this paper, we propose a real-time smoke removal approach based on Convolutional Neural Network (CNN). An encoder-decoder architecture with Laplacian image pyramid decomposition input strategy is proposed. This is an end-to-end network which takes the smoke image and its Laplacian image pyramid decomposition as inputs, and outputs a smoke free image directly without relying on any physical models or estimation of intermediate parameters. This design can be further embedded to deep learning based follow-up image guided surgery processes such as segmentation and tracking tasks easily. A dataset with synthetic smoke images generated from Blender and Adobe Photoshop is employed for training the network. The result is evaluated quantitatively on synthetic images and qualitatively on a laparoscopic dataset degraded with real smoke. Our proposed method can eliminate smoke effectively while preserving the original colors and reaches 26 fps for a video of size 512 × 512 on our training machine. The obtained results not only demonstrate the efficiency and effectiveness of the proposed CNN structure, but also prove the potency of training the network on synthetic dataset.},
 }
@@ -8018,7 +8044,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {OU},
-  dvrk_cites = {Fontanelli2017a and Garg2016b and Kazanzides2014 and Li2017 and Quek2018 and Sang2017b and Shahzada2016a and Wang2017},
+  dvrk_cites = {Fontanelli2017a and Garg2016b and Kazanzides2014 and Li2017 and Quek2018 and Sang2017b and Shahzada2016a and Wang2017 and Zevallos2018a},
   date_added = {2021-07-01},
   abstract = {Robot-Assisted Minimally Invasive Surgery (RAMIS) is becoming standard-of-care in western medicine. RAMIS offers better patient outcome compared to traditional open surgery, however, the surgeons’ ability to identify the tissues with the sense of touch is missing from most robotic systems. Regarding haptic feedback, the most promising diagnostic technique is probably palpation; a physical contact examination method through which information can be gathered about the underlying structures by gently pressing with the fingers. In open surgery, palpation is widely used to identify blood vessels, tendons or even tumors; and the knowledge on the exact location of such elements is often crucial with respect to the outcome of the intervention. This paper presents a review of the actual research directions in the field of palpation in RAMIS.},
 }
@@ -8107,6 +8133,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {UNFII},
+  dvrk_cites = {Fontanelli2017b and Fontanelli2018f},
   date_added = {2021-07-01},
   abstract = {da Vinci is a robotic platform used to perform surgical tasks. The use of this robotic platform can have a significant effect on the reduction of operation time and improvement of the surgical task outcomes. However, the dynamic model of the da Vinci robot especially the friction model of the prismatic joint is unknown. Therefore, the design of an adaptive torque controller for da Vinci system can be the optimal solution for autonomous control strategies. In this work, we propose a fuzzy dynamic surface controller as a suitable application of the fuzzy method to tune the gain of the dynamic surface as an adaptive and robust controller for the da Vinci robot. The proposed controller is able to observe and eliminate the uncertainties. Lyaponuv method is used to guarantee the stability of the closed loop system. Finally, experiments are conducted to verify the proper performance of the proposed approach. It is worth noting that the experimental results indicate the robustness of the controller against uncertainties of the system.},
 }
@@ -8266,6 +8293,7 @@
   data_type = {RI and KD},
   peer_reviewed = {yes},
   dvrk_site = {BGUN},
+  dvrk_cites = {Enayati2018a and Fard2017 and Jarc2015 and Kazanzides2014 and Krishnan2017 and Nisky2015 and Sharon2017 and Sharon2018a and Wang2018b},
   date_added = {2021-07-01},
   abstract = {Robotic-Assisted Minimally Invasive Surgery allows for easy recording of kinematic data, and presents excellent opportunities for data-intensive approaches to assessment of surgical skill, system design, and automation of procedures. However, typical surgical cases result in long data streams, and therefore, automated segmentation into gestures is important. The public release of the JIGSAWS dataset allowed for developing and benchmarking data-intensive segmentation algorithms. However, this dataset is small and the gestures are similar in their structure and directions. This may limit the generalization of the algorithms to real surgical data that are characterized by movements in arbitrary directions. In this paper, we use a recurrent neural network to segment a suturing task, and demonstrate one such generalization problem-limited generalization to rotation. We propose a simple augmentation that can solve this problem without collecting new data, and demonstrate its benefit using: (1) the JIGSAWS dataset, and (2) a new dataset that we recorded with a da Vinci Research Kit. Our study highlights the prospect of using data augmentation in the analysis of kinematic data in surgical data science.},
 }
@@ -8315,6 +8343,7 @@
   data_type = {RI and KD},
   peer_reviewed = {yes},
   dvrk_site = {UNFII},
+  dvrk_cites = {Fontanelli2017b and Kazanzides2014 and Selvaggio2018},
   date_added = {2021-07-01},
   abstract = {Polyp dissection requires very accurate detection of the region of interest and high-precision cutting with adequate safety margins. Robot-assisted polyp dissection is a solution to accomplish high-quality intervention. This paper proposes a method to constrain the robot to follow an accurate dissection path based on Virtual Fixtures (VF). The VFs are created via specific control points obtained directly from images of the surgical scene and are updated by the vision algorithm. The VF constraints can autonomously adapt themselves to environment changing during the surgical intervention. The entire pipeline is validated through experiments on the da Vinci Research Kit (dVRK) robot.},
 }
@@ -8332,6 +8361,7 @@
   data_type = {RI and KD},
   peer_reviewed = {yes},
   dvrk_site = {UCL},
+  dvrk_cites = {Allan2018a and Kazanzides2014 and Krishnan2017 and Murali2016},
   date_added = {2021-07-01},
   abstract = {Kinematic trajectories recorded from surgical robots contain information about surgical gestures and potentially encode cues about surgeon's skill levels. Automatic segmentation of these trajectories into meaningful action units could help to develop new metrics for surgical skill assessment as well as to simplify surgical automation. State-of-the-art methods for action recognition relied on manual labelling of large datasets, which is time consuming and error prone. Unsupervised methods have been developed to overcome these limitations. However, they often rely on tedious parameter tuning and perform less well than supervised approaches, especially on data with high variability such as surgical trajectories. Hence, the potential of weak supervision could be to improve unsupervised learning while avoiding manual annotation of large datasets. In this paper, we used at a minimum one expert demonstration and its ground truth annotations to generate an appropriate initialization for a GMM-based algorithm for gesture recognition. We showed on real surgical demonstrations that the latter significantly outperforms standard task-agnostic initialization methods. We also demonstrated how to improve the recognition accuracy further by redefining the actions and optimising the inputs.},
 }
@@ -8445,6 +8475,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Chen2017 and Kazanzides2014 and Wang2017 and Xia2013},
   date_added = {2021-07-01},
   abstract = {Robotic surgical systems have contributed greatly to the advancement of minimally invasive surgery (MIS). More specifically, telesurgical robots have provided enhanced dexterity to surgeons performing MIS procedures. However, current robotic teleoperated systems have only limited situational awareness of the patient anatomy and surgical environment that would typically be available to a surgeon in an open surgery. Although the endoscopic view enhances the visualization of the anatomy, perceptual understanding of the environment and anatomy is still lacking due to the absence of sensory feedback. To address these limitations, we present an algorithmic software framework to provide Complementary Situational Awareness (CSA) in a surgical assistant. This framework aims at improving the human-robot relationship by providing elaborate guidance and sensory feedback capabilities for the surgeon in complex MIS procedures. Unlike traditional teleoperation, this framework enables the user to telemanipulate the situational model in a virtual environment and uses that information to command the slave robot with appropriate admittance gains and environmental constraints. Simultaneously, the situational model is updated based on interaction of the slave robot with the task space environment. We provide various high-level and mid-level components to provide CSA and illustrate the necessary capabilities required for any robotic platform to readily incorporate CSA. We also demonstrate the use of our framework for constrained model-mediated teleoperation using the open-source da Vinci Research Kit (dVRK) hardware.},
 }
@@ -9013,6 +9044,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {SU},
+  dvrk_cites = {Kazanzides2014},
   date_added = {2021-07-01},
   abstract = {Teleoperation systems could benefit from force sensory substitution when kinesthetic force feedback systems are too bulky or expensive, and when they cause instability by magnifying force feedback. We aim to magnify force feedback using sensory substitution via force-controlled tactile skin deformation, using a device with the ability to provide tangential and normal force directly to the fingerpads. The sensory substitution device is able to provide skin deformation force feedback over ten times the maximum stable kinesthetic force feedback on a da Vinci Research Kit teleoperation system. We evaluated the effect of this force magnification in two experimental tasks where the goal was to minimize interaction force with the environment. In a peg transfer task, magnified force feedback using sensory substitution improved participants' performance for force magnifications up to ten times, but decreased performance for higher force magnifications. In a tube connection task, sensory substitution that doubled the force feedback maximized performance; there was no improvement at the larger magnifications. These experiments demonstrate that magnified force feedback using sensory substitution via force-controlled skin deformation feedback can decrease applied forces similarly to magnified kinesthetic force feedback during teleoperation.},
 }
@@ -9142,6 +9174,7 @@
   research_field = {TR},
   data_type = {RI and KD},
   peer_reviewed = {yes},
+  dvrk_cites = {Fard2017},
   date_added = {2021-07-01},
   abstract = {PURPOSE: This paper focuses on an automated analysis of surgical motion profiles for objective skill assessment and task recognition in robot-assisted surgery. Existing techniques heavily rely on conventional statistic measures or shallow modelings based on hand-engineered features and gesture segmentation. Such developments require significant expert knowledge, are prone to errors, and are less efficient in online adaptive training systems. METHODS: In this work, we present an efficient analytic framework with a parallel deep learning architecture, SATR-DL, to assess trainee expertise and recognize surgical training activity. Through an end-to-end learning technique, abstract information of spatial representations and temporal dynamics is jointly obtained directly from raw motion sequences. RESULTS: By leveraging a shared highlevel representation learning, the resulting model is successful in the recognition of trainee skills and surgical tasks, suturing, needle-passing, and knot-tying. Meanwhile, we explore the use of ensemble in classification at the trial level, where the SATR-DL outperforms state-of-the-art performance by achieving accuracies of 0.960 and 1.000 in skill assessment and task recognition, respectively. CONCLUSION: This study highlights the potential of SATR-DL to provide improvements for an efficient data-driven assessment in intelligent robotic surgery.},
 }
@@ -9161,7 +9194,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
-  dvrk_cites = {Kazanzides2014 and Vagvolgyi2017 and Vozar2015a and Xia2012 and Xia2013},
+  dvrk_cites = {Kazanzides2014 and Vagvolgyi2017 and Vozar2015 and Vozar2015a and Xia2012 and Xia2013},
   date_added = {2021-07-01},
   abstract = {Teleoperation in extreme environments can be hindered by limitations in telemetry and in operator perception of the remote environment. Often, the primary mode of perception is visual feedback from remote cameras, which do not always provide suitable views and are subject to telemetry delays. To address these challenges, we propose to build a model of the remote environment and provide an augmented virtuality visualization system that augments the model with projections of real camera images. The approach is demonstrated in a satellite servicing scenario, with a multisecond round-trip telemetry delay between the operator on Earth and the satellite on orbit. The scene modeling enables both virtual fixtures to assist the human operator and augmented virtuality visualization that allows the operator to teleoperate a virtual robot from a convenient virtual viewpoint, with the delayed camera images projected onto the three-dimensional model. Experiments on a ground-based telerobotic platform, with software-created telemetry delays, indicate that the proposed method leads to better teleoperation performance with 30% better blade alignment and 50% reduction in task execution time compared to the baseline case where visualization is restricted to the available camera views.},
 }
@@ -9271,7 +9304,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {CWRU},
-  dvrk_cites = {Jackson2017 and Kazanzides2014 and Liu2015},
+  dvrk_cites = {Jackson2017 and Kazanzides2014 and Liu2015 and Liu2016},
   date_added = {2021-07-01},
   abstract = {This paper presents algorithms for three-dimensional tracking of surgical needles using the stereo endoscopic camera images obtained from the da Vinci® Surgical Robotic System. The proposed method employs Bayesian state estimation, computer vision techniques, and robot kinematics. A virtual needle rendering procedure is implemented to create simulated images of the surgical needle under the da Vinci ® robot endoscope, which makes it possible to measure the similarity between the rendered needle image and the real needle. A particle filter algorithm using the mentioned techniques is then used for tracking the surgical needle. The performance of the tracking is experimentally evaluated using an actual da Vinci® surgical robotic system and quantitatively validated in a ROS/Gazebo simulation thereof.},
 }
@@ -9522,6 +9555,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {UNFII},
+  dvrk_cites = {Fontanelli2017b},
   date_added = {2021-07-01},
   abstract = {Minimally invasive robotic surgery holds a fundamental role in modern surgery. However, one of its major limitations compared to classic laparoscopy is that the surgeon can only rely on visual perception, for the lack of haptic force feedback. A new solution for a force sensor placed at the end-tip of the trocar is presented here. This solution allows measuring the interaction forces between the surgical instrument and the environment without any changes to the instrument structure and with full adaptability to different robot platforms and surgical tools. A prototype of the sensor has been realized with 3D printed technology for a proof of concept. The static and dynamic characterization of the sensor is provided together with experimental validation.},
 }
@@ -9550,6 +9584,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Kazanzides2014 and Vozar2015 and Vozar2015a and Xia2012 and Xia2013},
   date_added = {2021-07-01},
   abstract = {Ground-based teleoperation of robots in space is subject to time delays of several seconds or more. This leads to the use of model-based approaches, where the operator interacts with a model (simulation) of the remote environment and the remote robot attempts to reproduce the results of that interaction. But, it is also desirable for the operator to view (delayed) images from the remote scene. These images, however, are often from one or more monocular cameras mounted on the robot end-effector, which leads to several other problems: unintuitive teleoperation due to the eye-in-hand configuration, limited field of view, and lack of stereo visualization. We present an augmented virtuality interface for teleoperation, which can solve these problems by projecting the real camera images onto a registered 3D model of the environment and allowing the operator to select any desired viewpoint. This approach is suitable when there is at least a partial model of the environment, as is the case for satellite servicing. The proposed method begins with a video survey to register the 3D model to the physical environment, followed by a user interface that presents a stereo visualization of the model, augmented by projections of real camera images onto the model. We quantitatively and qualitatively compare the augmented virtuality images to real camera images taken from the same viewpoint and perform experiments to evaluate the efficacy of the augmented virtuality paradigm for teleoperation. The results suggest that this approach can improve operator situation awareness, potentially leading to better performance, especially when the camera views are unintuitive or limited.},
 }
@@ -9586,6 +9621,7 @@
   data_type = {ED},
   peer_reviewed = {yes},
   dvrk_site = {CMU},
+  dvrk_cites = {Garg2016b and McKinley2015b},
   date_added = {2021-07-01},
   abstract = {This work presents the design and evaluation of a low-cost tri-axial force sensor, that has been developed to regain the sense of touch in minimally invasive surgeries (MIS). The force sensor uses an array of force sensitive resistors (FSR) with a mechanically pre-loaded structure to perform the force sensing. The sensor has a built-in signal conditioning circuitry to provide on-board power regulation, programmable signal amplification and analog to digital conversion. The sensor is inexpensive and highly sensitive to low-amplitude force, critical in surgical applications. We validate the efficacy of the sensor with two surgical applications - robotic palpation for stiffness mapping and obstacle avoidance for a highly articulated robotic probe (HARP). The results show that the sensor is capable of accurately detecting the stiff inclusions embedded in the tissues as well as detecting obstacles and helping HARP safely navigate around them.},
 }
@@ -9700,7 +9736,7 @@
   data_type = {KD and ED},
   peer_reviewed = {yes},
   dvrk_site = {ICL},
-  dvrk_cites = {Kazanzides2014 and Zhang2017i},
+  dvrk_cites = {Kazanzides2014 and Pratt2015c and Zhang2017i},
   date_added = {2021-07-01},
 }
 
@@ -9736,6 +9772,7 @@
   data_type = {RI and KD and DD and ED},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Kazanzides2014 and Kim2016a and Kim2017b},
   date_added = {2021-07-01},
   abstract = {One of the risks of the endonasal approach to skull base surgery is inadvertent damage to one of the two carotid arteries that are located behind the bone being drilled. Photoacoustic imaging, which combines a pulsed laser with an ultrasound receiver probe, has been shown to be able to image blood vessels behind bone. We therefore integrated a photoacoustic imaging system with a telerobotic system, where the pulsed laser is delivered via an optical fiber attached to the drill held by one robot arm and the ultrasound receiver is positioned, at some distance from the drilling site, by another robot arm. This paper describes a new method for accurately determining the safe region for drilling, which is defined by the center-line between the two carotid arteries, and presents the first phantom experiments with this system. The results show that the system can determine the center point with an accuracy better than 2 mm, which suggests that it may be sufficient for clinical scenarios where the two carotid arteries can be within 8 mm of each other.},
 }
@@ -9816,6 +9853,7 @@
   research_field = {HW},
   data_type = {RI and KD and ED},
   peer_reviewed = {yes},
+  dvrk_cites = {Pratt2015c and Zhang2017i},
   date_added = {2021-07-01},
 }
 
@@ -9852,7 +9890,7 @@
   data_type = {RI and KD and DD and SD and ED},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
-  dvrk_cites = {Kazanzides2014 and Kazanzides2015 and Kim2016a},
+  dvrk_cites = {Kazanzides2014 and Kazanzides2015 and Kim2016a and Kim2017a},
   date_added = {2021-07-01},
   abstract = {Death and paralysis are significant risks of modern surgeries, caused by injury to blood vessels and nerves hidden by bone and other tissue. We propose an approach to surgical guidance that relies on photoacoustic (PA) imaging to determine the separation between these critical anatomical features and to assess the extent of safety zones during surgical procedures. Images were acquired as an optical fiber was swept across vessel-mimicking targets, in the absence and presence of teleoperation with a research da Vinci Surgical System. Vessel separation distances were measured directly from PA images. Vessel positions were additionally recorded based on the fiber position (calculated from the da Vinci robot kinematics) that corresponded to an observed PA signal, and these recordings were used to indirectly measure vessel separation distances. Amplitude- and coherence-based beamforming were used to estimate vessel separations, resulting in 0.52- to 0.56-mm mean absolute errors, 0.66- to 0.71-mm root-mean-square errors, and 65% to 68% more accuracy compared to fiber position measurements obtained through the da Vinci robot kinematics. Similar accuracy was achieved in the presence of up to 4.5-mm-thick ex vivo tissue. Results indicate that PA image-based measurements of the separation among anatomical landmarks could be a viable method for real-time path planning in multiple interventional PA applications.},
 }
@@ -9870,6 +9908,7 @@
   data_type = {RI and KD and DD and SD and ED},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Kazanzides2014 and Kim2016a and Kim2017a},
   date_added = {2021-07-01},
   abstract = {In image-guided surgery, preoperative images are registered to an intraoperative tracking system and thereby provide visual feedback of the position of one or more surgical instruments with respect to the patient anatomy in the preoperative image. Two significant limitations of this approach are that relying on a preoperative image cannot account for registration error or intraoperative changes to the anatomy, and that the navigation system cannot provide mechanical assistance to the surgeon. We propose a system architecture to overcome both limitations by incorporating real-time image feedback in a telerobotic system that can provide guidance via virtual fixtures. We describe the implementation of this system, which integrates 3D Slicer and the da Vinci Research Kit (dVRK), and present a photoacoustic image-guided telerobotic system developed for endonasal skull base surgery as an example application.},
 }
@@ -9960,6 +9999,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Chen2014a and Kazanzides2014 and Munawar2016a and Qian2015},
   date_added = {2021-07-01},
   abstract = {The da Vinci Research Kit (dVRK) has been installed at over 25 research institutions across the world, forming a research community sharing a common open-source research platform. This paper presents the dVRK software architecture, which consists of a distributed hardware interface layer, a real-time component-based software framework, and integration with the Robot Operating System (ROS). The architecture is scalable to support multiple active manipulators, reconfigurable to enable researchers to partition a full system into multiple independent subsystems, and extensible at all levels of control.},
 }
@@ -10193,6 +10233,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {UCB},
+  dvrk_cites = {Kazanzides2014 and Krishnan2017 and Murali2015c},
   date_added = {2021-07-01},
   abstract = {For supervised automation of multi-throw suturing in Robot-Assisted Minimally Invasive Surgery, we present a novel mechanical needle guide and a framework for optimizing needle size, trajectory, and control parameters using sequential convex programming. The Suture Needle Angular Positioner (SNAP) results in a 3x error reduction in the needle pose estimate in comparison with the standard actuator. We evaluate the algorithm and SNAP on a da Vinci Research Kit using tissue phantoms and compare completion time with that of humans from the JIGSAWS dataset [5]. Initial results suggest that the dVRK can perform suturing at 30% of human speed while completing 86% suture throws attempted. Videos and data are available at: berkeleyautomation.github.io/amts.},
 }
@@ -10246,6 +10287,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Kazanzides2014},
   date_added = {2021-07-01},
   abstract = {Injury to the internal carotid arteries during the minimally invasive procedure to remove pituitary tumors (i.e., endonasal transsphenoidal surgery) could have many severe complications, including patient death. While preoperative CT or MR images are available to assist with navigation, the location of these arteries may be uncertain during surgery due to registration errors and intraoperative changes. Ideally, the surgeon should be able to visualize these arteries in real-time, even though they are behind the bone being drilled. We are therefore exploring the feasibility of a novel photoacoustic image-guided telerobotic system to measure the location of the artery with respect to the drill tip and to accurately visualize the spatial relationship between the artery and drill tip with respect to the imaging system components (i.e., the optical fiber attached to the drill and the ultrasound transducer). The potential system accuracy was evaluated in a two-stage approach that includes gross localization of the vessel center, followed by refinement with an image-based algorithm. This method was tested with a research-based da Vinci Surgical System, simulated photoacoustic data, and experimental data, revealing mean absolute errors of 1.89±0.93 mm and 0.3±0.2 mm for gross and fine positioning, respectively. Results are promising for surgeons to visualize the internal carotid arteries and thereby avoid injury with a teleoperative robotic approach.},
 }
@@ -10412,6 +10454,7 @@
   data_type = {RI and KD},
   peer_reviewed = {yes},
   dvrk_site = {UCB},
+  dvrk_cites = {Krishnan2017},
   date_added = {2021-07-01},
   abstract = {The growth of robot-assisted minimally invasive surgery has led to sizable datasets of fixed-camera video and kinematic recordings of surgical subtasks. Segmentation of these trajectories into locally-similar contiguous sections can facilitate learning from demonstrations, skill assessment, and salvaging good segments from otherwise inconsistent demonstrations. Manual, or supervised, segmentation can be prone to error and impractical for large datasets. We present Transition State Clustering with Deep Learning (TSC-DL), a new unsupervised algorithm that leverages video and kinematic data for task-level segmentation, and finds regions of the visual feature space that correlate with transition events using features constructed from layers of pre-trained image classification Deep Convolutional Neural Networks (CNNs). We report results on three datasets comparing Deep Learning architectures (AlexNet and VGG), choice of convolutional layer, dimensionality reduction techniques, visual encoding, and the use of Scale Invariant Feature Transforms (SIFT). We find that the deep architectures extract features that result in up-to a 30.4% improvement in Silhouette Score (a measure of cluster tightness) over the traditional “shallow” features from SIFT. We also present cases where TSC-DL discovers human annotator omissions. Supplementary material, data and code is available at: http://berkeleyautomation.github.io/tsc-dl/.},
 }
@@ -10447,6 +10490,7 @@
   data_type = {KD and DD and ED},
   peer_reviewed = {yes},
   dvrk_site = {SU},
+  dvrk_cites = {Kazanzides2014 and Nisky2015},
   date_added = {2021-07-01},
   abstract = {Human-human dyads have been shown to out-perform individuals in a variety of movement tasks and develop specialized roles through haptic communication. Dyadic collaboration is a promising approach for teleoperated tasks that can benefit from the collaboration of multiple agents. In teleoperation, haptic communication depends on physical properties of the master and slave manipulators, as well as control parameters for position tracking and haptic feedback. We performed experiments to compare the performance of dyads and individuals in a teleoperated 1-degree-of-freedom target acquisition task using the da Vinci Research Kit surgical robot platform. In order to test the role of haptic communication in the collaborative task, two modes of force feedback were implemented for the dyad trials: a strong haptic coupling between the two master manipulators that attempts to simulate a physical link, and a weak haptic coupling that relates position differences through a soft linear spring. Results showed that participants were not able to improve their performance significantly by collaboration, and role specialization was not observed. We hypothesize that this result is due to limited haptic feedback and the dynamics of the teleoperated system. However, we demonstrated that most users accommodated to their partners to some extent, and users who had similar individual performance were more likely to improve as dyads.},
 }
@@ -10591,6 +10635,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Chen2014a},
   date_added = {2021-07-01},
   abstract = {In this paper, a real-time control network based on Ethernet and FireWire is presented, where Ethernet provides a convenient, cross-platform interface between a central control PC and a FireWire subnetwork that contains multiple distributed nodes (I/O boards). Real-time performance is achieved because this architecture limits the number of Ethernet transactions on the host PC, benefits from the availability of real-time Ethernet drivers, and uses the broadcast and peer-to-peer capabilities of FireWire to efficiently transfer data among the distributed nodes. This approach and resulting benefits are comparable to EtherCAT, but preserves existing investments in FireWire-based controllers and relies only on conventional, vendor-neutral network hardware and protocols. The system performance is demonstrated on the da Vinci Research Kit (dVRK), which consists of 8 FireWire nodes that control 2 Master Tool Manipulators (MTMs) and 2 Patient Side Manipulators (PSMs), for a total of 28 axes. This approach is generally applicable to interface existing FireWire-based systems to new control PCs via Ethernet or to serve as an open-source alternative to EtherCAT for new designs.},
 }
@@ -10622,6 +10667,7 @@
   research_field = {},
   data_type = {},
   peer_reviewed = {yes},
+  dvrk_cites = {Kazanzides2014},
   date_added = {2021-07-01},
 }
 
@@ -10675,6 +10721,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Kazanzides2014 and Xia2012 and Xia2013},
   date_added = {2021-07-01},
   abstract = {The ability to refuel satellites on-orbit using teleoperated robots could extend the life of satellite missions, potentially saving time and resources for both industry and space agencies. One critical step in the refueling process is to gain access to the satellite's fueling port by cutting through a seam of tape that adheres two sections of multi-layer insulation (MLI) covering the satellite body. The deformable, delicate, specular nature of the metalized tape used to adhere sections of MLI to one another makes cutting the tape seams a difficult task to perform remotely, a difficulty that is compounded by unavoidable multi-second communications delays. Virtual-fixture-assisted teleoperation can help mitigate some of these issues by constraining the motion of the cutting blade based on a priori knowledge of the task. Adding force control may further assist teleoperators by automatically setting a desired normal cutting force. This paper presents the results of a 20-participant user study for a representative satellite tape-cutting task, showing that force control based on a virtual fixture mapped to the MLI blanket plane can decrease both tape bunching and operator workload.},
 }
@@ -10826,6 +10873,7 @@
   data_type = {},
   peer_reviewed = {yes},
   dvrk_site = {JHU},
+  dvrk_cites = {Kazanzides2014 and Vozar2015a and Xia2012 and Xia2013},
   date_added = {2021-07-01},
   abstract = {Direct teleoperation with multisecond time-delayed telemetry between master and slave is challenging for humans to perform. When controlling a holonomic robot with many degrees of freedom, operators may incidentally provide commands in an intended direction without realizing their mistake until receiving feedback several seconds later. For some applications, imposing a virtual nonholonomic constraint (VNHC) on the motion of the end effector can help prevent operators from moving in an unintended direction by reducing the number of controllable degrees of freedom. This paper presents the development of a VNHC for a planar time-delayed telerobotic task, motivated by an on-orbit telerobotic satellite servicing operation. We also describe a nonholonomic virtual fixture (NHVF) that adheres to the VNHC to further reduce the potential for operators to input mistaken commands. We report the results of a pilot study in which teleoperation with a VNHC was found to have comparable task performance to holonomic planar teleoperation, while decreasing operator workload. The NHVF was found to decrease performance slightly, though user feedback indicated that a differently implemented virtual fixture and controller may improve performance.},
 }
@@ -10878,6 +10926,7 @@
   data_type = {KD and DD and ED},
   peer_reviewed = {yes},
   dvrk_site = {BGUN and SU},
+  dvrk_cites = {Kazanzides2014},
   date_added = {2021-07-01},
   abstract = {When a person interacts with an environment using a tool, he/she receives tactile information in the form of fingerpad skin deformation. Different interaction forces and torques on the tool cause different skin deformation patterns on the fingerpads. We designed a 6-degree-of-freedom tactile device that creates similar skin deformation patterns on the fingerpads. The device communicates force and torque information by translating and rotating skin deformation tactors relative to the fingerpads. An experiment was conducted to determine participants' ability to use skin deformation tactile cues to perform a peg-in-hole insertion task. Results show that participants can use the tactile cues to reduce interaction force and torque, and they use the tactile force cues to reduce interaction force more than they use the tactile torque cues to reduce interaction torque. Rendering force and torque cues simultaneously causes device saturation and degrades user performance. These results suggest that additional training may help participants use the skin deformation torque cues, and motivate a tactile device design that decouples force and torque skin deformation rendering to minimize device saturation. Fingerpad skin deformation is a promising form of tactile feedback to convey force and torque information in teleoperation systems such as robot-assisted surgery, where force feedback may be undesirable due to stability and safety concerns.},
 }
@@ -10895,6 +10944,7 @@
   data_type = {KD and DD and SD and ED},
   peer_reviewed = {yes},
   dvrk_site = {BGUN and SU},
+  dvrk_cites = {Kazanzides2014},
   date_added = {2021-07-01},
   abstract = {During robotic teleoperation, the dynamics of the master manipulators and the control of remote-side instruments impose challenges on the motor system of the human operator, and may impact performance and learning. In teleoperated robot-assisted minimally invasive surgery, there is a clear correlation between patient outcomes and the surgeon's case experience. However, the effect of the teleoperator on human motor skills and the relationship between these motor skills and patient outcomes are unknown. We used the da Vinci Research Kit, a custom research version of the da Vinci Surgical System, to compare teleoperated and open needle-driving movements of experienced da Vinci surgeons and novices. The experimental protocol consisted of structured but unconstrained needle driving trials repeated 80 times to allow for computational modeling of movement coordination and learning. Kinematic analysis showed that teleoperation increases trial time but reduces path length, that the trial times and path lengths of experienced surgeons are smaller than those of novices. In addition, there are significant differences in learning between experienced surgeons and novice users. Modeling of the movements and learning processes of experienced and novice surgeons may be used in the design of novel controllers that will expand robotic surgery capabilities and improve robot-assisted surgical skill acquisition.},
 }

@@ -1,0 +1,39 @@
+name: Validate Bibliography
+
+on:
+  pull_request:
+    paths:
+      - "publications.bib"
+      - "custom_tags.json"
+      - "peer_review_overrides.json"
+      - "scripts/**"
+      - ".github/workflows/validate-bib.yml"
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "publications.bib"
+      - "custom_tags.json"
+      - "peer_review_overrides.json"
+      - "scripts/**"
+
+jobs:
+  validate:
+    name: Validate publications.bib
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install script dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Validate BibTeX integrity and custom tag codes
+        run: python3 scripts/update_bib.py --check
+

@@ -33,13 +33,15 @@ import xml.etree.ElementTree as ET
 
 import requests
 
-try:
-    from tag_sites_from_affiliations import match_sites
-except ImportError:
-    try:
-        from scripts.tag_sites_from_affiliations import match_sites
-    except ImportError:
-        match_sites = None
+from bib_utils import (
+    CONTAINER_WORK_TYPES,
+    load_bib,
+    match_sites,
+    normalize_doi,
+    normalize_title,
+    reconstruct_openalex_abstract as _reconstruct_openalex_abstract,
+)
+from update_bib import run_pipeline
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -55,48 +57,18 @@ OPENALEX_MAILTO = "dvrk@jhu.edu"   # Polite-pool access for OpenAlex
 # BibTeX file helpers
 # ---------------------------------------------------------------------------
 
-def normalize_doi(doi: str) -> str:
-    if not doi:
-        return ""
-    doi = doi.lower().strip()
-    for prefix in (
-        "https://doi.org/", "http://doi.org/",
-        "https://dx.doi.org/", "http://dx.doi.org/",
-        "doi:",
-    ):
-        if doi.startswith(prefix):
-            doi = doi[len(prefix):]
-    return doi.strip()
-
-
-def normalize_title(title: str) -> str:
-    """Lowercase, strip LaTeX markup, remove punctuation, collapse whitespace."""
-    if not title:
-        return ""
-    title = re.sub(r"\\[a-zA-Z]+(?:\{[^}]*\})?", " ", title)
-    title = re.sub(r"\{([^}]*)\}", r"\1", title)
-    title = title.lower()
-    title = re.sub(r"[^\w\s]", " ", title)
-    return re.sub(r"\s+", " ", title).strip()
-
-
 def load_existing_data(bib_path):
-    """Return (set of DOIs, set of normalized titles) already in the bib file."""
+    """Return (set of normalized DOIs, set of normalized titles) already in the bib file."""
     dois, titles = set(), set()
     try:
-        with open(bib_path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line.lower().startswith(("doi =", "doi=")):
-                    v = line.split("=", 1)[1].strip().strip(",").strip('"').strip("{}")
-                    norm_d = normalize_doi(v)
-                    if norm_d:
-                        dois.add(norm_d)
-                elif line.lower().startswith(("title =", "title=")):
-                    v = line.split("=", 1)[1].strip().strip(",").strip('"').strip("{}")
-                    norm_t = normalize_title(v)
-                    if norm_t:
-                        titles.add(norm_t)
+        db = load_bib(bib_path)
+        for entry in db.entries:
+            norm_d = normalize_doi(entry.get("doi"))
+            if norm_d:
+                dois.add(norm_d)
+            norm_t = normalize_title(entry.get("title"))
+            if norm_t:
+                titles.add(norm_t)
     except Exception as e:
         print(f"Error reading bib file: {e}")
     return dois, titles
@@ -226,17 +198,6 @@ def doi_to_bibtex(doi):
 # Source 1: OpenAlex (broadest open index, polite pool, abstracts & sites)
 # ---------------------------------------------------------------------------
 
-def _reconstruct_openalex_abstract(inverted_index):
-    if not inverted_index:
-        return ""
-    words = []
-    for word, positions in inverted_index.items():
-        for pos in positions:
-            words.append((pos, word))
-    words.sort(key=lambda x: x[0])
-    return " ".join(w[1] for w in words)
-
-
 def _is_openalex_relevant(title, abstract, venue):
     combined = (title + " " + (abstract or "") + " " + (venue or "")).lower()
     # Filter out German political acronym "DVRK" (Demokratische Volksrepublik Korea) and non-robotics matches
@@ -257,7 +218,7 @@ def search_openalex(query, start_year, end_year, existing_dois, existing_titles,
     url = "https://api.openalex.org/works"
     cursor = "*"
     new_papers = []
-    EXCLUDE_TYPES = {"dataset", "software", "paratext"}
+    EXCLUDE_TYPES = {"dataset", "software", "paratext"} | CONTAINER_WORK_TYPES
     print(f"Searching OpenAlex for '{query}' ({start_year}–{end_year})...")
 
     while cursor:
@@ -421,20 +382,26 @@ def search_crossref(query, start_year, end_year, existing_dois, existing_titles,
     print(f"  -> {len(items)} raw results (filtering for relevance...)")
     new_papers = []
     for item in items:
+        wtype = item.get("type", "")
+        if wtype in CONTAINER_WORK_TYPES:
+            continue
         doi = item.get("DOI", "")
         title_parts = item.get("title", [])
         title = title_parts[0] if title_parts else ""
         if not title:
             continue
 
+        norm_d = normalize_doi(doi)
+        norm_t = normalize_title(title)
+
         # Skip already-known
-        if doi and doi.lower() in existing_dois:
+        if norm_d and norm_d in existing_dois:
             continue
-        if title.lower() in existing_titles:
+        if norm_t in existing_titles:
             continue
-        if doi and doi.lower() in rejected_dois:
+        if norm_d and norm_d in rejected_dois:
             continue
-        if title.lower() in rejected_dois:
+        if norm_t in rejected_dois:
             continue
 
         # Venue (needed for relevance check)
@@ -536,13 +503,15 @@ def search_arxiv(query, start_year, end_year, existing_dois, existing_titles, re
         pub_el = entry.find("a:published", ns)
         year = int(pub_el.text[:4]) if pub_el is not None else None
 
-        if doi and doi.lower() in existing_dois:
+        norm_d = normalize_doi(doi)
+        norm_t = normalize_title(title)
+        if norm_d and norm_d in existing_dois:
             continue
-        if title.lower() in existing_titles:
+        if norm_t in existing_titles:
             continue
-        if doi and doi.lower() in rejected_dois:
+        if norm_d and norm_d in rejected_dois:
             continue
-        if title.lower() in rejected_dois:
+        if norm_t in rejected_dois:
             continue
 
         authors = [
@@ -612,13 +581,15 @@ def search_semantic_scholar(query, years, existing_dois, existing_titles, reject
     for paper in r.json().get("data", []):
         doi   = (paper.get("externalIds") or {}).get("DOI")
         title = paper.get("title", "") or ""
-        if doi and doi.lower() in existing_dois:
+        norm_d = normalize_doi(doi)
+        norm_t = normalize_title(title)
+        if norm_d and norm_d in existing_dois:
             continue
-        if title.lower() in existing_titles:
+        if norm_t in existing_titles:
             continue
-        if doi and doi.lower() in rejected_dois:
+        if norm_d and norm_d in rejected_dois:
             continue
-        if title.lower() in rejected_dois:
+        if norm_t in rejected_dois:
             continue
 
         is_preprint = paper.get("isPreprint") or (paper.get("publicationTypes") == ["Preprint"])
@@ -668,13 +639,15 @@ def search_ieee_xplore(query, start_year, end_year, existing_dois, existing_titl
     for article in r.json().get("articles", []):
         doi   = article.get("doi")
         title = article.get("title", "")
-        if doi and doi.lower() in existing_dois:
+        norm_d = normalize_doi(doi)
+        norm_t = normalize_title(title)
+        if norm_d and norm_d in existing_dois:
             continue
-        if title.lower() in existing_titles:
+        if norm_t in existing_titles:
             continue
-        if doi and doi.lower() in rejected_dois:
+        if norm_d and norm_d in rejected_dois:
             continue
-        if title.lower() in rejected_dois:
+        if norm_t in rejected_dois:
             continue
 
         authors = [
@@ -717,6 +690,11 @@ def main():
         default=["openalex", "crossref", "arxiv", "semanticscholar", "ieee"],
         choices=["openalex", "crossref", "arxiv", "semanticscholar", "ieee", "s2"],
         help="Sources to search (default: openalex crossref arxiv semanticscholar ieee)",
+    )
+    parser.add_argument(
+        "--no-update",
+        action="store_true",
+        help="Skip running update_bib.py automatically after adding new papers",
     )
     args = parser.parse_args()
 
@@ -781,6 +759,8 @@ def main():
     print(f"\nFound {len(all_new)} potential new papers.\n")
 
     # --- Interactive review ---
+    added_count = 0
+    stop_requested = False
     for i, paper in enumerate(all_new, 1):
         print("\n" + "=" * 70)
         print(f"  Paper {i}/{len(all_new)}  [{paper['source']}]")
@@ -840,6 +820,7 @@ def main():
             choice = input("\n  Add? [y]es / [n]o (reject) / [s]kip / [q]uit: ").lower().strip()
             if choice in ("y", "yes"):
                 if append_to_bib(paper, args.bib):
+                    added_count += 1
                     existing_titles.add(normalize_title(paper["title"]))
                     if paper.get("doi"):
                         existing_dois.add(normalize_doi(paper["doi"]))
@@ -852,13 +833,19 @@ def main():
                 print("  ⏭  Skipped.")
                 break
             elif choice in ("q", "quit"):
-                print("Exiting.")
-                sys.exit(0)
+                stop_requested = True
+                break
             else:
                 print("  Please type y, n, s, or q.")
+        if stop_requested:
+            break
 
     print("\n" + "=" * 70)
-    print("Review complete. Run 'python3 scripts/cleanup_bib.py' to normalise the bib file.")
+    if added_count > 0 and not args.no_update:
+        print(f"Added {added_count} paper(s). Running update_bib.py to enrich, link citations, and sort...")
+        run_pipeline(bib_path=args.bib)
+    else:
+        print("Review complete.")
 
 
 if __name__ == "__main__":

@@ -98,6 +98,7 @@
         { "id": "UCB", "name": "University of California, Berkeley", "country": "USA" },
         { "id": "UCL", "name": "University College London", "country": "UK" },
         { "id": "UCSD", "name": "University of California, San Diego", "country": "USA" },
+        { "id": "UIC", "name": "University of Illinois Chicago", "country": "USA" },
         { "id": "UL", "name": "University of Leeds", "country": "UK" },
         { "id": "UNITO", "name": "University of Turin", "country": "Italy" },
         { "id": "UU", "name": "University of Utah", "country": "USA" },
