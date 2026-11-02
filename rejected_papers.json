@@ -6,5 +6,69 @@
   {
     "doi": null,
     "title": "A Review of 10 Years With the da Vinci Research Kit"
+  },
+  {
+    "doi": "10.1002/rcs.70220",
+    "title": "MiDAS: A Multimodal Data Acquisition System and Dataset for Robot‐Assisted Minimally Invasive Surgery"
+  },
+  {
+    "doi": "10.1109/tmrb.2025.3583169",
+    "title": "Autonomous Closed-Loop Control for Robotic Soft Tissue Electrosurgery Using RGB-D Image Guidance"
+  },
+  {
+    "doi": "10.1109/tmrb.2025.3560400",
+    "title": "A Confidence-Based Shared Control Strategy for Robotic Electrosurgery"
+  },
+  {
+    "doi": "10.3389/frobt.2026.1797952",
+    "title": "Transparency-optimized position–position control for human-scale bilateral teleoperation"
+  },
+  {
+    "doi": "10.48550/arxiv.2610.05792",
+    "title": "DASH: A da Vinci Adapter for Serial-link and Humanoid Robots as an Accessible Platform for Surgical Robotics Research"
+  },
+  {
+    "doi": "10.48550/arxiv.2610.41946",
+    "title": "Sensorium: An Open-Source Multimodal Data Collection and Curation Library for Embodied Surgical AI"
+  },
+  {
+    "doi": "10.48550/arxiv.2603.08490",
+    "title": "An Open-Source Robotics Research Platform for Autonomous Laparoscopic Surgery"
+  },
+  {
+    "doi": "10.48550/arxiv.2610.12780",
+    "title": "Multimodal Image-based Robotic Assistance and Guidance Environment (MIRAGE): A Novel Unified Framework for Surgical Navigation and Visualization"
+  },
+  {
+    "doi": "10.48550/arxiv.2603.08490",
+    "title": "An Open-Source Robotics Research Platform for Autonomous Laparoscopic Surgery"
+  },
+  {
+    "doi": "10.48550/arxiv.2610.41946",
+    "title": "Sensorium: An Open-Source Tactile and Force-Torque Sensing Gripper for Surgical Manipulation"
+  },
+  {
+    "doi": "10.48550/arxiv.2610.05792",
+    "title": "DASH: Dual-Arm Surgical Hardware for Scalable Robot Learning"
+  },
+  {
+    "doi": "10.48550/arxiv.2610.12780",
+    "title": "MIRAGE: Cross-Embodiment Zero-Shot Policy Transfer for Surgical Robots"
+  },
+  {
+    "doi": "10.1002/rcs.70220",
+    "title": "MiDAS: A Multimodal Intuitive Da Vinci System for Robot-Assisted Surgery"
+  },
+  {
+    "doi": "10.1109/tmrb.2025.3583169",
+    "title": "Autonomous Laparoscopic Anastomosis With Tissue Deformation Compensation on a 7-DOF KUKA LBR Med"
+  },
+  {
+    "doi": "10.1109/tmrb.2025.3560400",
+    "title": "Autonomous Electrosurgery on the Smart Tissue Autonomous Robot (STAR)"
+  },
+  {
+    "doi": "10.3389/frobt.2026.1797952",
+    "title": "Teleoperated Surgical Suturing With a Human-Scale WAM Robot"
   }
 ]

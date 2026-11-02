@@ -40,6 +40,7 @@ from bib_utils import (
     CUSTOM_TAGS_PATH,
     DEFAULT_BIB_PATH,
     MASTHEAD_RE,
+    MONTH_MAP,
     PEER_REVIEW_OVERRIDES_PATH,
     PREPRINT_HOSTS,
     THESIS_PATTERNS,
@@ -64,6 +65,9 @@ from bib_utils import (
 
 AFFILIATION_CACHE_PATH = os.path.join(CACHE_DIR, "affiliation_cache.json")
 REFERENCE_CACHE_PATH = os.path.join(CACHE_DIR, "reference_cache.json")
+OPENALEX_API_KEY = os.environ.get("OPENALEX_API_KEY", "")
+OPENALEX_MAILTO = "dvrk@jhu.edu"
+_OPENALEX_BUDGET_EXHAUSTED = False
 
 
 # ---------------------------------------------------------------------------
@@ -147,6 +151,30 @@ def is_candidate_preprint(entry: dict) -> bool:
 # Upstream API helpers (OpenAlex, Crossref, arXiv)
 # ---------------------------------------------------------------------------
 
+def _openalex_get(url: str, params: dict | None = None, timeout: int = 10) -> requests.Response | None:
+    """Perform an OpenAlex GET with optional OPENALEX_API_KEY and fast fail on daily budget exhaustion."""
+    global _OPENALEX_BUDGET_EXHAUSTED
+    if _OPENALEX_BUDGET_EXHAUSTED:
+        return None
+    req_params = dict(params or {})
+    req_params.setdefault("mailto", OPENALEX_MAILTO)
+    if OPENALEX_API_KEY:
+        req_params["api_key"] = OPENALEX_API_KEY
+    try:
+        r = requests.get(url, params=req_params, headers={"User-Agent": USER_AGENT}, timeout=timeout)
+        if r.status_code == 200:
+            return r
+        if r.status_code == 429 and "insufficient budget" in (r.text or "").lower():
+            _OPENALEX_BUDGET_EXHAUSTED = True
+            print(
+                "  [OpenAlex] Daily unauthenticated budget exhausted; "
+                "falling back to Crossref/arXiv (set OPENALEX_API_KEY for higher quota)."
+            )
+    except Exception:
+        pass
+    return None
+
+
 def fetch_crossref_work(doi: str) -> dict | None:
     clean = normalize_doi(doi)
     if not clean or clean.startswith("10.48550/arxiv"):
@@ -166,20 +194,14 @@ def fetch_crossref_work(doi: str) -> dict | None:
 
 def fetch_openalex_work(target: str) -> dict | None:
     """Fetch a single OpenAlex work by DOI URL (e.g. 'https://doi.org/10.1109/...')."""
-    try:
-        r = requests.get(
-            f"https://api.openalex.org/works/{target}",
-            params={
-                "select": "id,doi,title,display_name,type,publication_year,primary_location,authorships,abstract_inverted_index"
-            },
-            headers={"User-Agent": USER_AGENT},
-            timeout=10,
-        )
-        if r.status_code == 200:
-            return r.json()
-    except Exception:
-        pass
-    return None
+    r = _openalex_get(
+        f"https://api.openalex.org/works/{target}",
+        params={
+            "select": "id,doi,title,display_name,type,publication_year,primary_location,authorships,abstract_inverted_index"
+        },
+        timeout=10,
+    )
+    return r.json() if r is not None else None
 
 
 def batch_fetch_openalex_dois(dois: list[str]) -> dict[str, dict]:
@@ -188,26 +210,24 @@ def batch_fetch_openalex_dois(dois: list[str]) -> dict[str, dict]:
     results: dict[str, dict] = {}
     batch_size = 40
     for i in range(0, len(unique), batch_size):
+        if _OPENALEX_BUDGET_EXHAUSTED:
+            break
         batch = unique[i:i + batch_size]
         filt = "|".join(f"https://doi.org/{d}" for d in batch)
-        try:
-            r = requests.get(
-                "https://api.openalex.org/works",
-                params={
-                    "filter": f"doi:{filt}",
-                    "per-page": 50,
-                    "select": "id,doi,title,display_name,type,publication_year,primary_location,authorships,abstract_inverted_index",
-                },
-                headers={"User-Agent": USER_AGENT},
-                timeout=15,
-            )
-            if r.status_code == 200:
-                for w in r.json().get("results", []):
-                    d = normalize_doi(w.get("doi"))
-                    if d:
-                        results[d] = w
-        except Exception:
-            pass
+        r = _openalex_get(
+            "https://api.openalex.org/works",
+            params={
+                "filter": f"doi:{filt}",
+                "per-page": 50,
+                "select": "id,doi,title,display_name,type,publication_year,primary_location,authorships,abstract_inverted_index",
+            },
+            timeout=15,
+        )
+        if r is not None:
+            for w in r.json().get("results", []):
+                d = normalize_doi(w.get("doi"))
+                if d:
+                    results[d] = w
         time.sleep(0.1)
     return results
 
@@ -236,29 +256,28 @@ def extract_openalex_institutions(work: dict, paper_year: str | None = None) -> 
             pass
 
     for authorship in (work.get("authorships") or [])[:8]:
+        if _OPENALEX_BUDGET_EXHAUSTED:
+            break
         author_id = ((authorship.get("author") or {}).get("id") or "")
         if not author_id:
             continue
         api_url = author_id.replace("https://openalex.org/", "https://api.openalex.org/")
-        try:
-            r = requests.get(api_url, headers={"User-Agent": USER_AGENT}, timeout=6)
-            if r.status_code == 200:
-                a_data = r.json()
-                if target_years:
-                    for aff in a_data.get("affiliations") or []:
-                        years = set(aff.get("years") or [])
-                        if years & target_years:
-                            name = ((aff.get("institution") or {}).get("display_name") or "")
-                            if name:
-                                institutions.append(name)
-                else:
-                    for inst in a_data.get("last_known_institutions") or []:
-                        name = (inst or {}).get("display_name") or ""
+        r = _openalex_get(api_url, timeout=6)
+        if r is not None:
+            a_data = r.json()
+            if target_years:
+                for aff in a_data.get("affiliations") or []:
+                    years = set(aff.get("years") or [])
+                    if years & target_years:
+                        name = ((aff.get("institution") or {}).get("display_name") or "")
                         if name:
                             institutions.append(name)
+            else:
+                for inst in a_data.get("last_known_institutions") or []:
+                    name = (inst or {}).get("display_name") or ""
+                    if name:
+                        institutions.append(name)
             time.sleep(0.08)
-        except Exception:
-            pass
 
     return institutions
 
@@ -297,6 +316,52 @@ def fetch_arxiv_abstract_by_id_or_title(arxiv_id: str | None, title: str, author
     return None, ""
 
 
+def _extract_primary_last_names(author_str: str | None) -> list[str]:
+    """Return ordered list of normalized surname keys from a BibTeX author string."""
+    names: list[str] = []
+    if not author_str:
+        return names
+    for raw in re.split(r"\s+and\s+", author_str, flags=re.IGNORECASE):
+        raw = re.sub(r"[{}]", "", raw).strip()
+        if not raw:
+            continue
+        last = raw.split(",")[0].strip() if "," in raw else (raw.split()[-1] if raw.split() else "")
+        nl = normalize_title(last).replace(" ", "")
+        if nl:
+            names.append(nl)
+    return names
+
+
+def _build_crossref_promotion(cr: dict, doi: str, update_title: bool = False) -> dict:
+    """Extract rich bibliographic promotion metadata from a Crossref work object."""
+    venue = " ".join(html.unescape((cr.get("container-title") or [""])[0]).split())
+    ct = " ".join(html.unescape((cr.get("title") or [""])[0]).split())
+    issued = ((cr.get("issued") or {}).get("date-parts") or [[None]])[0]
+    pub_year = issued[0] if issued else None
+    pub_month = MONTH_MAP.get(str(issued[1])) if len(issued) >= 2 and issued[1] else None
+    raw_pages = (cr.get("page") or cr.get("article-number") or "").strip()
+    pages = re.sub(r"^(\d+)\s*[-–]\s*(\d+)$", r"\1--\2", raw_pages) if raw_pages else ""
+    affs = [
+        aff.get("name")
+        for auth in (cr.get("author") or [])
+        for aff in (auth.get("affiliation") or [])
+        if aff.get("name")
+    ]
+    return {
+        "doi": doi,
+        "venue": venue,
+        "work_type": cr.get("type") or "",
+        "year": pub_year,
+        "month": pub_month,
+        "volume": (cr.get("volume") or "").strip(),
+        "number": (cr.get("issue") or "").strip(),
+        "pages": pages,
+        "publisher": (cr.get("publisher") or "").strip(),
+        "title": ct if update_title and ct else "",
+        "affiliations": affs,
+    }
+
+
 def check_published_promotion(entry: dict) -> dict | None:
     """Check whether a candidate preprint has been formally published in a peer-reviewed venue."""
     title = entry.get("title", "")
@@ -312,13 +377,7 @@ def check_published_promotion(entry: dict) -> dict | None:
             if title_similarity(title, ct) >= 0.65 and wtype in ("journal-article", "proceedings-article", "book-chapter"):
                 venue = html.unescape((cr.get("container-title") or [""])[0]).strip()
                 if venue and not is_preprint_venue(venue):
-                    issued = ((cr.get("issued") or {}).get("date-parts") or [[None]])[0]
-                    return {
-                        "doi": existing_doi,
-                        "venue": venue,
-                        "work_type": wtype,
-                        "year": issued[0] if issued else None,
-                    }
+                    return _build_crossref_promotion(cr, existing_doi)
 
     # 2. OpenAlex lookup via non-preprint DOI or arXiv DOI
     target = None
@@ -347,12 +406,81 @@ def check_published_promotion(entry: dict) -> dict | None:
                         or source_type in ("journal", "conference")
                     )
                     if is_pub:
+                        promo_doi = canonical_doi or existing_doi
+                        if promo_doi and not any(p in promo_doi.lower() for p in PREPRINT_HOSTS):
+                            cr = fetch_crossref_work(promo_doi)
+                            if cr and not is_preprint_venue((cr.get("container-title") or [""])[0]):
+                                return _build_crossref_promotion(cr, promo_doi)
                         return {
-                            "doi": canonical_doi or existing_doi,
+                            "doi": promo_doi,
                             "venue": source_name,
                             "work_type": data.get("type") or "",
                             "year": data.get("publication_year"),
                         }
+
+    # 3. Crossref title + author-surname fallback (catches preprints published without arXiv back-link)
+    clean_query_title = re.sub(r"[{}]", "", title).strip()
+    bib_last_names = _extract_primary_last_names(entry.get("author"))
+    if not clean_query_title or not bib_last_names:
+        return None
+
+    preprint_year = None
+    try:
+        preprint_year = int((entry.get("year") or "").strip())
+    except ValueError:
+        pass
+
+    try:
+        r = requests.get(
+            "https://api.crossref.org/works",
+            params={
+                "query.title": clean_query_title,
+                "rows": 5,
+                "select": "DOI,title,container-title,type,author,issued,volume,issue,page,article-number,publisher",
+            },
+            headers={"User-Agent": USER_AGENT},
+            timeout=10,
+        )
+        if r.status_code == 200:
+            bib_set = set(bib_last_names)
+            for cr in (r.json().get("message") or {}).get("items") or []:
+                wtype = cr.get("type") or ""
+                if wtype not in ("journal-article", "proceedings-article", "book-chapter"):
+                    continue
+                c_doi = clean_doi_preserve_case(cr.get("DOI"))
+                if not c_doi or any(p in c_doi.lower() for p in PREPRINT_HOSTS):
+                    continue
+                venue = html.unescape((cr.get("container-title") or [""])[0]).strip()
+                if not venue or is_preprint_venue(venue):
+                    continue
+                issued = ((cr.get("issued") or {}).get("date-parts") or [[None]])[0]
+                pub_year = issued[0] if issued else None
+                if preprint_year and pub_year and not (preprint_year - 1 <= pub_year <= preprint_year + 5):
+                    continue
+
+                cr_last_names = [
+                    normalize_title(a.get("family", "")).replace(" ", "")
+                    for a in (cr.get("author") or [])
+                    if a.get("family")
+                ]
+                cr_last_names = [n for n in cr_last_names if n]
+                if not cr_last_names or cr_last_names[0] != bib_last_names[0]:
+                    continue
+
+                cr_set = set(cr_last_names)
+                shared = bib_set & cr_set
+                overlap_ratio = len(shared) / max(len(bib_set), len(cr_set))
+                ct = html.unescape((cr.get("title") or [""])[0]).strip()
+                sim = title_similarity(title, ct)
+
+                strong_exact = sim >= 0.90 and (len(shared) >= 2 or (len(shared) == 1 and len(bib_set) == 1))
+                strong_subtitle_revision = sim >= 0.72 and overlap_ratio >= 0.80 and len(shared) >= 2
+                if strong_exact or strong_subtitle_revision:
+                    update_t = overlap_ratio >= 0.85 and sim < 0.96
+                    return _build_crossref_promotion(cr, c_doi, update_title=update_t)
+    except Exception:
+        pass
+
     return None
 
 
@@ -557,13 +685,16 @@ def run_pipeline(
         elif is_candidate_preprint(e):
             promoted = check_published_promotion(e) if not offline else None
             if promoted and promoted.get("venue"):
+                prev_aid = extract_arxiv_id(e)
                 old_v = e.get("journal") or e.get("booktitle") or e.get("howpublished") or "Preprint"
                 new_v = promoted["venue"]
                 new_doi = promoted.get("doi") or e.get("doi", "")
                 wtype = promoted.get("work_type") or ""
                 promotions.append((eid, old_v, new_v, new_doi))
                 e["peer_reviewed"] = "yes"
-                if "journal" in wtype or etype == "article":
+                if prev_aid and not e.get("arxiv"):
+                    e["arxiv"] = f"https://arxiv.org/abs/{prev_aid}"
+                if "journal" in wtype or (not wtype and etype == "article"):
                     e["journal"] = new_v
                     e["ENTRYTYPE"] = "article"
                     e.pop("booktitle", None)
@@ -573,10 +704,31 @@ def run_pipeline(
                     e.pop("journal", None)
                 if new_doi:
                     e["doi"] = new_doi
+                    cur_url = (e.get("url") or "").lower()
+                    if not cur_url or any(h in cur_url for h in PREPRINT_HOSTS):
+                        e["url"] = f"https://doi.org/{new_doi}"
                 if promoted.get("year"):
                     e["year"] = str(promoted["year"])
+                if promoted.get("title"):
+                    e["title"] = promoted["title"]
+                for fld in ("month", "volume", "number", "pages"):
+                    if promoted.get(fld) and not e.get(fld):
+                        e[fld] = str(promoted[fld])
+                was_preprint_pub = any(h in (e.get("publisher") or "").lower() for h in PREPRINT_HOSTS)
+                if was_preprint_pub:
+                    e.pop("copyright", None)
+                    e.pop("publisher", None)
+                if promoted.get("publisher") and not e.get("publisher"):
+                    e["publisher"] = promoted["publisher"]
                 if "howpublished" in e and any(h in e["howpublished"].lower() for h in PREPRINT_HOSTS):
                     del e["howpublished"]
+                promo_sites = match_sites(promoted.get("affiliations") or [])
+                if promo_sites:
+                    existing_sites = {s.strip() for s in (e.get("dvrk_site") or "").split(" and ") if s.strip()}
+                    merged_sites = sorted(existing_sites | promo_sites)
+                    if set(merged_sites) != existing_sites:
+                        e["dvrk_site"] = " and ".join(merged_sites)
+                        sites_tagged += 1
             else:
                 e["peer_reviewed"] = "no"
         else:

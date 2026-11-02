@@ -16,6 +16,7 @@ Usage:
     python3 scripts/find_new_papers.py --start-year 2026 --end-year 2026
 
 Optional environment variables:
+    OPENALEX_API_KEY           — optional OpenAlex API key for higher daily quota
     SEMANTIC_SCHOLAR_API_KEY   — enables reliable Semantic Scholar search
     IEEE_API_KEY               — enables IEEE Xplore search
 """
@@ -46,6 +47,7 @@ from update_bib import run_pipeline
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
+OPENALEX_API_KEY = os.environ.get("OPENALEX_API_KEY", "")
 SEMANTIC_SCHOLAR_API_KEY = os.environ.get("SEMANTIC_SCHOLAR_API_KEY", "")
 IEEE_API_KEY = os.environ.get("IEEE_API_KEY", "")
 REJECTED_FILE = "rejected_papers.json"
@@ -164,6 +166,9 @@ def fetch_with_retry(url, params=None, headers=None, retries=3, delay=5):
             if r.status_code == 200:
                 return r
             elif r.status_code == 429:
+                if "insufficient budget" in (r.text or "").lower():
+                    print("  Daily API budget exhausted (set OPENALEX_API_KEY for higher quota); skipping.")
+                    break
                 wait = delay * (2 ** attempt)
                 print(f"  Rate limited. Waiting {wait}s (attempt {attempt + 1}/{retries})...")
                 time.sleep(wait)
@@ -229,6 +234,8 @@ def search_openalex(query, start_year, end_year, existing_dois, existing_titles,
             "cursor": cursor,
             "select": "id,doi,title,publication_year,publication_date,authorships,primary_location,open_access,type,abstract_inverted_index,ids",
         }
+        if OPENALEX_API_KEY:
+            params["api_key"] = OPENALEX_API_KEY
         r = fetch_with_retry(url, params=params)
         if not r:
             break
