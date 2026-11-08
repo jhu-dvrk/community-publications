@@ -4,6 +4,10 @@ Publications related to the [dVRK](https://github.com/jhu-dvrk/sawIntuitiveResea
 
 We hope dVRK users will update this database when they publish new work.  To update the database, please fork this repository, edit the `publications.bib` file and issue a pull request (you can optionally run `python3 scripts/update_bib.py --check` locally to validate your BibTeX entry; see [scripts/README.md](scripts/README.md) for maintainer tools).
 
+## Inclusion Criteria
+
+A publication belongs in this database only if the work was **made possible by the existence of the dVRK** — i.e., it directly develops, uses, or evaluates **dVRK / dVRK-Si hardware**, **dVRK software or simulators** (such as `sawIntuitiveResearchKit`, AMBF, SurRoL, dVRL, or Orbit-Surgical), and/or **datasets acquired on the dVRK** (such as SurgRIPE, SurgPose, ROSMA, Open-H, CRCD, or LUMICS), or specifically reviews the dVRK ecosystem itself. Papers that merely mention or cite the dVRK in related work, use unrelated robotic platforms, or are general clinical/robotics reviews authored by researchers who have previously used the dVRK should not be included.
+
 There is also a web interface for the database: https://jhu-dvrk.github.io/community-publications/
 
 # Custom fields 
@@ -20,7 +24,7 @@ First of all, here we find all the papers published during the `development of t
 To `optimize the surgical workflow`, some research efforts tried to enhance the surgeon’s awareness and perception or to improve the teleoperation capabilities of the da Vinci. Finally, few additional works investigated the use of the `dVRK beyond its current surgical intent`, both in other surgical specialties (e.g., for retinal surgery) or for non-surgical applications, like using the master controllers to drive vehicles in simulation.
 * `SS`: **System simulation and modelling**<br>This field contains only studies that focused on the integration of the dVRK into simulation environments without any direct application inside the publication itself. Here we have works focused on optimizing simulation to obtain `realistic robot interactions with rigid and soft objects`, as well as works related to robot `parametrization`, that means the identification of the kinematics and dynamics properties of the robotic arms for external forces estimation and other applications.
 * `IM`: **Imaging and vision**<br>This field encompasses all the publications related to the processing of the images acquired by the endoscopic camera. `Camera and hand-eye calibration` includes publications investigating approaches to register the coordinate systems of the endoscope and the surgical tools  as well as determining the camera intrinsic parameters. A wide range of papers reported algorithms aimed at `detecting, segmenting, and tracking` important elements in the surgical scene, such as surgical instruments, tissues, and so on. Image processing was also finalized to `spatial mapping and understanding`, like to estimate the depth of the workspace, or to automatically remove smoke from the surgeon field of view. Finally, the dVRK research tried to keep up with `novel imaging capabilities` like interfacing standard imaging with the one from miniaturized ultrasound probes or photoacoustic imaging, or implementing other kinds of `image augmentation` to assist the surgeon throughout the surgical procedure.
-* `RE`: **Reviews**<br>Review papers that cite the dVRK platform. 
+* `RE`: **Reviews**<br>Review papers focused on the dVRK platform, its software/simulators, or dVRK-enabled research (not general clinical or robotics reviews that only cite the dVRK in passing).
 
 
 ## Data type

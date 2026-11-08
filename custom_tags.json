@@ -28,7 +28,7 @@
         {
             "id": "RE",
             "name": "Reviews",
-            "description": "Review papers that cite the dVRK platform."
+            "description": "Review papers focused on the dVRK platform, its software/simulators, or dVRK-enabled research."
         }
     ],
     "data_types": [

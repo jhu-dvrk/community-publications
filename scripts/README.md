@@ -35,6 +35,8 @@ python3 scripts/update_bib.py
 
 Searches open scholarly catalogs for new dVRK / da Vinci Research Kit papers and walks through each candidate interactively (`[y]` add, `[n]` reject into `rejected_papers.json`, `[s]` skip, `[q]` quit).
 
+> **Selection Criterion**: Only accept publications whose work was **made possible by the existence of the dVRK** (hardware, software/simulators, and/or dVRK-acquired datasets, or reviews specifically about the dVRK). Reject (`[n]`) papers that only cite dVRK in related work, use other robots, or are general reviews that happen to share authors with dVRK labs.
+
 | Source | API key needed? | Default behavior |
 |---|---|---|
 | **OpenAlex** | No | Always searched; includes abstracts and `dvrk_site` affiliations |
@@ -59,7 +61,7 @@ Single idempotent maintenance pipeline for `publications.bib`:
 1. **Hygiene & Fallbacks**: Normalizes months and DOIs, unescapes HTML entities in venues, sets `date_added` if missing, standardizes `@phdthesis` / `school` on theses, and ensures preprints have clean `howpublished` fallbacks.
 2. **Peer-Review Classification & Preprint Promotion**: Assigns `peer_reviewed` (`yes`, `no`, or `thesis`, honoring `peer_review_overrides.json`) and checks `peer_reviewed = {no}` preprints against Crossref and OpenAlex to promote newly published journal/conference papers (enforcing title similarity verification).
 3. **Incremental Affiliation, Venue & Abstract Backfill**: Queries OpenAlex (batched), Crossref, and arXiv only for entries missing `dvrk_site`, `abstract`, or venue, caching affiliation lookups in `cache/affiliation_cache.json`.
-4. **Community Cross-References (`dvrk_cites`)**: Fetches Crossref reference lists for newly added DOIs (`cache/reference_cache.json`), links exact unique DOIs and unambiguous exact titles, and prunes any removed citation keys.
+4. **Community Cross-References (`dvrk_cites`)**: Extracts references from Crossref (`cache/reference_cache.json`), arXiv HTML bibliographies for preprints, and OpenAlex citation graphs (`cache/openalex_refs_cache.json`), linking exact DOIs, OpenAlex Work IDs, and unambiguous titles while pruning any removed citation keys.
 5. **Integrity Validation & Canonical Formatting**: Validates required fields, unique IDs/DOIs, `custom_tags.json` codes, and `dvrk_cites` targets, then writes canonically sorted, single-line-per-field BibTeX.
 
 ```zsh

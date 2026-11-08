@@ -65,6 +65,7 @@ from bib_utils import (
 
 AFFILIATION_CACHE_PATH = os.path.join(CACHE_DIR, "affiliation_cache.json")
 REFERENCE_CACHE_PATH = os.path.join(CACHE_DIR, "reference_cache.json")
+OPENALEX_REFS_CACHE_PATH = os.path.join(CACHE_DIR, "openalex_refs_cache.json")
 OPENALEX_API_KEY = os.environ.get("OPENALEX_API_KEY", "")
 OPENALEX_MAILTO = "dvrk@jhu.edu"
 _OPENALEX_BUDGET_EXHAUSTED = False
@@ -498,6 +499,86 @@ def fetch_references_crossref(doi: str) -> list[dict] | None:
     return extracted
 
 
+def fetch_references_arxiv_html(arxiv_id: str) -> list[dict] | None:
+    """Extract referenced DOIs, arXiv IDs, and titles from LaTeXML bibliography on arxiv.org/html."""
+    if not arxiv_id:
+        return None
+    try:
+        r = requests.get(
+            f"https://arxiv.org/html/{arxiv_id}",
+            headers={"User-Agent": USER_AGENT},
+            timeout=15,
+        )
+        if r.status_code != 200 or "ltx_bibitem" not in r.text:
+            return None
+    except Exception:
+        return None
+
+    extracted: list[dict] = []
+    for m in re.finditer(r'<li[^>]*class="[^"]*ltx_bibitem[^"]*"[^>]*>(.*?)</li>', r.text, re.DOTALL):
+        li_html = re.sub(r'<span[^>]*class="[^"]*ltx_bib_cited[^"]*"[^>]*>.*?</span>', " ", m.group(1), flags=re.DOTALL)
+
+        r_doi = ""
+        m_doi = re.search(r"https?://(?:dx\.)?doi\.org/([^\s\"'<>]+)", li_html, re.IGNORECASE)
+        if m_doi:
+            r_doi = normalize_doi(html.unescape(m_doi.group(1)).rstrip(".,;)"))
+        if not r_doi:
+            m_arx = re.search(r"(?:arxiv\.org/abs/|arxiv:\s*)(\d{4}\.\d{4,5})", li_html, re.IGNORECASE)
+            if m_arx:
+                r_doi = f"10.48550/arxiv.{m_arx.group(1)}"
+
+        r_title = ""
+        m_t = re.search(r'<span[^>]*class="[^"]*ltx_bib_title[^"]*"[^>]*>(.*?)</span>', li_html, re.DOTALL)
+        if m_t:
+            r_title = html.unescape(re.sub(r"<[^>]+>", " ", m_t.group(1)))
+            r_title = " ".join(r_title.split()).strip(" .,;")
+        else:
+            plain = html.unescape(re.sub(r"<[^>]+>", " ", li_html))
+            plain = " ".join(plain.split())
+            m_q = re.search(r"[“\"]([^”\"]{12,300})[”\"]", plain)
+            if m_q:
+                r_title = m_q.group(1).strip(" .,;")
+
+        if r_doi or r_title:
+            extracted.append({"doi": r_doi, "title": r_title})
+
+    return extracted if extracted else None
+
+
+def batch_fetch_openalex_refs(dois: list[str]) -> dict[str, dict]:
+    """Batch-fetch OpenAlex Work IDs, titles, and referenced_works (up to 50 DOIs per request)."""
+    results: dict[str, dict] = {}
+    unique = sorted({normalize_doi(d) for d in dois if normalize_doi(d)})
+    for i in range(0, len(unique), 50):
+        chunk = unique[i : i + 50]
+        doi_filter = "|".join(f"https://doi.org/{d}" for d in chunk)
+        r = _openalex_get(
+            "https://api.openalex.org/works",
+            params={
+                "filter": f"doi:{doi_filter}",
+                "per-page": 200,
+                "select": "id,doi,title,display_name,referenced_works",
+            },
+            timeout=15,
+        )
+        if not r:
+            if _OPENALEX_BUDGET_EXHAUSTED:
+                break
+            continue
+        try:
+            for w in r.json().get("results", []):
+                w_doi = normalize_doi(w.get("doi"))
+                if w_doi:
+                    results[w_doi] = {
+                        "id": w.get("id") or "",
+                        "title": w.get("title") or w.get("display_name") or "",
+                        "referenced_works": w.get("referenced_works") or [],
+                    }
+        except Exception:
+            pass
+    return results
+
+
 # ---------------------------------------------------------------------------
 # Integrity Validation (--check)
 # ---------------------------------------------------------------------------
@@ -886,71 +967,166 @@ def run_pipeline(
 
     # --- Stage 4: Internal Community Cross-References (dvrk_cites) ---
     ref_cache = load_reference_cache(REFERENCE_CACHE_PATH)
-    uncached_dois = [
-        normalize_doi(e.get("doi"))
-        for e in entries
-        if normalize_doi(e.get("doi"))
-        and not normalize_doi(e.get("doi")).startswith("10.48550/arxiv")
-        and normalize_doi(e.get("doi")) not in ref_cache
-    ]
+    oa_refs_cache = load_json_cache(OPENALEX_REFS_CACHE_PATH)
+    cur_year = datetime.date.today().year
 
+    # 4a. Crossref reference lists for archival DOIs
+    uncached_dois: list[str] = []
+    recent_dois: set[str] = set()
+    for e in entries:
+        nd = normalize_doi(e.get("doi"))
+        if not nd or nd.startswith("10.48550/arxiv"):
+            continue
+        try:
+            ey = int(e.get("year") or 0)
+        except ValueError:
+            ey = 0
+        if ey >= cur_year - 1:
+            recent_dois.add(nd)
+        if nd not in ref_cache or (refresh_misses and not ref_cache.get(nd)):
+            uncached_dois.append(nd)
+
+    ref_cache_dirty = False
     if uncached_dois and not offline:
         unique_uncached = sorted(set(uncached_dois))
-        print(f"Fetching Crossref reference lists for {len(unique_uncached)} new DOI(s)...")
-        fetched_any = False
+        print(f"Fetching Crossref reference lists for {len(unique_uncached)} DOI(s)...")
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = {executor.submit(fetch_references_crossref, d): d for d in unique_uncached}
             for fut in as_completed(futures):
                 d = futures[fut]
                 try:
                     refs = fut.result()
-                    if refs is not None:
+                    if refs is not None and (refs or d not in recent_dois):
                         ref_cache[d] = refs
-                        fetched_any = True
+                        ref_cache_dirty = True
                 except Exception:
                     pass
-        if fetched_any and not dry_run:
-            save_reference_cache(ref_cache, REFERENCE_CACHE_PATH)
+
+    # 4b. arXiv HTML bibliography extraction for preprints
+    uncached_arxiv_ids: list[str] = []
+    for e in entries:
+        if e.get("peer_reviewed") != "no":
+            continue
+        aid = extract_arxiv_id(e)
+        if not aid:
+            continue
+        arx_key = f"10.48550/arxiv.{aid}"
+        if arx_key not in ref_cache or (refresh_misses and not ref_cache.get(arx_key)):
+            uncached_arxiv_ids.append(aid)
+
+    if uncached_arxiv_ids and not offline:
+        unique_aids = sorted(set(uncached_arxiv_ids))
+        print(f"Fetching arXiv HTML bibliographies for {len(unique_aids)} preprint(s)...")
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = {executor.submit(fetch_references_arxiv_html, aid): aid for aid in unique_aids}
+            for fut in as_completed(futures):
+                aid = futures[fut]
+                try:
+                    refs = fut.result()
+                    if refs:
+                        ref_cache[f"10.48550/arxiv.{aid}"] = refs
+                        ref_cache_dirty = True
+                except Exception:
+                    pass
+
+    if ref_cache_dirty and not dry_run:
+        save_reference_cache(ref_cache, REFERENCE_CACHE_PATH)
+
+    # 4c. OpenAlex referenced_works batch lookup (covers both archival DOIs and arXiv DOIs)
+    entry_lookup_keys: dict[str, list[str]] = {}
+    oa_to_fetch: list[str] = []
+    for e in entries:
+        pid = e["ID"]
+        keys: list[str] = []
+        nd = normalize_doi(e.get("doi"))
+        aid = extract_arxiv_id(e)
+        if nd:
+            keys.append(nd)
+        if aid:
+            arx_d = f"10.48550/arxiv.{aid}"
+            if arx_d not in keys:
+                keys.append(arx_d)
+        entry_lookup_keys[pid] = keys
+        for k in keys:
+            cached_oa = oa_refs_cache.get(k)
+            if cached_oa is None or (refresh_misses and not (cached_oa.get("referenced_works") or [])):
+                oa_to_fetch.append(k)
+
+    if oa_to_fetch and not offline and not _OPENALEX_BUDGET_EXHAUSTED:
+        unique_oa_keys = sorted(set(oa_to_fetch))
+        print(f"Batch-fetching OpenAlex citation graphs for {len(unique_oa_keys)} DOI/arXiv key(s)...")
+        fetched_oa = batch_fetch_openalex_refs(unique_oa_keys)
+        oa_dirty = False
+        for k in unique_oa_keys:
+            if k in fetched_oa:
+                oa_refs_cache[k] = fetched_oa[k]
+                oa_dirty = True
+            elif not _OPENALEX_BUDGET_EXHAUSTED and k not in recent_dois and not k.startswith("10.48550/arxiv.26"):
+                oa_refs_cache[k] = {"id": "", "title": "", "referenced_works": []}
+                oa_dirty = True
+        if oa_dirty and not dry_run:
+            save_json_cache(OPENALEX_REFS_CACHE_PATH, oa_refs_cache)
 
     doi_to_ids: dict[str, list[str]] = collections.defaultdict(list)
     title_to_ids: dict[str, list[str]] = collections.defaultdict(list)
+    wid_to_ids: dict[str, list[str]] = collections.defaultdict(list)
     entry_by_id: dict[str, dict] = {}
 
     for e in entries:
         pid = e["ID"]
         entry_by_id[pid] = e
-        nd = normalize_doi(e.get("doi"))
         ct = compact_title_key(e.get("title"))
-        if nd:
-            doi_to_ids[nd].append(pid)
+        for k in entry_lookup_keys[pid]:
+            if pid not in doi_to_ids[k]:
+                doi_to_ids[k].append(pid)
+            oa_rec = oa_refs_cache.get(k)
+            if oa_rec and oa_rec.get("id") and title_similarity(e.get("title"), oa_rec.get("title")) >= 0.65:
+                wid = oa_rec["id"]
+                if pid not in wid_to_ids[wid]:
+                    wid_to_ids[wid].append(pid)
         if ct and len(ct) > 15:
             title_to_ids[ct].append(pid)
 
     unique_dois = {d: ids[0] for d, ids in doi_to_ids.items() if len(ids) == 1}
+    unique_wids = {w: ids[0] for w, ids in wid_to_ids.items() if len(ids) == 1}
     citations_report = {pid: {"cites": [], "cited_by": []} for pid in entry_by_id}
     new_cite_links = 0
 
     for e in entries:
         pid = e["ID"]
-        nd = normalize_doi(e.get("doi"))
         matched_targets: set[str] = set()
 
-        if nd and nd in ref_cache:
-            for ref in ref_cache[nd]:
+        # Match via Crossref & arXiv HTML reference cache
+        for k in entry_lookup_keys[pid]:
+            if k not in ref_cache:
+                continue
+            for ref in ref_cache[k]:
                 r_doi = normalize_doi(ref.get("doi"))
                 r_ct = compact_title_key(ref.get("title"))
                 target_id = None
                 if r_doi and r_doi in unique_dois:
                     cand_id = unique_dois[r_doi]
-                    if r_ct and r_ct != compact_title_key(entry_by_id[cand_id].get("title")):
+                    if r_ct and title_similarity(ref.get("title"), entry_by_id[cand_id].get("title")) < 0.70:
                         target_id = None
                     else:
                         target_id = cand_id
-                elif not r_doi and len(r_ct) > 20:
+                if not target_id and len(r_ct) > 20:
                     cands = title_to_ids.get(r_ct, [])
                     if len(cands) == 1:
                         target_id = cands[0]
 
+                if target_id and target_id != pid:
+                    matched_targets.add(target_id)
+
+        # Match via OpenAlex referenced_works graph
+        for k in entry_lookup_keys[pid]:
+            oa_rec = oa_refs_cache.get(k)
+            if not oa_rec or not oa_rec.get("id"):
+                continue
+            if title_similarity(e.get("title"), oa_rec.get("title")) < 0.65:
+                continue
+            for rw in oa_rec.get("referenced_works") or []:
+                target_id = unique_wids.get(rw)
                 if target_id and target_id != pid:
                     matched_targets.add(target_id)
 

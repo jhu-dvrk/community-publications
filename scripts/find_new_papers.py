@@ -3,6 +3,15 @@
 Search for new dVRK / da Vinci Research Kit publications and interactively
 add them to publications.bib.
 
+Inclusion criterion:
+  Only add publications whose work was made possible by the existence of the
+  dVRK — i.e., directly developing, using, or evaluating dVRK / dVRK-Si
+  hardware, dVRK software/simulators (e.g., sawIntuitiveResearchKit, AMBF,
+  SurRoL, dVRL, Orbit-Surgical), and/or dVRK-acquired datasets (e.g., SurgRIPE,
+  SurgPose, ROSMA, Open-H, CRCD, LUMICS), or specifically reviewing the dVRK
+  ecosystem. Do NOT add papers merely because their authors have worked on the
+  dVRK or because they cite the dVRK in related work or general reviews.
+
 Search sources (tried in order, all free):
   1. OpenAlex       — broad open index; includes abstracts and author affiliations
   2. CrossRef       — covers most published journals and conference papers
@@ -763,7 +772,11 @@ def main():
         print("\nNo new papers found.")
         return
 
-    print(f"\nFound {len(all_new)} potential new papers.\n")
+    print(f"\nFound {len(all_new)} potential new papers.")
+    print(
+        "Reminder: Only accept [y] papers made possible by the dVRK "
+        "(hardware, software/simulators, and/or dVRK datasets — not general reviews or passing citations).\n"
+    )
 
     # --- Interactive review ---
     added_count = 0

@@ -67,6 +67,7 @@ MONTH_NUM = {
 THESIS_PATTERNS = (
     "10.25560/",               # Imperial College London Spiral
     "10.7939/",                # University of Alberta Education & Research Archive
+    "10.25417/",               # University of Illinois Chicago INDIGO
     "spiral.imperial.ac.uk",
     "etheses.whiterose.ac.uk",
     "scholaris.ca",
@@ -276,8 +277,12 @@ def compact_title_key(title: str | None) -> str:
     """Alphanumeric-only key for exact unambiguous citation title matching."""
     if not title:
         return ""
-    t = re.sub(r"[{}\"'\\]", "", title)
-    return re.sub(r"[^a-zA-Z0-9]", "", t).lower()
+    s = html.unescape(title)
+    s = re.sub(r"\(\s*(?:r|tm)\s*\)|[®™]|\\textregistered\b|\\texttrademark\b", " ", s, flags=re.IGNORECASE)
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    s = re.sub(r"\\[a-zA-Z]+(?:\{[^}]*\})?", "", s)
+    return re.sub(r"[^a-zA-Z0-9]", "", s).lower()
 
 
 def title_similarity(t1: str | None, t2: str | None) -> float:
