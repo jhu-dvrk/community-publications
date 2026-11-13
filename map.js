@@ -10,10 +10,10 @@ createApp({
             loading: true,
             minYear: 2013,
             maxYear: new Date().getFullYear(),
-            selectedYear: new Date().getFullYear(),
+            selectedYear: 2013,
             mode: 'cumulative', // 'cumulative' or 'annual'
-            isPlaying: false,
-            playSpeedMs: 900,
+            isPlaying: true,
+            playSpeedMs: 1400,
             playTimer: null,
             siteFilter: '',
             selectedModal: null,
@@ -193,13 +193,16 @@ createApp({
                 if (years.length > 0) {
                     this.minYear = Math.min(...years);
                     this.maxYear = Math.max(...years);
-                    this.selectedYear = this.maxYear;
+                    this.selectedYear = this.minYear;
                 }
 
                 this.loading = false;
                 this.$nextTick(() => {
                     this.initMap();
                     this.renderMap();
+                    if (this.isPlaying) {
+                        this.startTimer();
+                    }
                 });
             } catch (err) {
                 console.error('Error loading publications for map:', err);
@@ -429,7 +432,7 @@ createApp({
                 if (this.selectedYear < this.maxYear) {
                     this.selectedYear += 1;
                 } else {
-                    this.pausePlay();
+                    this.selectedYear = this.minYear;
                 }
             }, this.playSpeedMs);
         },
