@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S1ZSJQ3NE3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-S1ZSJQ3NE3');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborations - dVRK Community Publications</title>
+    <meta name="description" content="Inter-site collaboration matrix of co-authored publications across da Vinci Research Kit (dVRK) institutions.">
+    <link rel="canonical" href="https://jhu-dvrk.github.io/community-publications/collaborations.html">
+    <link rel="icon" type="image/png" href="dvrk-logo.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jhu-dvrk.github.io/community-publications/collaborations.html">
+    <meta property="og:title" content="Collaborations - dVRK Community Publications">
+    <meta property="og:description" content="Inter-site collaboration matrix of co-authored publications across da Vinci Research Kit (dVRK) institutions.">
+    <meta property="og:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://jhu-dvrk.github.io/community-publications/collaborations.html">
+    <meta name="twitter:title" content="Collaborations - dVRK Community Publications">
+    <meta name="twitter:description" content="Inter-site collaboration matrix of co-authored publications across da Vinci Research Kit (dVRK) institutions.">
+    <meta name="twitter:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
+
+    <script>
+        (function() {
+            const stored = localStorage.getItem('dvrk_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', stored || (prefersDark ? 'dark' : 'light'));
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
+    <script src="config.js?v=10"></script>
+    <link rel="stylesheet" href="styles.css?v=18">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
+                    <h1>Community Publications</h1>
+                </div>
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications • {{ totalAuthors }} authors •
+                    Contribute
+                    <a href="https://github.com/jhu-dvrk/community-publications" target="_blank" rel="noopener noreferrer">https://github.com/jhu-dvrk/community-publications</a>
+                </p>
+                <div class="header-nav">
+                    <a href="index.html" class="nav-btn">Publications</a>
+                    <a href="analytics.html" class="nav-btn">Analytics</a>
+                    <a href="map.html" class="nav-btn">Map</a>
+                    <a href="collaborations.html" class="nav-btn active">Collaborations</a>
+                    <a href="graph.html" class="nav-btn">Cross References</a>
+                    <button class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+                        <span class="theme-toggle-icon">🌙</span>
+                        <span class="theme-toggle-text">Dark</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <div v-if="loading" class="loading">
+                <p>Loading collaboration matrix...</p>
+            </div>
+
+            <div v-else class="collaborations-content">
+                <div class="chart-container collaboration-section">
+                    <div class="collab-header-bar">
+                        <div>
+                            <h2>Inter-Site Collaboration Matrix</h2>
+                            <p class="section-subtitle">Co-authored publications between dVRK research institutions</p>
+                        </div>
+                        <div class="collab-controls">
+                            <div class="collab-control-group">
+                                <span>Sites:</span>
+                                <div class="btn-group">
+                                    <button type="button" class="pill-btn" :class="{ active: matrixFilter === 'collaborating' }" @click="matrixFilter = 'collaborating'">
+                                        Collaborating ({{ collabKPIs.collaboratingCount }})
+                                    </button>
+                                    <button type="button" class="pill-btn" :class="{ active: matrixFilter === 'all' }" @click="matrixFilter = 'all'">
+                                        All ({{ collabKPIs.allSitesCount }})
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="collab-control-group">
+                                <label for="matrix-sort-select">Order:</label>
+                                <select id="matrix-sort-select" name="matrixSort" v-model="matrixSort" class="matrix-sort-select">
+                                    <option value="collaborations">Most Collaborations</option>
+                                    <option value="total">Total Publications</option>
+                                    <option value="alphabetical">Alphabetical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary KPI Bar -->
+                    <div class="collab-stats-bar">
+                        <div class="collab-stat-item">
+                            <span class="collab-stat-value">{{ collabKPIs.jointPapersCount }}</span>
+                            <span class="collab-stat-desc">Joint Papers ({{ collabKPIs.jointPapersPercent }}% of total)</span>
+                        </div>
+                        <div class="collab-stat-item">
+                            <span class="collab-stat-value">{{ collabKPIs.collaboratingCount }}</span>
+                            <span class="collab-stat-desc">Collaborating Institutions</span>
+                        </div>
+                        <div class="collab-stat-item">
+                            <span class="collab-stat-value">{{ collabKPIs.topPair.name }}</span>
+                            <span class="collab-stat-desc">Top Partnership ({{ collabKPIs.topPair.count }} papers)</span>
+                        </div>
+                        <div class="collab-stat-item">
+                            <span class="collab-stat-value">{{ collabKPIs.topHub.name }}</span>
+                            <span class="collab-stat-desc">Top Collaborative Hub ({{ collabKPIs.topHub.count }} joint)</span>
+                        </div>
+                    </div>
+
+                    <!-- Matrix Scroll Container -->
+                    <div class="matrix-wrapper">
+                        <div class="matrix-scroll-container">
+                            <table class="collab-matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th class="matrix-corner-cell"></th>
+                                        <th v-for="colSite in displayedSites" :key="'col-' + colSite"
+                                            class="matrix-col-header"
+                                            :class="{ 'header-highlighted': hoveredCell && hoveredCell.col === colSite }"
+                                            :title="getSiteFullName(colSite) + (getSiteCountry(colSite) ? ' (' + getSiteCountry(colSite) + ')' : '')">
+                                            <span class="col-label-rot">{{ colSite }}</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="rowSite in displayedSites" :key="'row-' + rowSite">
+                                        <th class="matrix-row-header"
+                                            :class="{ 'header-highlighted': hoveredCell && hoveredCell.row === rowSite }"
+                                            :title="getSiteFullName(rowSite) + (getSiteCountry(rowSite) ? ' (' + getSiteCountry(rowSite) + ')' : '')">
+                                            {{ rowSite }}
+                                        </th>
+                                        <td v-for="colSite in displayedSites" :key="rowSite + '-' + colSite"
+                                            class="matrix-cell"
+                                            :class="getCellClasses(rowSite, colSite)"
+                                            :title="getCellTitle(rowSite, colSite)"
+                                            @mouseenter="onCellHover(rowSite, colSite)"
+                                            @mouseleave="onCellLeave"
+                                            @click="onCellClick(rowSite, colSite)">
+                                            <span class="cell-content">{{ getCellDisplay(rowSite, colSite) }}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Legend & Hint Footer -->
+                    <div class="matrix-footer-bar">
+                        <div class="matrix-legend">
+                            <span class="legend-label">Co-authored Papers:</span>
+                            <div class="legend-scale">
+                                <span class="legend-cell level-0">0</span>
+                                <span class="legend-cell level-1">1–2</span>
+                                <span class="legend-cell level-2">3–5</span>
+                                <span class="legend-cell level-3">6–8</span>
+                                <span class="legend-cell level-4">9–11+</span>
+                                <span class="legend-cell legend-diagonal">Diagonal: Total Papers</span>
+                            </div>
+                        </div>
+                        <div class="matrix-hint">
+                            💡 Click any cell with papers to inspect co-authored publications
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drill-down Modal for Joint Publications -->
+                <div v-if="selectedCollab" class="modal-overlay" @click.self="closeModal">
+                    <div class="modal-card">
+                        <div class="modal-header">
+                            <div>
+                                <h3 class="modal-title">
+                                    <span v-if="selectedCollab.isDiagonal">
+                                        🏛️ {{ selectedCollab.siteA }} Publications ({{ selectedCollab.papers.length }})
+                                    </span>
+                                    <span v-else>
+                                        🤝 {{ selectedCollab.siteA }} × {{ selectedCollab.siteB }} Joint Publications ({{ selectedCollab.papers.length }})
+                                    </span>
+                                </h3>
+                                <p class="modal-subtitle">
+                                    <span v-if="selectedCollab.isDiagonal">
+                                        {{ getSiteFullName(selectedCollab.siteA) }} • {{ getSiteCountry(selectedCollab.siteA) }}
+                                    </span>
+                                    <span v-else>
+                                        {{ getSiteFullName(selectedCollab.siteA) }} & {{ getSiteFullName(selectedCollab.siteB) }}
+                                    </span>
+                                </p>
+                            </div>
+                            <button class="modal-close-btn" @click="closeModal" title="Close (Esc)">✕</button>
+                        </div>
+                        <div class="modal-body">
+                            <pub-preview-list :papers="selectedCollab.papers" />
+                        </div>
+                        <div class="modal-footer">
+                            <div v-if="selectedCollab.isDiagonal" class="modal-footer-links">
+                                <a :href="getSiteAnalyticsUrl(selectedCollab.siteA)" class="modal-action-link">
+                                    📊 Site Analytics ({{ selectedCollab.siteA }})
+                                </a>
+                                <a :href="getSearchUrl(selectedCollab.siteA)" class="modal-action-link" target="_blank" rel="noopener noreferrer">
+                                    🔍 View all in Publications Search ({{ selectedCollab.siteA }})
+                                </a>
+                                <a v-if="getSiteUrl(selectedCollab.siteA)" :href="getSiteUrl(selectedCollab.siteA)" class="modal-action-link" target="_blank" rel="noopener noreferrer">
+                                    🌐 Lab Website ↗
+                                </a>
+                            </div>
+                            <span v-else class="modal-action-note">
+                                {{ selectedCollab.papers.length }} co-authored publication{{ selectedCollab.papers.length > 1 ? 's' : '' }}
+                            </span>
+                            <button class="modal-btn" @click="closeModal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>dVRK Publications Database | {{ publications.length }} total publications</p>
+                <p>Data source: <a href="https://github.com/jhu-dvrk" target="_blank">dVRK Project</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="collaborations.js?v=2"></script>
+</body>
+
+</html>

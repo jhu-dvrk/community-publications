@@ -1,12 +1,13 @@
-const { createApp, markRaw } = Vue;
+const { createApp, markRaw, h } = Vue;
 
-createApp({
+const analyticsApp = createApp({
     data() {
         return {
             publications: [],
             loading: true,
-            charts: {},
-            chartMeta: {},
+            selectedSite: '',
+            sitesChartMode: 'cumulative', // 'cumulative' or 'perYear'
+            sitesSelectedYear: null,
             chartReplay: {
                 perYear: null,
                 cumulative: null,
@@ -14,12 +15,20 @@ createApp({
                 dataTypes: null,
                 sites: null
             },
-            chartReplayTimers: {},
-            matrixFilter: 'collaborating', // 'collaborating' or 'all'
-            matrixSort: 'collaborations',   // 'collaborations', 'total', 'alphabetical'
-            hoveredCell: null,
-            selectedCollab: null
+            chartPausedYear: {
+                perYear: null,
+                cumulative: null,
+                fields: null,
+                dataTypes: null,
+                sites: null
+            }
         };
+    },
+    created() {
+        // Keep Chart.js instances and timers outside Vue's reactive Proxy tree.
+        this.charts = {};
+        this.chartMeta = {};
+        this.chartReplayTimers = {};
     },
     computed: {
         yearRange() {
@@ -34,160 +43,73 @@ createApp({
             const yearSpan = Math.max(...years) - Math.min(...years) + 1;
             return Math.round(this.publications.length / yearSpan);
         },
-        collaborationData() {
-            const siteTotals = {};         // site -> [pub, ...]
-            const jointPairs = {};          // 'siteA:::siteB' -> [pub, ...]
-            const siteJointCounts = {};     // site -> number of joint papers
-            let uniqueJointPubs = 0;
-
-            // Initialize all known sites from CONFIG.SITE_MAP
+        siteTotals() {
+            const totals = {};
             Object.keys(CONFIG.SITE_MAP).forEach(siteId => {
-                siteTotals[siteId] = [];
-                siteJointCounts[siteId] = 0;
+                totals[siteId] = 0;
             });
-
             this.publications.forEach(pub => {
-                if (!pub.dvrk_site) return;
-                const rawSites = pub.dvrk_site.split(' and ').map(s => s.trim()).filter(Boolean);
-                const uniqueSites = Array.from(new Set(rawSites));
-
-                uniqueSites.forEach(s => {
-                    if (!siteTotals[s]) siteTotals[s] = [];
-                    siteTotals[s].push(pub);
+                CONFIG.parseSites(pub.dvrk_site).forEach(s => {
+                    totals[s.acronym] = (totals[s.acronym] || 0) + 1;
                 });
-
-                if (uniqueSites.length > 1) {
-                    uniqueJointPubs++;
-                    uniqueSites.forEach(s => {
-                        siteJointCounts[s] = (siteJointCounts[s] || 0) + 1;
-                    });
-
-                    for (let i = 0; i < uniqueSites.length; i++) {
-                        for (let j = i + 1; j < uniqueSites.length; j++) {
-                            const s1 = uniqueSites[i];
-                            const s2 = uniqueSites[j];
-                            const pairKey = s1 < s2 ? `${s1}:::${s2}` : `${s2}:::${s1}`;
-                            if (!jointPairs[pairKey]) jointPairs[pairKey] = [];
-                            jointPairs[pairKey].push(pub);
-                        }
-                    }
-                }
             });
-
-            return {
-                siteTotals,
-                jointPairs,
-                siteJointCounts,
-                uniqueJointPubs
-            };
+            return totals;
         },
         allSiteIds() {
             const known = Object.keys(CONFIG.SITE_MAP);
             if (known.length > 0) return known;
-            return Object.keys(this.collaborationData.siteTotals);
+            return Object.keys(this.siteTotals);
         },
-        collaboratingSiteIds() {
-            const counts = this.collaborationData.siteJointCounts;
-            return this.allSiteIds.filter(s => (counts[s] || 0) > 0);
+        siteFilterOptions() {
+            return [...this.allSiteIds]
+                .map(id => ({
+                    id,
+                    name: CONFIG.SITE_MAP[id] || id,
+                    count: this.siteTotals[id] || 0
+                }))
+                .sort((a, b) => (b.count - a.count) || a.id.localeCompare(b.id));
         },
-        displayedSites() {
-            const sites = this.matrixFilter === 'all'
-                ? [...this.allSiteIds]
-                : [...this.collaboratingSiteIds];
-
-            const { siteJointCounts, siteTotals } = this.collaborationData;
-
-            if (this.matrixSort === 'collaborations') {
-                sites.sort((a, b) => {
-                    const cDiff = (siteJointCounts[b] || 0) - (siteJointCounts[a] || 0);
-                    if (cDiff !== 0) return cDiff;
-                    const tDiff = (siteTotals[b]?.length || 0) - (siteTotals[a]?.length || 0);
-                    if (tDiff !== 0) return tDiff;
-                    return a.localeCompare(b);
+        siteFilteredPublications() {
+            if (!this.selectedSite) return this.publications;
+            return this.publications.filter(pub => {
+                if (!pub.dvrk_site) return false;
+                return pub.dvrk_site.split(' and ').some(s => s.trim() === this.selectedSite);
+            });
+        },
+        allYearLabels() {
+            const yearSet = new Set();
+            this.publications.forEach(pub => {
+                const y = parseInt(pub.year, 10);
+                if (!isNaN(y)) yearSet.add(String(y));
+            });
+            return Array.from(yearSet).sort();
+        },
+        allYearLabelsNumbered() {
+            return this.allYearLabels.map(y => parseInt(y, 10)).filter(y => !isNaN(y));
+        },
+        sitesActiveYear() {
+            if (this.chartReplay.sites !== null) return this.chartReplay.sites;
+            if (this.chartPausedYear.sites !== null) return this.chartPausedYear.sites;
+            return this.sitesSelectedYear;
+        }
+    },
+    watch: {
+        selectedSite(newSite) {
+            this.syncSiteUrlParam(newSite);
+            if (!this.loading && this.publications.length > 0) {
+                this.$nextTick(() => {
+                    this.refreshTopFourCharts();
                 });
-            } else if (this.matrixSort === 'total') {
-                sites.sort((a, b) => {
-                    const tDiff = (siteTotals[b]?.length || 0) - (siteTotals[a]?.length || 0);
-                    if (tDiff !== 0) return tDiff;
-                    return (siteJointCounts[b] || 0) - (siteJointCounts[a] || 0);
-                });
-            } else {
-                // alphabetical
-                sites.sort((a, b) => a.localeCompare(b));
             }
-
-            return sites;
-        },
-        collabKPIs() {
-            const { jointPairs, siteJointCounts, uniqueJointPubs } = this.collaborationData;
-            const totalPubs = this.publications.length;
-            const percent = totalPubs > 0 ? ((uniqueJointPubs / totalPubs) * 100).toFixed(1) : '0.0';
-
-            // Top pair
-            let topPair = { name: 'None', count: 0 };
-            Object.entries(jointPairs).forEach(([key, papers]) => {
-                if (papers.length > topPair.count) {
-                    const [s1, s2] = key.split(':::');
-                    topPair = { name: `${s1} & ${s2}`, count: papers.length };
-                }
-            });
-
-            // Top hub
-            let topHub = { name: 'None', count: 0 };
-            Object.entries(siteJointCounts).forEach(([site, count]) => {
-                if (count > topHub.count) {
-                    topHub = { name: site, count };
-                }
-            });
-
-            return {
-                jointPapersCount: uniqueJointPubs,
-                jointPapersPercent: percent,
-                collaboratingCount: this.collaboratingSiteIds.length,
-                allSitesCount: this.allSiteIds.length,
-                topPair,
-                topHub
-            };
         }
     },
     methods: {
         async loadPublications() {
             try {
-                // Fetch the BibTeX file
-                const response = await fetch('publications.bib');
-                const bibtexText = await response.text();
+                const { publications } = await CONFIG.loadPublications({ sortBy: 'year_desc' });
+                this.publications = publications;
 
-                // Parse BibTeX using bibtex-parse-js
-                const cleanedBibtexText = CONFIG.cleanBibtexText(bibtexText);
-                const parsed = bibtexParse.toJSON(cleanedBibtexText);
-
-                // Convert to our format
-                this.publications = parsed
-                    .filter(entry => entry.entryTags && entry.entryTags.title && entry.entryTags.year)
-                    .map(entry => {
-                        const tags = entry.entryTags;
-                        const authorUnicode = CONFIG.convertLatexToUnicode(tags.author || '');
-                        const venuePrimary = CONFIG.convertLatexToUnicode(tags.journal || tags.booktitle || '');
-                        const venueFallback = CONFIG.cleanHowPublished(tags.howpublished || '') || CONFIG.convertLatexToUnicode(tags.school || '');
-                        return {
-                            id: entry.citationKey,
-                            type: entry.entryType,
-                            title: CONFIG.convertLatexToUnicode(tags.title ? tags.title.replace(/[{}]/g, '') : ''),
-                            author: authorUnicode,
-                            formattedAuthors: CONFIG.formatAuthors(authorUnicode),
-                            year: tags.year || '',
-                            journal: venuePrimary,
-                            venueDisplay: venuePrimary || venueFallback,
-                            doi: tags.doi ? tags.doi.replace(/[{}]/g, '') : '',
-                            url: tags.url ? tags.url.replace(/[{}]/g, '') : '',
-                            research_field: tags.research_field ? tags.research_field.replace(/[{}]/g, '') : '',
-                            data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
-                            dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
-                            date_added: tags.date_added ? tags.date_added.replace(/[{}]/g, '') : ''
-                        };
-                    })
-                    .sort((a, b) => parseInt(a.year) - parseInt(b.year));
-
+                this.applyUrlSiteFilter();
                 this.loading = false;
 
                 // Wait for next tick to ensure DOM is updated
@@ -210,15 +132,34 @@ createApp({
                 this.toggleChartReplay(key);
             });
         },
+        refreshTopFourCharts() {
+            const topKeys = ['perYear', 'cumulative', 'fields', 'dataTypes'];
+            topKeys.forEach(key => {
+                this.clearChartTimer(key);
+                this.chartReplay[key] = null;
+                this.chartPausedYear[key] = null;
+                if (this.charts[key]) {
+                    this.charts[key].destroy();
+                    delete this.charts[key];
+                }
+            });
+            this.createPublicationsPerYearChart();
+            this.createCumulativeChart();
+            this.createResearchFieldsChart();
+            this.createDataTypesChart();
+            topKeys.forEach(key => {
+                this.toggleChartReplay(key);
+            });
+        },
         createPublicationsPerYearChart() {
             const yearCounts = {};
-            this.publications.forEach(pub => {
+            this.siteFilteredPublications.forEach(pub => {
                 const year = pub.year;
                 yearCounts[year] = (yearCounts[year] || 0) + 1;
             });
 
-            const years = Object.keys(yearCounts).sort();
-            const counts = years.map(year => yearCounts[year]);
+            const years = this.allYearLabels.length > 0 ? [...this.allYearLabels] : Object.keys(yearCounts).sort();
+            const counts = years.map(year => yearCounts[year] || 0);
 
             this.chartMeta.perYear = markRaw({
                 years: years.map(y => parseInt(y, 10)),
@@ -249,7 +190,8 @@ createApp({
                         if (elements.length > 0) {
                             const index = elements[0].index;
                             const year = years[index];
-                            window.location.href = `index.html?year=${year}`;
+                            const siteParam = this.selectedSite ? `&site=${encodeURIComponent(this.selectedSite)}` : '';
+                            window.location.href = `index.html?year=${year}${siteParam}`;
                         }
                     },
                     plugins: {
@@ -277,16 +219,16 @@ createApp({
         },
         createCumulativeChart() {
             const yearCounts = {};
-            this.publications.forEach(pub => {
+            this.siteFilteredPublications.forEach(pub => {
                 const year = pub.year;
                 yearCounts[year] = (yearCounts[year] || 0) + 1;
             });
 
-            const years = Object.keys(yearCounts).sort();
+            const years = this.allYearLabels.length > 0 ? [...this.allYearLabels] : Object.keys(yearCounts).sort();
             const cumulativeCounts = [];
             let total = 0;
             years.forEach(year => {
-                total += yearCounts[year];
+                total += (yearCounts[year] || 0);
                 cumulativeCounts.push(total);
             });
 
@@ -321,7 +263,8 @@ createApp({
                         if (elements.length > 0) {
                             const index = elements[0].index;
                             const year = years[index];
-                            window.location.href = `index.html?year=${year}`;
+                            const siteParam = this.selectedSite ? `&site=${encodeURIComponent(this.selectedSite)}` : '';
+                            window.location.href = `index.html?year=${year}${siteParam}`;
                         }
                     },
                     plugins: {
@@ -347,7 +290,7 @@ createApp({
 
         createResearchFieldsChart() {
             const fieldCounts = {};
-            this.publications.forEach(pub => {
+            this.siteFilteredPublications.forEach(pub => {
                 if (pub.research_field) {
                     pub.research_field.split(' and ').forEach(code => {
                         const trimmed = code.trim();
@@ -366,13 +309,14 @@ createApp({
             const labels = sortedFields.map(([name]) => name);
             const data = sortedFields.map(([, count]) => count);
 
+            const replayYears = this.allYearLabels.map(y => parseInt(y, 10));
             this.chartMeta.fields = this.buildTagReplayMeta(labels, pub => {
                 if (!pub.research_field) return [];
                 return pub.research_field.split(' and ').map(code => {
                     const trimmed = code.trim();
                     return CONFIG.FIELD_MAP[trimmed] || trimmed;
                 }).filter(Boolean);
-            });
+            }, this.siteFilteredPublications, replayYears);
 
             const ctx = document.getElementById('researchFieldsChart');
             if (!ctx) return;
@@ -397,7 +341,8 @@ createApp({
                         if (elements.length > 0) {
                             const index = elements[0].index;
                             const field = encodeURIComponent(labels[index]);
-                            window.location.href = `index.html?field=${field}`;
+                            const siteParam = this.selectedSite ? `&site=${encodeURIComponent(this.selectedSite)}` : '';
+                            window.location.href = `index.html?field=${field}${siteParam}`;
                         }
                     },
                     plugins: {
@@ -426,7 +371,7 @@ createApp({
 
         createDataTypesChart() {
             const typeCounts = {};
-            this.publications.forEach(pub => {
+            this.siteFilteredPublications.forEach(pub => {
                 if (pub.data_type) {
                     pub.data_type.split(' and ').forEach(code => {
                         const trimmed = code.trim();
@@ -445,13 +390,14 @@ createApp({
             const labels = sortedTypes.map(([name]) => name);
             const data = sortedTypes.map(([, count]) => count);
 
+            const replayYears = this.allYearLabels.map(y => parseInt(y, 10));
             this.chartMeta.dataTypes = this.buildTagReplayMeta(labels, pub => {
                 if (!pub.data_type) return [];
                 return pub.data_type.split(' and ').map(code => {
                     const trimmed = code.trim();
                     return CONFIG.DATA_TYPE_MAP[trimmed] || trimmed;
                 }).filter(Boolean);
-            });
+            }, this.siteFilteredPublications, replayYears);
 
             const ctx = document.getElementById('dataTypesChart');
             if (!ctx) return;
@@ -476,7 +422,8 @@ createApp({
                         if (elements.length > 0) {
                             const index = elements[0].index;
                             const dataType = encodeURIComponent(labels[index]);
-                            window.location.href = `index.html?dataType=${dataType}`;
+                            const siteParam = this.selectedSite ? `&site=${encodeURIComponent(this.selectedSite)}` : '';
+                            window.location.href = `index.html?dataType=${dataType}${siteParam}`;
                         }
                     },
                     plugins: {
@@ -504,40 +451,109 @@ createApp({
         },
         createSitesChart() {
             const siteCounts = {};
+            const byYear = {};
+            const yearSet = new Set();
             this.publications.forEach(pub => {
+                const y = parseInt(pub.year, 10);
+                const hasValidYear = !isNaN(y);
+                if (hasValidYear) yearSet.add(y);
                 if (pub.dvrk_site) {
-                    pub.dvrk_site.split(' and ').forEach(site => {
-                        const trimmed = site.trim();
-                        if (trimmed) {
-                            siteCounts[trimmed] = (siteCounts[trimmed] || 0) + 1;
+                    const uniqueSites = CONFIG.parseSites(pub.dvrk_site).map(s => s.acronym);
+                    uniqueSites.forEach(site => {
+                        siteCounts[site] = (siteCounts[site] || 0) + 1;
+                        if (hasValidYear) {
+                            if (!byYear[y]) byYear[y] = {};
+                            byYear[y][site] = (byYear[y][site] || 0) + 1;
                         }
                     });
                 }
             });
 
-            // Sort by count
-            const sites = Object.keys(siteCounts).sort((a, b) => siteCounts[b] - siteCounts[a]);
-            const counts = sites.map(site => siteCounts[site]);
-            
-            // Map acronyms to full names for tooltips but use acronyms for X-axis labels to fit better "by column"
-            const labels = sites;
-            const fullNames = sites.map(acronym => CONFIG.SITE_MAP[acronym] || acronym);
+            const allPublishingSites = Object.keys(siteCounts);
+            const years = Array.from(yearSet).sort((a, b) => a - b);
+            const latestYear = years.length > 0 ? years[years.length - 1] : null;
+            if (this.sitesSelectedYear === null || !years.includes(this.sitesSelectedYear)) {
+                this.sitesSelectedYear = latestYear;
+            }
 
-            this.chartMeta.sites = this.buildTagReplayMeta(labels, pub => {
-                if (!pub.dvrk_site) return [];
-                return pub.dvrk_site.split(' and ').map(s => s.trim()).filter(Boolean);
+            let maxAnnualCount = 1;
+            years.forEach(y => {
+                allPublishingSites.forEach(s => {
+                    const c = byYear[y]?.[s] || 0;
+                    if (c > maxAnnualCount) maxAnnualCount = c;
+                });
+            });
+            const annualYAxisMax = maxAnnualCount < 5
+                ? maxAnnualCount + 1
+                : Math.ceil((maxAnnualCount + 1) / 5) * 5;
+
+            const isPerYear = this.sitesChartMode === 'perYear';
+            const cumThrough = (site, targetYear) => {
+                let sum = 0;
+                years.forEach(yr => {
+                    if (yr <= targetYear) sum += (byYear[yr]?.[site] || 0);
+                });
+                return sum;
+            };
+
+            const orderSitesAtYear = (targetYear) => {
+                const countMap = {};
+                const cumMap = {};
+                allPublishingSites.forEach(site => {
+                    cumMap[site] = targetYear !== null ? cumThrough(site, targetYear) : siteCounts[site];
+                    countMap[site] = isPerYear
+                        ? (targetYear !== null ? (byYear[targetYear]?.[site] || 0) : 0)
+                        : cumMap[site];
+                });
+                const sorted = [...allPublishingSites].sort((a, b) => {
+                    const diff = countMap[b] - countMap[a];
+                    if (diff !== 0) return diff;
+                    if (isPerYear) {
+                        const cumDiff = cumMap[b] - cumMap[a];
+                        if (cumDiff !== 0) return cumDiff;
+                    }
+                    const totalDiff = siteCounts[b] - siteCounts[a];
+                    if (totalDiff !== 0) return totalDiff;
+                    return a.localeCompare(b);
+                });
+                return {
+                    labels: sorted,
+                    data: sorted.map(site => countMap[site])
+                };
+            };
+
+            const targetInitialYear = isPerYear ? this.sitesSelectedYear : latestYear;
+            const initialOrder = orderSitesAtYear(targetInitialYear);
+
+            this.chartMeta.sites = markRaw({
+                years,
+                emptyData: allPublishingSites.map(() => 0),
+                fullLabels: [...initialOrder.labels],
+                fullData: [...initialOrder.data],
+                labelsAtYear: (y) => orderSitesAtYear(y).labels,
+                dataAtYear: (y) => orderSitesAtYear(y).data
             });
 
             const ctx = document.getElementById('sitesChart');
             if (!ctx) return;
 
+            const yScaleConfig = {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            };
+            if (isPerYear) {
+                yScaleConfig.max = annualYAxisMax;
+            }
+
             this.charts.sites = markRaw(new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: [...initialOrder.labels],
                     datasets: [{
                         label: 'Publications',
-                        data: counts,
+                        data: [...initialOrder.data],
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
@@ -549,8 +565,13 @@ createApp({
                     onClick: (event, elements) => {
                         if (elements.length > 0) {
                             const index = elements[0].index;
-                            const site = sites[index]; 
-                            window.location.href = `index.html?site=${site}`;
+                            const liveLabels = this.charts.sites?.data?.labels || initialOrder.labels;
+                            const site = liveLabels[index];
+                            if (!site) return;
+                            const year = this.sitesChartMode === 'perYear' && this.sitesActiveYear
+                                ? this.sitesActiveYear
+                                : '';
+                            window.location.href = CONFIG.getSearchUrl({ site, year });
                         }
                     },
                     plugins: {
@@ -560,10 +581,19 @@ createApp({
                         tooltip: {
                             callbacks: {
                                 title: (context) => {
-                                    const index = context[0].dataIndex;
-                                    return fullNames[index];
+                                    if (!context || context.length === 0) return '';
+                                    const item = context[0];
+                                    const site = item.chart?.data?.labels?.[item.dataIndex] || item.label || '';
+                                    return CONFIG.getSiteName(site);
                                 },
-                                label: function (context) {
+                                label: (context) => {
+                                    if (this.sitesChartMode === 'perYear') {
+                                        return `Publications in ${this.sitesActiveYear || ''}: ${context.parsed.y}`;
+                                    }
+                                    const cumulativeYear = this.chartReplay.sites ?? this.chartPausedYear.sites;
+                                    if (cumulativeYear !== null) {
+                                        return `Publications through ${cumulativeYear}: ${context.parsed.y}`;
+                                    }
                                     return `Total Publications: ${context.parsed.y}`;
                                 }
                             }
@@ -577,15 +607,37 @@ createApp({
                                 minRotation: 45
                             }
                         },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        }
+                        y: yScaleConfig
                     }
                 }
             }));
+        },
+        setSitesChartMode(mode) {
+            if (this.sitesChartMode === mode) return;
+            this.sitesChartMode = mode;
+            this.clearChartTimer('sites');
+            this.chartReplay.sites = null;
+            this.chartPausedYear.sites = null;
+            if (this.charts.sites) {
+                this.charts.sites.destroy();
+                delete this.charts.sites;
+            }
+            if (mode === 'perYear' && this.allYearLabelsNumbered.length > 0) {
+                this.sitesSelectedYear = this.allYearLabelsNumbered[this.allYearLabelsNumbered.length - 1];
+            }
+            this.$nextTick(() => {
+                this.createSitesChart();
+                this.toggleChartReplay('sites');
+            });
+        },
+        onSitesYearChange() {
+            if (this.sitesChartMode !== 'perYear') return;
+            this.clearChartTimer('sites');
+            this.chartReplay.sites = null;
+            this.chartPausedYear.sites = null;
+            if (this.sitesSelectedYear !== null) {
+                this.applyChartYear('sites', this.sitesSelectedYear);
+            }
         },
         applyChartTheme(theme) {
             const isDark = (theme || document.documentElement.getAttribute('data-theme')) === 'dark';
@@ -594,122 +646,49 @@ createApp({
                 Chart.defaults.borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)';
             }
             Object.values(this.charts).forEach(chart => {
-                if (chart) {
-                    if (chart.options && chart.options.scales) {
-                        Object.values(chart.options.scales).forEach(scale => {
+                if (chart && chart.config && chart.config.options) {
+                    const opts = chart.config.options;
+                    if (opts.scales) {
+                        Object.values(opts.scales).forEach(scale => {
                             if (scale.ticks) scale.ticks.color = isDark ? '#94a3b8' : '#64748b';
                             if (scale.grid) scale.grid.color = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
                         });
                     }
-                    if (chart.options && chart.options.plugins && chart.options.plugins.legend) {
-                        chart.options.plugins.legend.labels = chart.options.plugins.legend.labels || {};
-                        chart.options.plugins.legend.labels.color = isDark ? '#cbd5e1' : '#334155';
+                    if (opts.plugins && opts.plugins.legend) {
+                        if (!opts.plugins.legend.labels || typeof opts.plugins.legend.labels !== 'object') {
+                            opts.plugins.legend.labels = {};
+                        }
+                        opts.plugins.legend.labels.color = isDark ? '#cbd5e1' : '#334155';
                     }
-                    chart.update();
+                    chart.update('none');
                 }
             });
         },
         getSiteFullName(siteId) {
-            return CONFIG.SITE_MAP[siteId] || siteId;
+            return CONFIG.getSiteName(siteId);
         },
-        getSiteCountry(siteId) {
-            return CONFIG.SITE_COUNTRY_MAP[siteId] || '';
-        },
-        getPairPapers(s1, s2) {
-            const key = s1 < s2 ? `${s1}:::${s2}` : `${s2}:::${s1}`;
-            return this.collaborationData.jointPairs[key] || [];
-        },
-        getCellCount(s1, s2) {
-            if (s1 === s2) {
-                return this.collaborationData.siteTotals[s1]?.length || 0;
+        applyUrlSiteFilter() {
+            const siteParam = new URLSearchParams(window.location.search).get('site');
+            if (!siteParam) return;
+            const trimmed = siteParam.trim();
+            const match = this.allSiteIds.find(id => id.toLowerCase() === trimmed.toLowerCase());
+            if (match) {
+                this.selectedSite = match;
             }
-            return this.getPairPapers(s1, s2).length;
         },
-        getCellDisplay(rowSite, colSite) {
-            const count = this.getCellCount(rowSite, colSite);
-            if (rowSite === colSite) {
-                return count > 0 ? count : '0';
-            }
-            return count > 0 ? count : '';
-        },
-        getCellTitle(rowSite, colSite) {
-            const count = this.getCellCount(rowSite, colSite);
-            const rowName = this.getSiteFullName(rowSite);
-            const colName = this.getSiteFullName(colSite);
-            const rowCountry = this.getSiteCountry(rowSite) ? ` (${this.getSiteCountry(rowSite)})` : '';
-            const colCountry = this.getSiteCountry(colSite) ? ` (${this.getSiteCountry(colSite)})` : '';
-
-            if (rowSite === colSite) {
-                const jointCount = this.collaborationData.siteJointCounts[rowSite] || 0;
-                return `${rowName}${rowCountry}: ${count} total publications, ${jointCount} joint co-authorships. Click to view publications.`;
-            }
-            if (count > 0) {
-                return `${rowName} × ${colName}: ${count} joint co-authored publications. Click to view papers.`;
-            }
-            return `${rowName} × ${colName}: No joint publications.`;
-        },
-        getCellClasses(rowSite, colSite) {
-            const isDiagonal = rowSite === colSite;
-            const count = this.getCellCount(rowSite, colSite);
-            const isHovered = this.hoveredCell && (
-                (this.hoveredCell.row === rowSite && this.hoveredCell.col === colSite) ||
-                (this.hoveredCell.row === colSite && this.hoveredCell.col === rowSite)
-            );
-            const isCrosshair = this.hoveredCell && (this.hoveredCell.row === rowSite || this.hoveredCell.col === colSite);
-
-            let levelClass = 'level-0';
-            if (isDiagonal) {
-                levelClass = 'diagonal-cell';
-            } else if (count >= 9) {
-                levelClass = 'level-4';
-            } else if (count >= 6) {
-                levelClass = 'level-3';
-            } else if (count >= 3) {
-                levelClass = 'level-2';
-            } else if (count >= 1) {
-                levelClass = 'level-1';
-            }
-
-            return {
-                [levelClass]: true,
-                'has-papers': count > 0,
-                'cell-hovered': isHovered,
-                'cell-crosshair': isCrosshair && !isHovered
-            };
-        },
-        onCellHover(rowSite, colSite) {
-            this.hoveredCell = { row: rowSite, col: colSite };
-        },
-        onCellLeave() {
-            this.hoveredCell = null;
-        },
-        onCellClick(rowSite, colSite) {
-            if (rowSite === colSite) {
-                const papers = this.collaborationData.siteTotals[rowSite] || [];
-                if (papers.length > 0) {
-                    this.selectedCollab = {
-                        siteA: rowSite,
-                        siteB: rowSite,
-                        isDiagonal: true,
-                        papers: papers
-                    };
-                }
+        syncSiteUrlParam(site) {
+            const url = new URL(window.location.href);
+            if (site) {
+                url.searchParams.set('site', site);
             } else {
-                const papers = this.getPairPapers(rowSite, colSite);
-                if (papers.length > 0) {
-                    this.selectedCollab = {
-                        siteA: rowSite,
-                        siteB: colSite,
-                        isDiagonal: false,
-                        papers: papers
-                    };
-                }
+                url.searchParams.delete('site');
             }
+            window.history.replaceState({}, '', url.toString());
         },
-        buildTagReplayMeta(labels, extractTagsFn) {
-            const yearSet = new Set();
+        buildTagReplayMeta(labels, extractTagsFn, pubs = this.publications, overrideYears = null) {
+            const yearSet = new Set(overrideYears || []);
             const byYear = {};
-            this.publications.forEach(pub => {
+            pubs.forEach(pub => {
                 const y = parseInt(pub.year, 10);
                 if (isNaN(y)) return;
                 yearSet.add(y);
@@ -739,9 +718,63 @@ createApp({
                 })
             });
         },
+        clearChartTimer(key) {
+            if (this.chartReplayTimers[key]) {
+                clearInterval(this.chartReplayTimers[key]);
+                delete this.chartReplayTimers[key];
+            }
+        },
+        replayBtnTitle(key) {
+            if (this.chartReplay[key] !== null) return 'Pause playback';
+            if (this.chartPausedYear[key] !== null) return `Resume playback from ${this.chartPausedYear[key]}`;
+            return 'Replay by publication year';
+        },
+        applyChartYear(key, year) {
+            const chart = this.charts[key];
+            const meta = this.chartMeta[key];
+            if (!chart || !meta) return;
+            if (typeof meta.labelsAtYear === 'function') {
+                chart.data.labels = [...meta.labelsAtYear(year)];
+            }
+            chart.data.datasets[0].data = [...meta.dataAtYear(year)];
+            chart.update();
+        },
+        canStepChart(key, delta) {
+            const pausedYear = this.chartPausedYear[key];
+            const meta = this.chartMeta[key];
+            if (pausedYear === null || !meta || !meta.years || meta.years.length === 0) return false;
+            const idx = meta.years.indexOf(pausedYear);
+            if (idx === -1) return false;
+            const nextIdx = idx + delta;
+            return nextIdx >= 0 && nextIdx < meta.years.length;
+        },
+        stepChartReplay(key, delta) {
+            const pausedYear = this.chartPausedYear[key];
+            const meta = this.chartMeta[key];
+            if (pausedYear === null || !meta || !meta.years || meta.years.length === 0) return;
+            const idx = meta.years.indexOf(pausedYear);
+            if (idx === -1) return;
+            const nextIdx = Math.max(0, Math.min(meta.years.length - 1, idx + delta));
+            if (nextIdx === idx) return;
+            const nextYear = meta.years[nextIdx];
+            this.chartPausedYear[key] = nextYear;
+            if (key === 'sites' && this.sitesChartMode === 'perYear') {
+                this.sitesSelectedYear = nextYear;
+            }
+            this.applyChartYear(key, nextYear);
+        },
+        pauseChartReplay(key) {
+            this.clearChartTimer(key);
+            const currentYear = this.chartReplay[key];
+            this.chartReplay[key] = null;
+            this.chartPausedYear[key] = currentYear;
+            if (key === 'sites' && this.sitesChartMode === 'perYear' && currentYear !== null) {
+                this.sitesSelectedYear = currentYear;
+            }
+        },
         toggleChartReplay(key) {
             if (this.chartReplay[key] !== null) {
-                this.stopChartReplay(key, true);
+                this.pauseChartReplay(key);
                 return;
             }
             const chart = this.charts[key];
@@ -755,18 +788,39 @@ createApp({
                 chart.options.scales[axisKey].max = valueScale.max;
             }
 
-            let idx = 0;
             const applyYear = (year) => {
+                this.chartPausedYear[key] = null;
                 this.chartReplay[key] = year;
-                chart.data.datasets[0].data = meta.dataAtYear(year);
-                chart.update();
+                if (key === 'sites' && this.sitesChartMode === 'perYear') {
+                    this.sitesSelectedYear = year;
+                }
+                this.applyChartYear(key, year);
             };
 
-            if (meta.emptyData) {
-                chart.data.datasets[0].data = [...meta.emptyData];
-                chart.update('none');
+            const pausedYear = this.chartPausedYear[key];
+            const pausedIdx = pausedYear !== null ? meta.years.indexOf(pausedYear) : -1;
+            let idx = 0;
+
+            if (pausedIdx !== -1 && pausedIdx + 1 < meta.years.length) {
+                idx = pausedIdx + 1;
+                applyYear(meta.years[idx]);
+            } else {
+                if (meta.emptyData) {
+                    if (typeof meta.labelsAtYear === 'function') {
+                        chart.data.labels = [...meta.labelsAtYear(meta.years[0])];
+                    }
+                    chart.data.datasets[0].data = [...meta.emptyData];
+                    chart.update('none');
+                }
+                applyYear(meta.years[0]);
             }
-            applyYear(meta.years[0]);
+
+            if (idx + 1 >= meta.years.length) {
+                this.stopChartReplay(key, false);
+                return;
+            }
+
+            this.clearChartTimer(key);
             this.chartReplayTimers[key] = setInterval(() => {
                 idx += 1;
                 if (idx < meta.years.length) {
@@ -777,18 +831,35 @@ createApp({
             }, 380);
         },
         stopChartReplay(key, restoreFull) {
-            if (this.chartReplayTimers[key]) {
-                clearInterval(this.chartReplayTimers[key]);
-                delete this.chartReplayTimers[key];
-            }
+            this.clearChartTimer(key);
             this.chartReplay[key] = null;
+            this.chartPausedYear[key] = null;
+            if (key === 'sites' && this.sitesChartMode === 'perYear' && this.chartMeta.sites) {
+                const years = this.chartMeta.sites.years;
+                if (restoreFull && this.sitesSelectedYear !== null) {
+                    const yrLabels = this.chartMeta.sites.labelsAtYear
+                        ? this.chartMeta.sites.labelsAtYear(this.sitesSelectedYear)
+                        : this.chartMeta.sites.fullLabels;
+                    const yrData = this.chartMeta.sites.dataAtYear(this.sitesSelectedYear);
+                    if (yrLabels) this.chartMeta.sites.fullLabels = [...yrLabels];
+                    this.chartMeta.sites.fullData = [...yrData];
+                    if (this.charts.sites) {
+                        if (yrLabels) this.charts.sites.data.labels = [...yrLabels];
+                        this.charts.sites.data.datasets[0].data = [...yrData];
+                        this.charts.sites.update();
+                    }
+                } else if (!restoreFull && years.length > 0) {
+                    this.sitesSelectedYear = years[years.length - 1];
+                }
+                return;
+            }
             if (restoreFull && this.charts[key] && this.chartMeta[key]) {
-                this.charts[key].data.datasets[0].data = this.chartMeta[key].fullData;
+                if (this.chartMeta[key].fullLabels) {
+                    this.charts[key].data.labels = [...this.chartMeta[key].fullLabels];
+                }
+                this.charts[key].data.datasets[0].data = [...this.chartMeta[key].fullData];
                 this.charts[key].update();
             }
-        },
-        closeModal() {
-            this.selectedCollab = null;
         }
     },
     async mounted() {
@@ -797,14 +868,77 @@ createApp({
         window.addEventListener('dvrk-theme-changed', (e) => {
             this.applyChartTheme(e.detail?.theme);
         });
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.selectedCollab) {
-                this.closeModal();
-            }
-        });
         this.loadPublications();
     },
     beforeUnmount() {
         Object.keys(this.chartReplayTimers).forEach(k => clearInterval(this.chartReplayTimers[k]));
     }
-}).mount('#app');
+});
+
+analyticsApp.component('chart-replay-controls', {
+    props: {
+        playingYear: { type: Number, default: null },
+        pausedYear: { type: Number, default: null },
+        canPrev: { type: Boolean, default: false },
+        canNext: { type: Boolean, default: false }
+    },
+    emits: ['toggle', 'step'],
+    render() {
+        const isPlaying = this.playingYear !== null;
+        const isPaused = this.pausedYear !== null;
+        const title = isPlaying
+            ? 'Pause playback'
+            : (isPaused ? `Resume playback from ${this.pausedYear}` : 'Replay by publication year');
+        const label = isPlaying
+            ? `⏸ ${this.playingYear}`
+            : (isPaused ? `▶ ${this.pausedYear}` : '▶');
+
+        const renderStepIcon = (isNext) => h('svg', {
+            viewBox: '0 0 12 12',
+            width: 10,
+            height: 10,
+            fill: 'currentColor',
+            'aria-hidden': 'true'
+        }, isNext
+            ? [
+                h('polygon', { points: '1.5,2 7.8,6 1.5,10' }),
+                h('rect', { x: 8.7, y: 2, width: 1.8, height: 8, rx: 0.4 })
+            ]
+            : [
+                h('rect', { x: 1.5, y: 2, width: 1.8, height: 8, rx: 0.4 }),
+                h('polygon', { points: '10.5,2 4.2,6 10.5,10' })
+            ]);
+
+        const children = [];
+        if (isPaused) {
+            children.push(h('button', {
+                type: 'button',
+                class: 'chart-step-btn',
+                disabled: !this.canPrev,
+                title: 'Previous year',
+                'aria-label': 'Previous year',
+                onClick: () => this.$emit('step', -1)
+            }, [renderStepIcon(false)]));
+        }
+        children.push(h('button', {
+            type: 'button',
+            class: ['chart-replay-btn', { playing: isPlaying, paused: isPaused }],
+            title,
+            onClick: () => this.$emit('toggle')
+        }, label));
+        if (isPaused) {
+            children.push(h('button', {
+                type: 'button',
+                class: 'chart-step-btn',
+                disabled: !this.canNext,
+                title: 'Next year',
+                'aria-label': 'Next year',
+                onClick: () => this.$emit('step', 1)
+            }, [renderStepIcon(true)]));
+        }
+        return h('div', { class: 'chart-replay-controls' }, children);
+    }
+});
+
+CONFIG.registerSharedComponents(analyticsApp);
+analyticsApp.mount('#app');

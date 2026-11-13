@@ -3,7 +3,7 @@ const { createApp } = Vue;
 const OSM_TILES_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-createApp({
+const mapApp = createApp({
     data() {
         return {
             publications: [],
@@ -187,33 +187,8 @@ createApp({
     methods: {
         async loadPublications() {
             try {
-                const response = await fetch('publications.bib');
-                const bibtexText = await response.text();
-                const cleaned = CONFIG.cleanBibtexText(bibtexText);
-                const parsed = bibtexParse.toJSON(cleaned);
-
-                this.publications = parsed
-                    .filter(entry => entry.entryTags && entry.entryTags.title && entry.entryTags.year)
-                    .map(entry => {
-                        const tags = entry.entryTags;
-                        const authorUnicode = CONFIG.convertLatexToUnicode(tags.author || '');
-                        const venuePrimary = CONFIG.convertLatexToUnicode(tags.journal || tags.booktitle || '');
-                        const venueFallback = CONFIG.cleanHowPublished(tags.howpublished || '') || CONFIG.convertLatexToUnicode(tags.school || '');
-                        return {
-                            id: entry.citationKey,
-                            type: entry.entryType,
-                            title: CONFIG.convertLatexToUnicode(tags.title ? tags.title.replace(/[{}]/g, '') : ''),
-                            author: authorUnicode,
-                            formattedAuthors: CONFIG.formatAuthors(authorUnicode),
-                            year: (tags.year || '').replace(/[{}]/g, '').trim(),
-                            journal: venuePrimary,
-                            venueDisplay: venuePrimary || venueFallback,
-                            doi: tags.doi ? tags.doi.replace(/[{}]/g, '') : '',
-                            url: tags.url ? tags.url.replace(/[{}]/g, '') : '',
-                            dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : ''
-                        };
-                    })
-                    .sort((a, b) => parseInt(b.year, 10) - parseInt(a.year, 10));
+                const { publications } = await CONFIG.loadPublications({ sortBy: 'year_desc' });
+                this.publications = publications;
 
                 const years = this.publications
                     .map(p => parseInt(p.year, 10))
@@ -476,7 +451,7 @@ createApp({
                 if (this.selectedYear < this.maxYear) {
                     this.selectedYear += 1;
                 } else {
-                    this.selectedYear = this.minYear;
+                    this.pausePlay();
                 }
             }, this.playSpeedMs);
         },
@@ -509,16 +484,16 @@ createApp({
             this.selectedModal = null;
         },
         getSiteFullName(siteId) {
-            return CONFIG.SITE_MAP[siteId] || siteId;
+            return CONFIG.getSiteName(siteId);
         },
         getSiteCountry(siteId) {
-            return CONFIG.SITE_COUNTRY_MAP[siteId] || '';
+            return CONFIG.getSiteCountry(siteId);
         },
         getSiteYearAdded(siteId) {
-            return CONFIG.SITE_YEAR_ADDED_MAP[siteId] || null;
+            return CONFIG.getSiteYearAdded(siteId);
         },
         getSiteUrl(siteId) {
-            return CONFIG.SITE_URL_MAP[siteId] || '';
+            return CONFIG.getSiteUrl(siteId);
         }
     },
     async mounted() {
@@ -538,5 +513,8 @@ createApp({
         this.pausePlay();
         if (this.animRafId) cancelAnimationFrame(this.animRafId);
     }
-}).mount('#app');
+});
+
+CONFIG.registerSharedComponents(mapApp);
+mapApp.mount('#app');
 

@@ -25,6 +25,7 @@ createApp({
             nodesDataSet: null,
             edgesDataSet: null,
             activeNodeIds: new Set(),
+            connectedNodeIds: new Set(),
             defaultNodeColors: {},
             siteColorMap: {
                 'JHU': '#2563eb',    // Royal Blue
@@ -96,63 +97,12 @@ createApp({
 
         async loadPublications() {
             try {
-                const response = await fetch('publications.bib');
-                const bibtexText = await response.text();
-
-                const cleanedBibtexText = CONFIG.cleanBibtexText(bibtexText);
-                const parsed = bibtexParse.toJSON(cleanedBibtexText);
-
-                this.publications = parsed
-                    .filter(entry => entry.entryTags && entry.entryTags.title && entry.entryTags.year)
-                    .map(entry => {
-                        const tags = entry.entryTags;
-                        const rawCites = tags.dvrk_cites ? tags.dvrk_cites.replace(/[{}]/g, '') : '';
-                        const cites = rawCites ? rawCites.split(' and ').map(s => s.trim()).filter(Boolean) : [];
-                        const authorUnicode = CONFIG.convertLatexToUnicode(tags.author || '');
-                        return {
-                            id: entry.citationKey,
-                            type: entry.entryType,
-                            title: CONFIG.convertLatexToUnicode(tags.title || ''),
-                            author: authorUnicode,
-                            formattedAuthors: CONFIG.formatAuthors(authorUnicode),
-                            year: tags.year || '',
-                            journal: CONFIG.convertLatexToUnicode(tags.journal || ''),
-                            booktitle: CONFIG.convertLatexToUnicode(tags.booktitle || ''),
-                            howpublished: CONFIG.cleanHowPublished(tags.howpublished || ''),
-                            school: CONFIG.convertLatexToUnicode(tags.school || ''),
-                            doi: tags.doi || '',
-                            url: tags.url || '',
-                            dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
-                            cites: cites,
-                            cited_by: []
-                        };
-                    })
-                    .sort((a, b) => parseInt(b.year) - parseInt(a.year));
-
-                // Populate publication map
-                this.publicationMap = {};
-                this.publications.forEach(p => {
-                    this.publicationMap[p.id] = p;
+                const { publications, publicationMap } = await CONFIG.loadPublications({
+                    withCitations: true,
+                    sortBy: 'year_desc'
                 });
-
-                // Invert graph to compute cited_by dynamically
-                this.publications.forEach(p => {
-                    if (p.cites && p.cites.length > 0) {
-                        p.cites.forEach(targetId => {
-                            const target = this.publicationMap[targetId];
-                            if (target) {
-                                target.cited_by.push(p.id);
-                            }
-                        });
-                    }
-                });
-
-                // Sort cited_by
-                this.publications.forEach(p => {
-                    if (p.cited_by.length > 1) {
-                        p.cited_by.sort();
-                    }
-                });
+                this.publications = publications;
+                this.publicationMap = publicationMap;
 
                 // Extract years
                 const years = [...new Set(this.publications.map(p => parseInt(p.year)).filter(y => !isNaN(y)))];
@@ -177,7 +127,7 @@ createApp({
         getNodeColor(pub) {
             if (this.colorScheme === 'site') {
                 if (!pub.dvrk_site) return this.siteColorMap['Other'];
-                const firstSite = pub.dvrk_site.split(' and ')[0].trim();
+                const firstSite = CONFIG.parseTagCodes(pub.dvrk_site)[0] || '';
                 return this.siteColorMap[firstSite] || this.siteColorMap['Other'];
             }
 
@@ -243,7 +193,7 @@ createApp({
 
                 const nodeObj = {
                     id: pub.id,
-                    label: pub.id,
+                    label: '',
                     size: this.computeNodeSize(pub),
                     color: {
                         background: color,
@@ -411,6 +361,7 @@ createApp({
 
             this.network.on('stabilizationIterationsDone', () => this.finishStabilization());
             this.network.on('stabilized', () => this.finishStabilization());
+            this.network.on('afterDrawing', (ctx) => this.drawNodeLabelsOnTop(ctx));
             this.startStabilization();
 
             // Click event on node
@@ -464,11 +415,69 @@ createApp({
             this.highlightNeighborhood(nodeId);
         },
 
+        drawNodeLabelsOnTop(ctx) {
+            if (!this.network || !this.activeNodeIds || this.activeNodeIds.size === 0) return;
+            const positions = this.network.getPositions();
+            const isDark = this.isDarkMode();
+            const hasSelection = Boolean(this.selectedPub);
+            const selectedId = hasSelection ? this.selectedPub.id : null;
+            const connected = this.connectedNodeIds || new Set();
+
+            const dimmedLabels = [];
+            const normalLabels = [];
+            let selectedLabel = null;
+
+            this.activeNodeIds.forEach(id => {
+                const pos = positions[id];
+                if (!pos) return;
+                if (id === selectedId) {
+                    selectedLabel = { id, pos };
+                } else if (hasSelection && !connected.has(id)) {
+                    dimmedLabels.push({ id, pos });
+                } else {
+                    normalLabels.push({ id, pos });
+                }
+            });
+
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.lineJoin = 'round';
+            ctx.miterLimit = 2;
+
+            const drawBatch = (items, font, fillStyle, strokeStyle, lineWidth) => {
+                if (items.length === 0) return;
+                ctx.font = font;
+                ctx.fillStyle = fillStyle;
+                ctx.strokeStyle = strokeStyle;
+                ctx.lineWidth = lineWidth;
+                items.forEach(({ id, pos }) => {
+                    ctx.strokeText(id, pos.x, pos.y);
+                    ctx.fillText(id, pos.x, pos.y);
+                });
+            };
+
+            const haloNormal = isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.92)';
+            const haloDimmed = isDark ? 'rgba(15, 23, 42, 0.45)' : 'rgba(255, 255, 255, 0.65)';
+            const textNormal = isDark ? '#f8fafc' : '#0f172a';
+            const textDimmed = isDark ? 'rgba(148, 163, 184, 0.45)' : 'rgba(100, 116, 139, 0.45)';
+            const fontFamily = '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif';
+
+            drawBatch(dimmedLabels, `500 10px ${fontFamily}`, textDimmed, haloDimmed, 2.5);
+            drawBatch(normalLabels, `600 11px ${fontFamily}`, textNormal, haloNormal, 3.5);
+            if (selectedLabel) {
+                drawBatch([selectedLabel], `700 13px ${fontFamily}`, isDark ? '#ffffff' : '#0f172a', haloNormal, 4.2);
+            }
+
+            ctx.restore();
+        },
+
         highlightNeighborhood(selectedId) {
             if (!this.network || !this.nodesDataSet || !this.edgesDataSet) return;
 
             const connectedNodeIds = new Set(this.network.getConnectedNodes(selectedId));
             connectedNodeIds.add(selectedId);
+            this.connectedNodeIds = connectedNodeIds;
 
             // Find incoming and outgoing edges
             const outgoingTargetIds = new Set(this.selectedPub.cites);
@@ -573,6 +582,7 @@ createApp({
 
         clearSelection() {
             this.selectedPub = null;
+            this.connectedNodeIds = new Set();
             if (!this.nodesDataSet || !this.edgesDataSet) return;
 
             const isDark = this.isDarkMode();
@@ -732,6 +742,7 @@ createApp({
                 });
             } else {
                 this.selectedPub = null;
+                this.connectedNodeIds = new Set();
             }
 
             this.fitGraph();
@@ -765,9 +776,13 @@ createApp({
     async mounted() {
         await CONFIG.init();
         window.addEventListener('dvrk-theme-changed', () => {
-            if (this.network) {
-                this.buildGraph();
+            if (!this.network) return;
+            if (this.selectedPub && this.activeNodeIds.has(this.selectedPub.id)) {
+                this.highlightNeighborhood(this.selectedPub.id);
+            } else {
+                this.clearSelection();
             }
+            this.network.redraw();
         });
         this.loadPublications();
     }

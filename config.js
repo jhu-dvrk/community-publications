@@ -571,6 +571,378 @@ const CONFIG = {
         return lines.join('\r\n');
     },
 
+    // Tag, Site & URL Helpers
+    parseTagCodes(raw) {
+        if (!raw) return [];
+        return String(raw)
+            .split(' and ')
+            .map(s => s.trim())
+            .filter(Boolean);
+    },
+
+    getSiteName(siteId) {
+        return this.SITE_MAP[siteId] || siteId;
+    },
+
+    getSiteCountry(siteId) {
+        return this.SITE_COUNTRY_MAP[siteId] || '';
+    },
+
+    getSiteYearAdded(siteId) {
+        return this.SITE_YEAR_ADDED_MAP[siteId] || null;
+    },
+
+    getSiteUrl(siteId) {
+        return this.SITE_URL_MAP[siteId] || '';
+    },
+
+    parseSites(rawSites) {
+        const seen = new Set();
+        const result = [];
+        this.parseTagCodes(rawSites).forEach(acronym => {
+            if (!seen.has(acronym)) {
+                seen.add(acronym);
+                result.push({
+                    acronym,
+                    name: this.getSiteName(acronym)
+                });
+            }
+        });
+        return result;
+    },
+
+    formatPublicationType(type) {
+        const typeMap = {
+            'article': 'Journal',
+            'inproceedings': 'Conference',
+            'conference': 'Conference',
+            'incollection': 'Book Chapter',
+            'inbook': 'Book Chapter',
+            'phdthesis': 'Thesis',
+            'mastersthesis': 'Thesis',
+            'techreport': 'Tech Report',
+            'misc': 'Other'
+        };
+        return typeMap[(type || '').toLowerCase()] || type;
+    },
+
+    getPublicationUrl(pubId) {
+        return `index.html?id=${encodeURIComponent(pubId)}`;
+    },
+
+    getSiteAnalyticsUrl(siteId) {
+        return `analytics.html?site=${encodeURIComponent(siteId)}`;
+    },
+
+    getSearchUrl(params = {}) {
+        const qs = new URLSearchParams();
+        Object.entries(params).forEach(([k, v]) => {
+            if (v !== undefined && v !== null && String(v) !== '') {
+                qs.set(k, String(v));
+            }
+        });
+        const str = qs.toString();
+        return str ? `index.html?${str}` : 'index.html';
+    },
+
+    extractBibtexEntries(bibtexText) {
+        const entries = {};
+        const regex = /@(\w+)\{([^,]+),[\s\S]*?\n\}/g;
+        let match;
+        while ((match = regex.exec(bibtexText)) !== null) {
+            entries[match[2]] = match[0];
+        }
+        return entries;
+    },
+
+    sortPublications(publications, sortBy = 'year_desc') {
+        const sorted = [...publications];
+        switch (sortBy) {
+            case 'year_asc':
+                sorted.sort((a, b) => {
+                    const diff = this.getPublicationDateSortKey(a) - this.getPublicationDateSortKey(b);
+                    return diff !== 0 ? diff : (a.title || '').localeCompare(b.title || '');
+                });
+                break;
+            case 'date_added_desc':
+                sorted.sort((a, b) => {
+                    const dateDiff = (b.date_added || '').localeCompare(a.date_added || '');
+                    if (dateDiff !== 0) return dateDiff;
+                    return this.getPublicationDateSortKey(b) - this.getPublicationDateSortKey(a);
+                });
+                break;
+            case 'cites_desc':
+                sorted.sort((a, b) => {
+                    const cA = a.cited_by ? a.cited_by.length : 0;
+                    const cB = b.cited_by ? b.cited_by.length : 0;
+                    if (cB !== cA) return cB - cA;
+                    return this.getPublicationDateSortKey(b) - this.getPublicationDateSortKey(a);
+                });
+                break;
+            case 'title_asc':
+                sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+                break;
+            case 'author_asc':
+                sorted.sort((a, b) => {
+                    const cmp = (a.authorSortKey || '').localeCompare(b.authorSortKey || '');
+                    if (cmp !== 0) return cmp;
+                    return this.getPublicationDateSortKey(b) - this.getPublicationDateSortKey(a);
+                });
+                break;
+            case 'year_desc':
+            default:
+                sorted.sort((a, b) => {
+                    const diff = this.getPublicationDateSortKey(b) - this.getPublicationDateSortKey(a);
+                    return diff !== 0 ? diff : (a.title || '').localeCompare(b.title || '');
+                });
+                break;
+        }
+        return sorted;
+    },
+
+    filterPublications(publications, criteria = {}) {
+        let filtered = publications || [];
+
+        if (criteria.searchQuery) {
+            const query = criteria.searchQuery.toLowerCase().trim();
+            if (query) {
+                filtered = filtered.filter(pub => {
+                    const matchesBasic = (
+                        pub.title?.toLowerCase().includes(query) ||
+                        pub.author?.toLowerCase().includes(query) ||
+                        pub.formattedAuthors?.toLowerCase().includes(query) ||
+                        pub.journal?.toLowerCase().includes(query) ||
+                        pub.booktitle?.toLowerCase().includes(query) ||
+                        pub.howpublished?.toLowerCase().includes(query) ||
+                        pub.school?.toLowerCase().includes(query) ||
+                        pub.id?.toLowerCase().includes(query)
+                    );
+                    if (matchesBasic) return true;
+                    if (criteria.searchInAbstract && pub.abstract) {
+                        return pub.abstract.toLowerCase().includes(query);
+                    }
+                    return false;
+                });
+            }
+        }
+
+        if (criteria.startYear) {
+            const minY = parseInt(criteria.startYear, 10);
+            filtered = filtered.filter(pub => parseInt(pub.year, 10) >= minY);
+        }
+        if (criteria.endYear) {
+            const maxY = parseInt(criteria.endYear, 10);
+            filtered = filtered.filter(pub => parseInt(pub.year, 10) <= maxY);
+        }
+
+        if (criteria.selectedType) {
+            const selType = criteria.selectedType;
+            filtered = filtered.filter(pub => {
+                const t = (pub.type || '').toLowerCase();
+                if (selType === 'incollection') return t === 'incollection' || t === 'inbook';
+                if (selType === 'inproceedings') return t === 'inproceedings' || t === 'conference';
+                if (selType === 'phdthesis') return t === 'phdthesis' || t === 'mastersthesis';
+                return t === selType;
+            });
+        }
+
+        if (criteria.selectedPeerReviewed) {
+            filtered = filtered.filter(pub => pub.peer_reviewed === criteria.selectedPeerReviewed);
+        }
+
+        if (criteria.selectedField) {
+            filtered = filtered.filter(pub => {
+                if (!pub.research_field) return false;
+                return this.parseTagCodes(pub.research_field)
+                    .map(code => this.FIELD_MAP[code] || code)
+                    .includes(criteria.selectedField);
+            });
+        }
+
+        if (criteria.selectedDataType) {
+            filtered = filtered.filter(pub => {
+                if (!pub.data_type) return false;
+                return this.parseTagCodes(pub.data_type)
+                    .map(code => this.DATA_TYPE_MAP[code] || code)
+                    .includes(criteria.selectedDataType);
+            });
+        }
+
+        if (criteria.selectedSite) {
+            const selSite = criteria.selectedSite;
+            filtered = filtered.filter(pub => {
+                if (!pub.dvrk_site) return false;
+                return this.parseSites(pub.dvrk_site)
+                    .some(site => site.acronym === selSite || site.name === selSite);
+            });
+        }
+
+        if (criteria.selectedAuthor) {
+            const selAuthor = criteria.selectedAuthor;
+            filtered = filtered.filter(pub => {
+                const list = pub.authorsList || this.parseAuthorList(pub.author);
+                return list.some(auth => this.authorsMatch(auth, selAuthor));
+            });
+        }
+
+        return criteria.sortBy ? this.sortPublications(filtered, criteria.sortBy) : filtered;
+    },
+
+    async loadPublications(options = {}) {
+        const {
+            withBibtexText = false,
+            withCitations = false,
+            withUiState = false,
+            sortBy = 'year_desc'
+        } = options;
+
+        const response = await fetch('publications.bib');
+        const bibtexText = await response.text();
+        const cleanedBibtexText = this.cleanBibtexText(bibtexText);
+        const parsed = bibtexParse.toJSON(cleanedBibtexText);
+        const bibtexEntries = withBibtexText ? this.extractBibtexEntries(cleanedBibtexText) : {};
+
+        let publications = parsed
+            .filter(entry => entry.entryTags && entry.entryTags.title && entry.entryTags.year)
+            .map(entry => {
+                const tags = entry.entryTags;
+                const authorUnicode = this.convertLatexToUnicode(tags.author || '');
+                const journal = this.convertLatexToUnicode(tags.journal || '');
+                const booktitle = this.convertLatexToUnicode(tags.booktitle || '');
+                const howpublished = this.cleanHowPublished(tags.howpublished || '');
+                const school = this.convertLatexToUnicode(tags.school || '');
+                const venuePrimary = journal || booktitle;
+                const venueFallback = howpublished || school;
+                const pub = {
+                    id: entry.citationKey,
+                    type: (entry.entryType || '').toLowerCase(),
+                    title: this.convertLatexToUnicode(tags.title || ''),
+                    author: authorUnicode,
+                    authorsList: this.parseAuthorList(authorUnicode),
+                    formattedAuthors: this.formatAuthors(authorUnicode),
+                    authorSortKey: this.getFirstAuthorSortKey(authorUnicode),
+                    year: (tags.year || '').replace(/[{}]/g, '').trim(),
+                    month: tags.month || '',
+                    date: tags.date || '',
+                    journal,
+                    booktitle,
+                    howpublished,
+                    school,
+                    venueDisplay: venuePrimary || venueFallback,
+                    volume: tags.volume || '',
+                    number: tags.number || '',
+                    pages: tags.pages || '',
+                    publisher: this.convertLatexToUnicode(tags.publisher || ''),
+                    doi: tags.doi ? tags.doi.replace(/[{}]/g, '') : '',
+                    url: tags.url ? tags.url.replace(/[{}]/g, '') : '',
+                    ieeexplore: tags.ieeexplore || '',
+                    semanticscholar: tags.semanticscholar || '',
+                    arxiv: tags.arxiv || '',
+                    abstract: this.convertLatexToUnicode(tags.abstract || ''),
+                    openaccesspdf: tags.openaccesspdf || '',
+                    research_field: tags.research_field ? tags.research_field.replace(/[{}]/g, '') : '',
+                    data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
+                    peer_reviewed: tags.peer_reviewed ? tags.peer_reviewed.replace(/[{}]/g, '').toLowerCase().trim() : '',
+                    dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
+                    date_added: tags.date_added ? tags.date_added.replace(/[{}]/g, '') : '',
+                    cites: this.parseTagCodes(tags.dvrk_cites ? tags.dvrk_cites.replace(/[{}]/g, '') : ''),
+                    cited_by: []
+                };
+                if (withBibtexText) {
+                    pub.bibtexText = bibtexEntries[entry.citationKey] || '';
+                }
+                if (withUiState) {
+                    pub.showCites = false;
+                    pub.showCitedBy = false;
+                    pub.showBibtex = false;
+                    pub.showRis = false;
+                    pub.showAbstract = false;
+                    pub.bibCopied = false;
+                    pub.risCopied = false;
+                    pub.copied = false;
+                    pub.isHighlighted = false;
+                }
+                return pub;
+            });
+
+        publications = this.sortPublications(publications, sortBy);
+
+        const publicationMap = {};
+        publications.forEach(p => {
+            publicationMap[p.id] = p;
+        });
+
+        if (withCitations) {
+            publications.forEach(p => {
+                if (p.cites && p.cites.length > 0) {
+                    p.cites.forEach(targetId => {
+                        const target = publicationMap[targetId];
+                        if (target) {
+                            target.cited_by.push(p.id);
+                        }
+                    });
+                }
+            });
+            publications.forEach(p => {
+                if (p.cited_by.length > 1) {
+                    p.cited_by.sort();
+                }
+            });
+        }
+
+        return { publications, publicationMap };
+    },
+
+    // Register shared Vue UI components across pages
+    registerSharedComponents(app) {
+        if (!app || typeof Vue === 'undefined' || !Vue.h) return;
+        const { h } = Vue;
+        const self = this;
+
+        app.component('pub-preview-list', {
+            props: {
+                papers: {
+                    type: Array,
+                    default: () => []
+                },
+                emptyMessage: {
+                    type: String,
+                    default: 'No matching publications found.'
+                }
+            },
+            render() {
+                if (!this.papers || this.papers.length === 0) {
+                    return h('div', { class: 'empty-citations' }, this.emptyMessage);
+                }
+                return h('div', { class: 'pub-preview-list' }, this.papers.map(pub => {
+                    const metaChildren = [
+                        h('span', { class: 'modal-pub-year' }, String(pub.year || ''))
+                    ];
+                    const venue = pub.venueDisplay || pub.journal || pub.booktitle || pub.howpublished || pub.school;
+                    if (venue) {
+                        metaChildren.push(h('span', { class: 'modal-pub-venue' }, `• ${venue}`));
+                    }
+                    if (pub.dvrk_site) {
+                        metaChildren.push(h('span', { class: 'modal-pub-sites' }, `• Sites: ${pub.dvrk_site}`));
+                    }
+
+                    return h('div', { key: pub.id, class: 'modal-pub-item' }, [
+                        h('div', { class: 'modal-pub-title' }, [
+                            h('a', {
+                                href: self.getPublicationUrl(pub.id),
+                                target: '_blank',
+                                rel: 'noopener noreferrer',
+                                title: 'View publication in database'
+                            }, `${pub.title} ↗`)
+                        ]),
+                        h('div', { class: 'modal-pub-author' }, pub.formattedAuthors || pub.author),
+                        h('div', { class: 'modal-pub-meta' }, metaChildren)
+                    ]);
+                }));
+            }
+        });
+    },
+
     // Theme management (Light / Dark mode)
     getStoredTheme() {
         const stored = localStorage.getItem('dvrk_theme');

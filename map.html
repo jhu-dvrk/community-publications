@@ -44,8 +44,8 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
-    <script src="config.js?v=9"></script>
-    <link rel="stylesheet" href="styles.css?v=10">
+    <script src="config.js?v=10"></script>
+    <link rel="stylesheet" href="styles.css?v=18">
 </head>
 
 <body>
@@ -64,6 +64,7 @@
                     <a href="index.html" class="nav-btn">Publications</a>
                     <a href="analytics.html" class="nav-btn">Analytics</a>
                     <a href="map.html" class="nav-btn active">Map</a>
+                    <a href="collaborations.html" class="nav-btn">Collaborations</a>
                     <a href="graph.html" class="nav-btn">Cross References</a>
                     <button class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
                         <span class="theme-toggle-icon">🌙</span>
@@ -106,8 +107,18 @@
                             <span v-if="isPlaying">⏸ Pause</span>
                             <span v-else>▶ Play</span>
                         </button>
-                        <button @click="stepYear(-1)" :disabled="selectedYear <= minYear" class="map-step-btn" title="Previous year">◀</button>
-                        <button @click="stepYear(1)" :disabled="selectedYear >= maxYear" class="map-step-btn" title="Next year">▶</button>
+                        <button @click="stepYear(-1)" :disabled="selectedYear <= minYear" class="map-step-btn" title="Previous year" aria-label="Previous year">
+                            <svg viewBox="0 0 12 12" width="11" height="11" fill="currentColor" aria-hidden="true">
+                                <rect x="1.5" y="2" width="1.8" height="8" rx="0.4"></rect>
+                                <polygon points="10.5,2 4.2,6 10.5,10"></polygon>
+                            </svg>
+                        </button>
+                        <button @click="stepYear(1)" :disabled="selectedYear >= maxYear" class="map-step-btn" title="Next year" aria-label="Next year">
+                            <svg viewBox="0 0 12 12" width="11" height="11" fill="currentColor" aria-hidden="true">
+                                <polygon points="1.5,2 7.8,6 1.5,10"></polygon>
+                                <rect x="8.7" y="2" width="1.8" height="8" rx="0.4"></rect>
+                            </svg>
+                        </button>
                         <button @click="resetToStart" class="map-step-btn" title="Jump to earliest year">⏮</button>
                     </div>
 
@@ -154,7 +165,7 @@
                         <div class="map-legend-items">
                             <span class="map-legend-item">
                                 <span class="map-dot map-dot-zero"></span>
-                                0 publications
+                                new site
                             </span>
                             <span class="map-legend-item map-gradient-legend">
                                 <span>Publications:</span>
@@ -215,26 +226,16 @@
                             <button class="modal-close-btn" @click="closeModal" title="Close (Esc)">✕</button>
                         </div>
                         <div class="modal-body">
-                            <div v-if="selectedModal.papers.length === 0" class="empty-citations">
-                                No recorded publications for this site {{ mode === 'cumulative' ? 'through ' + selectedYear : 'in ' + selectedYear }}.
-                            </div>
-                            <div v-for="pub in selectedModal.papers" :key="pub.id" class="modal-pub-item">
-                                <div class="modal-pub-title">
-                                    <a :href="'index.html#' + pub.id" target="_blank" title="View publication in database">
-                                        {{ pub.title }} ↗
-                                    </a>
-                                </div>
-                                <div class="modal-pub-author">{{ pub.formattedAuthors || pub.author }}</div>
-                                <div class="modal-pub-meta">
-                                    <span class="modal-pub-year">{{ pub.year }}</span>
-                                    <span v-if="pub.venueDisplay || pub.journal" class="modal-pub-venue">• {{ pub.venueDisplay || pub.journal }}</span>
-                                    <span class="modal-pub-sites">• Sites: {{ pub.dvrk_site }}</span>
-                                </div>
-                            </div>
+                            <pub-preview-list
+                                :papers="selectedModal.papers"
+                                :empty-message="'No recorded publications for this site ' + (mode === 'cumulative' ? 'through ' + selectedYear : 'in ' + selectedYear) + '.'" />
                         </div>
                         <div class="modal-footer">
                             <div class="modal-footer-links">
-                                <a :href="'index.html?site=' + selectedModal.siteId" class="modal-action-link" target="_blank">
+                                <a :href="'analytics.html?site=' + encodeURIComponent(selectedModal.siteId)" class="modal-action-link">
+                                    📊 Site Analytics ({{ selectedModal.siteId }})
+                                </a>
+                                <a :href="'index.html?site=' + encodeURIComponent(selectedModal.siteId)" class="modal-action-link" target="_blank" rel="noopener noreferrer">
                                     🔍 View all in Publications Search ({{ selectedModal.siteId }})
                                 </a>
                                 <a v-if="getSiteUrl(selectedModal.siteId)" :href="getSiteUrl(selectedModal.siteId)" class="modal-action-link" target="_blank" rel="noopener noreferrer">
@@ -256,7 +257,7 @@
         </footer>
     </div>
 
-    <script src="map.js?v=2"></script>
+    <script src="map.js?v=4"></script>
 </body>
 
 </html>

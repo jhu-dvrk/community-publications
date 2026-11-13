@@ -176,133 +176,19 @@ createApp({
                 .sort((a, b) => a.name.localeCompare(b.name));
         },
         filteredPublications() {
-            let filtered = this.publications;
-
-            // Search filter
-            if (this.searchQuery) {
-                const query = this.searchQuery.toLowerCase().trim();
-                filtered = filtered.filter(pub => {
-                    const matchesBasic = (
-                        pub.title?.toLowerCase().includes(query) ||
-                        pub.author?.toLowerCase().includes(query) ||
-                        pub.formattedAuthors?.toLowerCase().includes(query) ||
-                        pub.journal?.toLowerCase().includes(query) ||
-                        pub.booktitle?.toLowerCase().includes(query) ||
-                        pub.howpublished?.toLowerCase().includes(query) ||
-                        pub.school?.toLowerCase().includes(query) ||
-                        pub.id?.toLowerCase().includes(query)
-                    );
-                    if (matchesBasic) return true;
-                    if (this.searchInAbstract && pub.abstract) {
-                        return pub.abstract.toLowerCase().includes(query);
-                    }
-                    return false;
-                });
-            }
-
-            // Year range filter
-            if (this.startYear) {
-                filtered = filtered.filter(pub => parseInt(pub.year) >= parseInt(this.startYear));
-            }
-            if (this.endYear) {
-                filtered = filtered.filter(pub => parseInt(pub.year) <= parseInt(this.endYear));
-            }
-
-            // Type filter
-            if (this.selectedType) {
-                filtered = filtered.filter(pub => {
-                    const t = (pub.type || '').toLowerCase();
-                    if (this.selectedType === 'incollection') return t === 'incollection' || t === 'inbook';
-                    if (this.selectedType === 'inproceedings') return t === 'inproceedings' || t === 'conference';
-                    if (this.selectedType === 'phdthesis') return t === 'phdthesis' || t === 'mastersthesis';
-                    return t === this.selectedType;
-                });
-            }
-
-            // Peer-reviewed filter
-            if (this.selectedPeerReviewed) {
-                filtered = filtered.filter(pub => pub.peer_reviewed === this.selectedPeerReviewed);
-            }
-
-            // Field filter
-            if (this.selectedField) {
-                filtered = filtered.filter(pub => {
-                    if (!pub.research_field) return false;
-                    const fields = this.parseFields(pub.research_field);
-                    return fields.includes(this.selectedField);
-                });
-            }
-
-            // Data type filter
-            if (this.selectedDataType) {
-                filtered = filtered.filter(pub => {
-                    if (!pub.data_type) return false;
-                    const types = this.parseDataTypes(pub.data_type);
-                    return types.includes(this.selectedDataType);
-                });
-            }
-            
-            // Site filter
-            if (this.selectedSite) {
-                filtered = filtered.filter(pub => {
-                    if (!pub.dvrk_site) return false;
-                    const sites = this.parseSites(pub.dvrk_site);
-                    return sites.some(site => site.acronym === this.selectedSite || site.name === this.selectedSite);
-                });
-            }
-
-            // Author filter
-            if (this.selectedAuthor) {
-                filtered = filtered.filter(pub => {
-                    const list = pub.authorsList || CONFIG.parseAuthorList(pub.author);
-                    return list.some(auth => CONFIG.authorsMatch(auth, this.selectedAuthor));
-                });
-            }
-
-            // Apply sorting
-            const sorted = [...filtered];
-            switch (this.sortBy) {
-                case 'year_asc':
-                    sorted.sort((a, b) => {
-                        const diff = CONFIG.getPublicationDateSortKey(a) - CONFIG.getPublicationDateSortKey(b);
-                        return diff !== 0 ? diff : (a.title || '').localeCompare(b.title || '');
-                    });
-                    break;
-                case 'date_added_desc':
-                    sorted.sort((a, b) => {
-                        const dateDiff = (b.date_added || '').localeCompare(a.date_added || '');
-                        if (dateDiff !== 0) return dateDiff;
-                        return CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
-                    });
-                    break;
-                case 'cites_desc':
-                    sorted.sort((a, b) => {
-                        const cA = a.cited_by ? a.cited_by.length : 0;
-                        const cB = b.cited_by ? b.cited_by.length : 0;
-                        if (cB !== cA) return cB - cA;
-                        return CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
-                    });
-                    break;
-                case 'title_asc':
-                    sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
-                    break;
-                case 'author_asc':
-                    sorted.sort((a, b) => {
-                        const cmp = (a.authorSortKey || '').localeCompare(b.authorSortKey || '');
-                        if (cmp !== 0) return cmp;
-                        return CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
-                    });
-                    break;
-                case 'year_desc':
-                default:
-                    sorted.sort((a, b) => {
-                        const diff = CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
-                        return diff !== 0 ? diff : (a.title || '').localeCompare(b.title || '');
-                    });
-                    break;
-            }
-
-            return sorted;
+            return CONFIG.filterPublications(this.publications, {
+                searchQuery: this.searchQuery,
+                searchInAbstract: this.searchInAbstract,
+                startYear: this.startYear,
+                endYear: this.endYear,
+                selectedType: this.selectedType,
+                selectedPeerReviewed: this.selectedPeerReviewed,
+                selectedField: this.selectedField,
+                selectedDataType: this.selectedDataType,
+                selectedSite: this.selectedSite,
+                selectedAuthor: this.selectedAuthor,
+                sortBy: this.sortBy
+            });
         },
         paginatedPublications() {
             const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -328,99 +214,14 @@ createApp({
     methods: {
         async loadPublications() {
             try {
-                // Fetch the BibTeX file
-                const bibResponse = await fetch('publications.bib');
-                const bibtexText = await bibResponse.text();
-
-                // Parse BibTeX using bibtex-parse-js
-                const cleanedBibtexText = CONFIG.cleanBibtexText(bibtexText);
-                const parsed = bibtexParse.toJSON(cleanedBibtexText);
-
-                // Extract individual BibTeX entries
-                const bibtexEntries = this.extractBibtexEntries(cleanedBibtexText);
-
-                // Convert to our format and sort by year
-                this.publications = parsed
-                    .filter(entry => entry.entryTags && entry.entryTags.title && entry.entryTags.year)
-                    .map(entry => {
-                        const tags = entry.entryTags;
-                        const rawCites = tags.dvrk_cites ? tags.dvrk_cites.replace(/[{}]/g, '') : '';
-                        const cites = rawCites ? rawCites.split(' and ').map(s => s.trim()).filter(Boolean) : [];
-                        const authorUnicode = CONFIG.convertLatexToUnicode(tags.author || '');
-                        return {
-                            id: entry.citationKey,
-                            type: (entry.entryType || '').toLowerCase(),
-                            title: CONFIG.convertLatexToUnicode(tags.title || ''),
-                            author: authorUnicode,
-                            authorsList: CONFIG.parseAuthorList(authorUnicode),
-                            formattedAuthors: CONFIG.formatAuthors(authorUnicode),
-                            authorSortKey: CONFIG.getFirstAuthorSortKey(authorUnicode),
-                            year: tags.year || '',
-                            month: tags.month || '',
-                            date: tags.date || '',
-                            journal: CONFIG.convertLatexToUnicode(tags.journal || ''),
-                            booktitle: CONFIG.convertLatexToUnicode(tags.booktitle || ''),
-                            howpublished: CONFIG.cleanHowPublished(tags.howpublished || ''),
-                            school: CONFIG.convertLatexToUnicode(tags.school || ''),
-                            volume: tags.volume || '',
-                            number: tags.number || '',
-                            pages: tags.pages || '',
-                            publisher: CONFIG.convertLatexToUnicode(tags.publisher || ''),
-                            doi: tags.doi || '',
-                            url: tags.url || '',
-                            ieeexplore: tags.ieeexplore || '',
-                            semanticscholar: tags.semanticscholar || '',
-                            arxiv: tags.arxiv || '',
-                            abstract: CONFIG.convertLatexToUnicode(tags.abstract || ''),
-                            openaccesspdf: tags.openaccesspdf || '',
-                            research_field: tags.research_field ? tags.research_field.replace(/[{}]/g, '') : '',
-                            data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
-                            peer_reviewed: tags.peer_reviewed ? tags.peer_reviewed.replace(/[{}]/g, '').toLowerCase().trim() : '',
-                            dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
-                            date_added: tags.date_added ? tags.date_added.replace(/[{}]/g, '') : '',
-                            bibtexText: bibtexEntries[entry.citationKey] || '',
-                            cites: cites,
-                            cited_by: [],
-                            showCites: false,
-                            showCitedBy: false,
-                            showBibtex: false,
-                            showRis: false,
-                            showAbstract: false,
-                            bibCopied: false,
-                            risCopied: false,
-                            copied: false,
-                            isHighlighted: false
-                        };
-                    })
-                    .sort((a, b) => {
-                        const diff = CONFIG.getPublicationDateSortKey(b) - CONFIG.getPublicationDateSortKey(a);
-                        return diff !== 0 ? diff : (a.title || '').localeCompare(b.title || '');
-                    });
-
-                // Populate publication map for fast lookup
-                this.publicationMap = {};
-                this.publications.forEach(p => {
-                    this.publicationMap[p.id] = p;
+                const { publications, publicationMap } = await CONFIG.loadPublications({
+                    withBibtexText: true,
+                    withCitations: true,
+                    withUiState: true,
+                    sortBy: 'year_desc'
                 });
-
-                // Invert citations to compute cited_by dynamically
-                this.publications.forEach(p => {
-                    if (p.cites && p.cites.length > 0) {
-                        p.cites.forEach(targetId => {
-                            const target = this.publicationMap[targetId];
-                            if (target) {
-                                target.cited_by.push(p.id);
-                            }
-                        });
-                    }
-                });
-
-                // Sort cited_by for consistent ordering
-                this.publications.forEach(p => {
-                    if (p.cited_by && p.cited_by.length > 1) {
-                        p.cited_by.sort();
-                    }
-                });
+                this.publications = publications;
+                this.publicationMap = publicationMap;
 
                 if (this.publications.length > 0 && this.availableYears.length > 0) {
                     if (!this.startYear) this.startYear = this.availableYears[this.availableYears.length - 1];
@@ -430,18 +231,6 @@ createApp({
             } catch (error) {
                 console.error('Error loading publications:', error);
             }
-        },
-        extractBibtexEntries(bibtexText) {
-            const entries = {};
-            const regex = /@(\w+)\{([^,]+),[\s\S]*?\n\}/g;
-            let match;
-
-            while ((match = regex.exec(bibtexText)) !== null) {
-                const citationKey = match[2];
-                entries[citationKey] = match[0];
-            }
-
-            return entries;
         },
         toggleBibtex(pub) {
             pub.showBibtex = !pub.showBibtex;
@@ -572,44 +361,16 @@ createApp({
             return CONFIG.formatAuthors(authors);
         },
         formatType(type) {
-            const typeMap = {
-                'article': 'Journal',
-                'inproceedings': 'Conference',
-                'conference': 'Conference',
-                'incollection': 'Book Chapter',
-                'inbook': 'Book Chapter',
-                'phdthesis': 'Thesis',
-                'mastersthesis': 'Thesis',
-                'techreport': 'Tech Report',
-                'misc': 'Other'
-            };
-            return typeMap[(type || '').toLowerCase()] || type;
+            return CONFIG.formatPublicationType(type);
         },
         parseFields(fields) {
-            if (!fields) return [];
-
-            return fields.split(' and ')
-                .map(f => f.trim())
-                .filter(f => f)
-                .map(code => CONFIG.FIELD_MAP[code] || code);
+            return CONFIG.parseTagCodes(fields).map(code => CONFIG.FIELD_MAP[code] || code);
         },
         parseDataTypes(dataTypes) {
-            if (!dataTypes) return [];
-
-            return dataTypes.split(' and ')
-                .map(dt => dt.trim())
-                .filter(dt => dt)
-                .map(code => CONFIG.DATA_TYPE_MAP[code] || code);
+            return CONFIG.parseTagCodes(dataTypes).map(code => CONFIG.DATA_TYPE_MAP[code] || code);
         },
         parseSites(sites) {
-            if (!sites) return [];
-            return sites.split(' and ')
-                .map(s => s.trim())
-                .filter(s => s)
-                .map(acronym => ({
-                    acronym: acronym,
-                    name: CONFIG.SITE_MAP[acronym] || acronym
-                }));
+            return CONFIG.parseSites(sites);
         },
         getFieldDescription(fieldName) {
             return CONFIG.FIELD_DESCRIPTIONS[fieldName] || '';

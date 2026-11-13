@@ -924,12 +924,18 @@ main {
 
 /* Footer - Compact */
 footer {
-    background: var(--text-primary);
+    background: #1e293b;
     color: white;
     padding: 1rem 0;
     margin-top: 2rem;
     text-align: center;
     font-size: 0.8rem;
+}
+
+[data-theme="dark"] footer {
+    background: #0f172a;
+    border-top: 1px solid var(--border-color);
+    color: #cbd5e1;
 }
 
 footer p {
@@ -1092,6 +1098,41 @@ footer a:hover {
     border-bottom: none;
 }
 
+.chart-replay-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+.chart-step-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: inherit;
+    background: #f1f5f9;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.chart-step-btn:hover:not(:disabled) {
+    background: #e2e8f0;
+    border-color: var(--primary-color);
+}
+
+.chart-step-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 .chart-replay-btn {
     display: inline-flex;
     align-items: center;
@@ -1122,6 +1163,12 @@ footer a:hover {
     border-color: var(--primary-color);
 }
 
+.chart-replay-btn.paused {
+    background: #dbeafe;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
 [data-theme="dark"] .chart-replay-btn {
     background: #0f172a;
     color: #60a5fa;
@@ -1135,6 +1182,23 @@ footer a:hover {
 [data-theme="dark"] .chart-replay-btn.playing {
     background: var(--primary-color);
     color: white;
+}
+
+[data-theme="dark"] .chart-replay-btn.paused {
+    background: rgba(59, 130, 246, 0.22);
+    color: #93c5fd;
+    border-color: #60a5fa;
+}
+
+[data-theme="dark"] .chart-step-btn {
+    background: #0f172a;
+    color: #60a5fa;
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .chart-step-btn:hover:not(:disabled) {
+    background: #334155;
+    border-color: #60a5fa;
 }
 
 .full-width-chart {
@@ -2214,6 +2278,60 @@ div.vis-tooltip {
     color: #cbd5e1;
 }
 
+[data-theme="dark"] .close-sidebar-btn:hover {
+    background: #334155;
+}
+
+[data-theme="dark"] .sidebar-venue {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .sidebar-link-btn {
+    background: #1e293b;
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .sidebar-link-btn:hover {
+    background: #334155;
+}
+
+[data-theme="dark"] .primary-link {
+    background: rgba(59, 130, 246, 0.18);
+    color: #93c5fd;
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+[data-theme="dark"] .primary-link:hover {
+    background: rgba(59, 130, 246, 0.28);
+}
+
+[data-theme="dark"] .sidebar-divider {
+    border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .sidebar-citation-item,
+[data-theme="dark"] .legend-box,
+[data-theme="dark"] .top-paper-item {
+    background: #0f172a;
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .sidebar-citation-item:hover,
+[data-theme="dark"] .top-paper-item:hover {
+    background: #334155;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .legend-box strong {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .top-paper-badge {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+}
+
 [data-theme="dark"] .stat-card {
     background: var(--card-bg);
     border-color: var(--border-color);
@@ -2715,6 +2833,14 @@ div.vis-tooltip {
     text-decoration: none;
 }
 
+.modal-action-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    cursor: pointer;
+}
+
 .modal-action-link:hover {
     text-decoration: underline;
 }
@@ -2914,7 +3040,11 @@ div.vis-tooltip {
 
 .map-step-btn,
 .map-reset-view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.38rem 0.65rem;
+    min-height: 1.9rem;
     font-size: 0.8rem;
     font-weight: 600;
     background: #f1f5f9;
@@ -3288,3 +3418,110 @@ div.vis-tooltip {
         width: 100%;
     }
 }
+
+/* ==========================================================================
+   Analytics Top-4 Charts Site Filter Bar
+   ========================================================================== */
+.analytics-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.25rem;
+    margin-top: 1.25rem;
+    padding: 0.85rem 1.25rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.chart-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.chart-mode-subtitle {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.sites-year-select {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.analytics-filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.analytics-filter-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.analytics-site-select {
+    max-width: 360px;
+    font-weight: 500;
+}
+
+.analytics-clear-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: inherit;
+    background: #f1f5f9;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.analytics-clear-btn:hover {
+    background: #e2e8f0;
+    border-color: var(--primary-color);
+}
+
+.analytics-filter-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.analytics-site-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.analytics-site-link:hover {
+    text-decoration: underline;
+}
+
+[data-theme="dark"] .analytics-clear-btn {
+    background: #0f172a;
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .analytics-clear-btn:hover {
+    background: #334155;
+}
+
+@media (max-width: 768px) {
+    .analytics-site-select {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
