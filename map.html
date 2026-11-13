@@ -45,7 +45,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
     <script src="config.js?v=9"></script>
-    <link rel="stylesheet" href="styles.css?v=9">
+    <link rel="stylesheet" href="styles.css?v=10">
 </head>
 
 <body>
@@ -152,9 +152,13 @@
                     <div id="dvrk-map" class="dvrk-map-canvas"></div>
                     <div class="map-legend-bar">
                         <div class="map-legend-items">
+                            <span class="map-legend-item">
+                                <span class="map-dot map-dot-zero"></span>
+                                0 publications
+                            </span>
                             <span class="map-legend-item map-gradient-legend">
-                                <span>Publications per site:</span>
-                                <span class="map-scale-label">0</span>
+                                <span>Publications:</span>
+                                <span class="map-scale-label">1</span>
                                 <span class="map-gradient-bar" aria-hidden="true"></span>
                                 <span class="map-scale-label">{{ colorScaleMax }} (max)</span>
                             </span>
@@ -252,7 +256,7 @@
         </footer>
     </div>
 
-    <script src="map.js?v=1"></script>
+    <script src="map.js?v=2"></script>
 </body>
 
 </html>

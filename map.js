@@ -277,9 +277,15 @@ createApp({
             return Math.min(34, 5.5 + 3.1 * Math.sqrt(count));
         },
         siteColor(count, dark) {
+            if (count <= 0) {
+                return {
+                    fill: dark ? '#f87171' : '#dc2626',
+                    stroke: dark ? '#fca5a5' : '#991b1b'
+                };
+            }
             const maxVal = Math.max(1, this.colorScaleMax);
-            const t = Math.max(0, Math.min(1, count / maxVal));
-            // Smooth HSL gradient from Blue (0 / min) -> Teal -> Full Green (max cumulated)
+            const t = maxVal > 1 ? Math.max(0, Math.min(1, (count - 1) / (maxVal - 1))) : 1;
+            // Smooth HSL gradient from Blue (1) -> Teal -> Full Green (max cumulated)
             const hue = Math.round(220 - 80 * t);
             const sat = Math.round(84 - 8 * t);
             const fillLight = Math.round((dark ? 58 : 52) - 10 * t);
@@ -344,7 +350,7 @@ createApp({
                     color: strokeColor,
                     weight: isJoinedThisYear ? 2.6 : (hasNewInYear ? 2.0 : 1.5),
                     fillColor: fillColor,
-                    fillOpacity: count === 0 ? (isJoinedThisYear ? 0.8 : 0.5) : 0.78
+                    fillOpacity: count === 0 ? (isJoinedThisYear ? 0.85 : 0.68) : 0.78
                 };
 
                 const targetR = this.computeRadius(count);

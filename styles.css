@@ -3021,6 +3021,16 @@ div.vis-tooltip {
     border: 1.5px solid transparent;
 }
 
+.map-dot-zero {
+    background: #dc2626;
+    border-color: #991b1b;
+}
+
+[data-theme="dark"] .map-dot-zero {
+    background: #f87171;
+    border-color: #fca5a5;
+}
+
 .map-dot-pop {
     background: rgba(56, 189, 248, 0.3);
     border-color: #38bdf8;
