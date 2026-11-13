@@ -1,4 +1,4 @@
-const { createApp } = Vue;
+const { createApp, markRaw } = Vue;
 
 createApp({
     data() {
@@ -206,6 +206,9 @@ createApp({
             this.createResearchFieldsChart();
             this.createDataTypesChart();
             this.createSitesChart();
+            ['perYear', 'cumulative', 'fields', 'dataTypes', 'sites'].forEach(key => {
+                this.toggleChartReplay(key);
+            });
         },
         createPublicationsPerYearChart() {
             const yearCounts = {};
@@ -217,16 +220,17 @@ createApp({
             const years = Object.keys(yearCounts).sort();
             const counts = years.map(year => yearCounts[year]);
 
-            this.chartMeta.perYear = {
+            this.chartMeta.perYear = markRaw({
                 years: years.map(y => parseInt(y, 10)),
+                emptyData: years.map(() => 0),
                 dataAtYear: (y) => years.map((yr, idx) => (parseInt(yr, 10) <= y ? counts[idx] : 0)),
-                fullData: counts
-            };
+                fullData: [...counts]
+            });
 
             const ctx = document.getElementById('publicationsPerYearChart');
             if (!ctx) return;
 
-            this.charts.perYear = new Chart(ctx, {
+            this.charts.perYear = markRaw(new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: years,
@@ -269,7 +273,7 @@ createApp({
                         }
                     }
                 }
-            });
+            }));
         },
         createCumulativeChart() {
             const yearCounts = {};
@@ -286,16 +290,17 @@ createApp({
                 cumulativeCounts.push(total);
             });
 
-            this.chartMeta.cumulative = {
+            this.chartMeta.cumulative = markRaw({
                 years: years.map(y => parseInt(y, 10)),
+                emptyData: years.map(() => null),
                 dataAtYear: (y) => years.map((yr, idx) => (parseInt(yr, 10) <= y ? cumulativeCounts[idx] : null)),
-                fullData: cumulativeCounts
-            };
+                fullData: [...cumulativeCounts]
+            });
 
             const ctx = document.getElementById('cumulativeChart');
             if (!ctx) return;
 
-            this.charts.cumulative = new Chart(ctx, {
+            this.charts.cumulative = markRaw(new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: years,
@@ -337,7 +342,7 @@ createApp({
                         }
                     }
                 }
-            });
+            }));
         },
 
         createResearchFieldsChart() {
@@ -372,7 +377,7 @@ createApp({
             const ctx = document.getElementById('researchFieldsChart');
             if (!ctx) return;
 
-            this.charts.fields = new Chart(ctx, {
+            this.charts.fields = markRaw(new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -416,7 +421,7 @@ createApp({
                         }
                     }
                 }
-            });
+            }));
         },
 
         createDataTypesChart() {
@@ -451,7 +456,7 @@ createApp({
             const ctx = document.getElementById('dataTypesChart');
             if (!ctx) return;
 
-            this.charts.dataTypes = new Chart(ctx, {
+            this.charts.dataTypes = markRaw(new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -495,7 +500,7 @@ createApp({
                         }
                     }
                 }
-            });
+            }));
         },
         createSitesChart() {
             const siteCounts = {};
@@ -526,7 +531,7 @@ createApp({
             const ctx = document.getElementById('sitesChart');
             if (!ctx) return;
 
-            this.charts.sites = new Chart(ctx, {
+            this.charts.sites = markRaw(new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -580,7 +585,7 @@ createApp({
                         }
                     }
                 }
-            });
+            }));
         },
         applyChartTheme(theme) {
             const isDark = (theme || document.documentElement.getAttribute('data-theme')) === 'dark';
@@ -721,8 +726,9 @@ createApp({
                 });
                 return total;
             });
-            return {
+            return markRaw({
                 years,
+                emptyData: labels.map(() => 0),
                 fullData,
                 dataAtYear: (y) => labels.map(lbl => {
                     let sum = 0;
@@ -731,7 +737,7 @@ createApp({
                     });
                     return sum;
                 })
-            };
+            });
         },
         toggleChartReplay(key) {
             if (this.chartReplay[key] !== null) {
@@ -742,6 +748,13 @@ createApp({
             const meta = this.chartMeta[key];
             if (!chart || !meta || !meta.years.length) return;
 
+            // Lock the value axis to the full-dataset ceiling so bars/lines don't autoresize mid-replay
+            const axisKey = chart.options.indexAxis === 'y' ? 'x' : 'y';
+            const valueScale = chart.scales && chart.scales[axisKey];
+            if (valueScale && typeof valueScale.max === 'number' && chart.options.scales && chart.options.scales[axisKey]) {
+                chart.options.scales[axisKey].max = valueScale.max;
+            }
+
             let idx = 0;
             const applyYear = (year) => {
                 this.chartReplay[key] = year;
@@ -749,6 +762,10 @@ createApp({
                 chart.update();
             };
 
+            if (meta.emptyData) {
+                chart.data.datasets[0].data = [...meta.emptyData];
+                chart.update('none');
+            }
             applyYear(meta.years[0]);
             this.chartReplayTimers[key] = setInterval(() => {
                 idx += 1;
