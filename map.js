@@ -23,7 +23,8 @@ createApp({
             pulseLayerGroup: null,
             siteMarkers: {},
             siteCurrentRadius: {},
-            animRafId: null
+            animRafId: null,
+            lastRenderedYear: null
         };
     },
     computed: {
@@ -253,10 +254,14 @@ createApp({
 
             const dark = this.isDarkTheme();
             const year = this.selectedYear;
+            const yearChanged = year !== this.lastRenderedYear;
+            this.lastRenderedYear = year;
             const { cumulativeCounts, annualCounts } = this.frameStats;
 
-            // Pulse rings for newly active/joined sites in selectedYear
-            this.pulseLayerGroup.clearLayers();
+            // Pulse rings play once when entering a year
+            if (yearChanged) {
+                this.pulseLayerGroup.clearLayers();
+            }
 
             // 3. Site markers with smooth animated radius interpolation
             const targetRadii = {};
@@ -289,7 +294,7 @@ createApp({
 
                 const hasNewInYear = ann > 0;
                 const isJoinedThisYear = yearAdded === year;
-                if (isJoinedThisYear) {
+                if (isJoinedThisYear && yearChanged) {
                     joinedNowSet.add(sid);
                 }
 
@@ -344,8 +349,8 @@ createApp({
                     marker.bringToFront();
                 }
 
-                // Pulse animation overlay when joining this year or publishing in selectedYear
-                if (isJoinedThisYear || hasNewInYear) {
+                // Single one-shot pop/pulse ring when entering this year
+                if (yearChanged && (isJoinedThisYear || hasNewInYear)) {
                     const pulseSize = Math.max(isJoinedThisYear ? 28 : 18, targetR * 2 + (isJoinedThisYear ? 16 : 10));
                     const ringClass = isJoinedThisYear ? 'pulse-joined-pop' : (count === 0 ? 'pulse-joined' : 'pulse-paper');
                     const pulseIcon = L.divIcon({
