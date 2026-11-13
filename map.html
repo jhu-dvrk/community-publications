@@ -152,17 +152,15 @@
                     <div id="dvrk-map" class="dvrk-map-canvas"></div>
                     <div class="map-legend-bar">
                         <div class="map-legend-items">
-                            <span class="map-legend-item">
-                                <span class="map-dot map-dot-active"></span>
-                                Publishing site (size = publications)
+                            <span class="map-legend-item map-gradient-legend">
+                                <span>Publications per site:</span>
+                                <span class="map-scale-label">0</span>
+                                <span class="map-gradient-bar" aria-hidden="true"></span>
+                                <span class="map-scale-label">{{ colorScaleMax }} (max)</span>
                             </span>
                             <span class="map-legend-item">
-                                <span class="map-dot map-dot-new"></span>
-                                Published in {{ selectedYear }}
-                            </span>
-                            <span class="map-legend-item">
-                                <span class="map-dot map-dot-joined"></span>
-                                Registered site (0 papers in scope) • Pops in join year
+                                <span class="map-dot map-dot-pop"></span>
+                                Pops once when joining / publishing
                             </span>
                         </div>
                         <div class="map-legend-hint">

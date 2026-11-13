@@ -1076,6 +1076,67 @@ footer a:hover {
     border-bottom: 2px solid var(--border-color);
 }
 
+.chart-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.chart-header-row h2 {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.chart-replay-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 1.75rem;
+    padding: 0 0.55rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: inherit;
+    background: #f1f5f9;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.chart-replay-btn:hover {
+    background: #e2e8f0;
+    border-color: var(--primary-color);
+}
+
+.chart-replay-btn.playing {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .chart-replay-btn {
+    background: #0f172a;
+    color: #60a5fa;
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .chart-replay-btn:hover {
+    background: #334155;
+}
+
+[data-theme="dark"] .chart-replay-btn.playing {
+    background: var(--primary-color);
+    color: white;
+}
+
 .full-width-chart {
     grid-column: 1 / -1;
     margin-top: 1.5rem;
@@ -2960,19 +3021,27 @@ div.vis-tooltip {
     border: 1.5px solid transparent;
 }
 
-.map-dot-active {
-    background: rgba(37, 99, 235, 0.75);
-    border-color: #1e3a8a;
+.map-dot-pop {
+    background: rgba(56, 189, 248, 0.3);
+    border-color: #38bdf8;
 }
 
-.map-dot-new {
-    background: rgba(234, 88, 12, 0.85);
-    border-color: #9a3412;
+.map-gradient-legend {
+    gap: 0.45rem;
 }
 
-.map-dot-joined {
-    background: rgba(5, 150, 105, 0.38);
-    border-color: #047857;
+.map-gradient-bar {
+    width: 110px;
+    height: 10px;
+    border-radius: 999px;
+    display: inline-block;
+    background: linear-gradient(90deg, hsl(220, 84%, 52%) 0%, hsl(180, 80%, 47%) 50%, hsl(140, 76%, 42%) 100%);
+    border: 1px solid var(--border-color);
+}
+
+.map-scale-label {
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .map-pulse-wrapper {
@@ -2988,16 +3057,16 @@ div.vis-tooltip {
 }
 
 .map-pulse-ring.pulse-paper {
-    border: 2px solid #f59e0b;
+    border: 2px solid #38bdf8;
 }
 
 .map-pulse-ring.pulse-joined {
-    border: 2px solid #10b981;
+    border: 2px solid #60a5fa;
 }
 
 .map-pulse-ring.pulse-joined-pop {
-    border: 2.5px solid #10b981;
-    background: rgba(16, 185, 129, 0.25);
+    border: 2.5px solid #38bdf8;
+    background: rgba(56, 189, 248, 0.24);
     animation: mapJoinPop 1.05s cubic-bezier(0.22, 1, 0.36, 1) 1 forwards;
 }
 

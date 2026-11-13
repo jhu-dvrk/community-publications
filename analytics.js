@@ -6,6 +6,15 @@ createApp({
             publications: [],
             loading: true,
             charts: {},
+            chartMeta: {},
+            chartReplay: {
+                perYear: null,
+                cumulative: null,
+                fields: null,
+                dataTypes: null,
+                sites: null
+            },
+            chartReplayTimers: {},
             matrixFilter: 'collaborating', // 'collaborating' or 'all'
             matrixSort: 'collaborations',   // 'collaborations', 'total', 'alphabetical'
             hoveredCell: null,
@@ -208,6 +217,12 @@ createApp({
             const years = Object.keys(yearCounts).sort();
             const counts = years.map(year => yearCounts[year]);
 
+            this.chartMeta.perYear = {
+                years: years.map(y => parseInt(y, 10)),
+                dataAtYear: (y) => years.map((yr, idx) => (parseInt(yr, 10) <= y ? counts[idx] : 0)),
+                fullData: counts
+            };
+
             const ctx = document.getElementById('publicationsPerYearChart');
             if (!ctx) return;
 
@@ -270,6 +285,12 @@ createApp({
                 total += yearCounts[year];
                 cumulativeCounts.push(total);
             });
+
+            this.chartMeta.cumulative = {
+                years: years.map(y => parseInt(y, 10)),
+                dataAtYear: (y) => years.map((yr, idx) => (parseInt(yr, 10) <= y ? cumulativeCounts[idx] : null)),
+                fullData: cumulativeCounts
+            };
 
             const ctx = document.getElementById('cumulativeChart');
             if (!ctx) return;
@@ -339,6 +360,14 @@ createApp({
 
             const labels = sortedFields.map(([name]) => name);
             const data = sortedFields.map(([, count]) => count);
+
+            this.chartMeta.fields = this.buildTagReplayMeta(labels, pub => {
+                if (!pub.research_field) return [];
+                return pub.research_field.split(' and ').map(code => {
+                    const trimmed = code.trim();
+                    return CONFIG.FIELD_MAP[trimmed] || trimmed;
+                }).filter(Boolean);
+            });
 
             const ctx = document.getElementById('researchFieldsChart');
             if (!ctx) return;
@@ -411,6 +440,14 @@ createApp({
             const labels = sortedTypes.map(([name]) => name);
             const data = sortedTypes.map(([, count]) => count);
 
+            this.chartMeta.dataTypes = this.buildTagReplayMeta(labels, pub => {
+                if (!pub.data_type) return [];
+                return pub.data_type.split(' and ').map(code => {
+                    const trimmed = code.trim();
+                    return CONFIG.DATA_TYPE_MAP[trimmed] || trimmed;
+                }).filter(Boolean);
+            });
+
             const ctx = document.getElementById('dataTypesChart');
             if (!ctx) return;
 
@@ -480,6 +517,11 @@ createApp({
             // Map acronyms to full names for tooltips but use acronyms for X-axis labels to fit better "by column"
             const labels = sites;
             const fullNames = sites.map(acronym => CONFIG.SITE_MAP[acronym] || acronym);
+
+            this.chartMeta.sites = this.buildTagReplayMeta(labels, pub => {
+                if (!pub.dvrk_site) return [];
+                return pub.dvrk_site.split(' and ').map(s => s.trim()).filter(Boolean);
+            });
 
             const ctx = document.getElementById('sitesChart');
             if (!ctx) return;
@@ -659,6 +701,75 @@ createApp({
                 }
             }
         },
+        buildTagReplayMeta(labels, extractTagsFn) {
+            const yearSet = new Set();
+            const byYear = {};
+            this.publications.forEach(pub => {
+                const y = parseInt(pub.year, 10);
+                if (isNaN(y)) return;
+                yearSet.add(y);
+                extractTagsFn(pub).forEach(tag => {
+                    if (!byYear[y]) byYear[y] = {};
+                    byYear[y][tag] = (byYear[y][tag] || 0) + 1;
+                });
+            });
+            const years = Array.from(yearSet).sort((a, b) => a - b);
+            const fullData = labels.map(lbl => {
+                let total = 0;
+                years.forEach(yr => {
+                    total += (byYear[yr]?.[lbl] || 0);
+                });
+                return total;
+            });
+            return {
+                years,
+                fullData,
+                dataAtYear: (y) => labels.map(lbl => {
+                    let sum = 0;
+                    years.forEach(yr => {
+                        if (yr <= y) sum += (byYear[yr]?.[lbl] || 0);
+                    });
+                    return sum;
+                })
+            };
+        },
+        toggleChartReplay(key) {
+            if (this.chartReplay[key] !== null) {
+                this.stopChartReplay(key, true);
+                return;
+            }
+            const chart = this.charts[key];
+            const meta = this.chartMeta[key];
+            if (!chart || !meta || !meta.years.length) return;
+
+            let idx = 0;
+            const applyYear = (year) => {
+                this.chartReplay[key] = year;
+                chart.data.datasets[0].data = meta.dataAtYear(year);
+                chart.update();
+            };
+
+            applyYear(meta.years[0]);
+            this.chartReplayTimers[key] = setInterval(() => {
+                idx += 1;
+                if (idx < meta.years.length) {
+                    applyYear(meta.years[idx]);
+                } else {
+                    this.stopChartReplay(key, false);
+                }
+            }, 380);
+        },
+        stopChartReplay(key, restoreFull) {
+            if (this.chartReplayTimers[key]) {
+                clearInterval(this.chartReplayTimers[key]);
+                delete this.chartReplayTimers[key];
+            }
+            this.chartReplay[key] = null;
+            if (restoreFull && this.charts[key] && this.chartMeta[key]) {
+                this.charts[key].data.datasets[0].data = this.chartMeta[key].fullData;
+                this.charts[key].update();
+            }
+        },
         closeModal() {
             this.selectedCollab = null;
         }
@@ -675,5 +786,8 @@ createApp({
             }
         });
         this.loadPublications();
+    },
+    beforeUnmount() {
+        Object.keys(this.chartReplayTimers).forEach(k => clearInterval(this.chartReplayTimers[k]));
     }
 }).mount('#app');

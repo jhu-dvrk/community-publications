@@ -82,6 +82,33 @@ createApp({
                 annualPubsBySite
             };
         },
+        globalSiteMaxes() {
+            const cumTotals = {};
+            const annualBySiteYear = {};
+            this.publications.forEach(pub => {
+                if (!pub.dvrk_site) return;
+                const y = parseInt(pub.year, 10);
+                const sites = Array.from(new Set(
+                    pub.dvrk_site.split(' and ').map(s => s.trim()).filter(Boolean)
+                ));
+                sites.forEach(sid => {
+                    if (!CONFIG.SITE_COORDS_MAP[sid]) return;
+                    cumTotals[sid] = (cumTotals[sid] || 0) + 1;
+                    if (!isNaN(y)) {
+                        const key = `${sid}:::${y}`;
+                        annualBySiteYear[key] = (annualBySiteYear[key] || 0) + 1;
+                    }
+                });
+            });
+            const maxCumulative = Math.max(1, ...Object.values(cumTotals), 0);
+            const maxAnnual = Math.max(1, ...Object.values(annualBySiteYear), 0);
+            return { maxCumulative, maxAnnual };
+        },
+        colorScaleMax() {
+            return this.mode === 'cumulative'
+                ? this.globalSiteMaxes.maxCumulative
+                : this.globalSiteMaxes.maxAnnual;
+        },
         frameKPIs() {
             const { matchedPubs, cumulativeCounts, annualCounts } = this.frameStats;
             const counts = this.mode === 'cumulative' ? cumulativeCounts : annualCounts;
@@ -249,6 +276,19 @@ createApp({
             if (count <= 0) return 5;
             return Math.min(34, 5.5 + 3.1 * Math.sqrt(count));
         },
+        siteColor(count, dark) {
+            const maxVal = Math.max(1, this.colorScaleMax);
+            const t = Math.max(0, Math.min(1, count / maxVal));
+            // Smooth HSL gradient from Blue (0 / min) -> Teal -> Full Green (max cumulated)
+            const hue = Math.round(220 - 80 * t);
+            const sat = Math.round(84 - 8 * t);
+            const fillLight = Math.round((dark ? 58 : 52) - 10 * t);
+            const strokeLight = Math.round((dark ? 76 : 30) - 6 * t);
+            return {
+                fill: `hsl(${hue}, ${sat}%, ${fillLight}%)`,
+                stroke: `hsl(${hue}, ${Math.min(92, sat + 5)}%, ${strokeLight}%)`
+            };
+        },
         renderMap() {
             if (!this.map || !this.markerLayerGroup) return;
 
@@ -298,20 +338,13 @@ createApp({
                     joinedNowSet.add(sid);
                 }
 
-                const fillColor = count === 0
-                    ? (isJoinedThisYear ? (dark ? '#34d399' : '#10b981') : (dark ? '#10b981' : '#059669'))
-                    : (hasNewInYear ? (dark ? '#f59e0b' : '#ea580c') : (dark ? '#3b82f6' : '#2563eb'));
-                const strokeColor = isJoinedThisYear
-                    ? (dark ? '#a7f3d0' : '#065f46')
-                    : (count === 0
-                        ? (dark ? '#6ee7b7' : '#047857')
-                        : (hasNewInYear ? (dark ? '#fde68a' : '#9a3412') : (dark ? '#93c5fd' : '#1e3a8a')));
+                const { fill: fillColor, stroke: strokeColor } = this.siteColor(count, dark);
 
                 const style = {
                     color: strokeColor,
-                    weight: isJoinedThisYear ? 2.8 : (hasNewInYear ? 2.2 : 1.5),
+                    weight: isJoinedThisYear ? 2.6 : (hasNewInYear ? 2.0 : 1.5),
                     fillColor: fillColor,
-                    fillOpacity: count === 0 ? (isJoinedThisYear ? 0.85 : 0.45) : (hasNewInYear ? 0.82 : 0.68)
+                    fillOpacity: count === 0 ? (isJoinedThisYear ? 0.8 : 0.5) : 0.78
                 };
 
                 const targetR = this.computeRadius(count);
