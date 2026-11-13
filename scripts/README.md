@@ -97,6 +97,23 @@ python3 scripts/deduplicate_bib.py
 
 ---
 
+### `sync_dvrk_sites.py` — Sync `dvrk_site` registry from ReadTheDocs
+
+Parses the upstream site table at `https://dvrk.readthedocs.io/main/pages/introduction/groups.html` (`_sources/pages/introduction/groups.rst.txt`), reconciles `year_added`, `years`, and `url` fields in `custom_tags.json`, and flags any newly added upstream groups missing a site code or alias mapping.
+
+```zsh
+# Sync custom_tags.json with upstream dVRK groups.rst
+python3 scripts/sync_dvrk_sites.py
+
+# Preview updates and unmapped groups without writing
+python3 scripts/sync_dvrk_sites.py --dry-run
+
+# Check mode (exits non-zero if unmapped groups or metadata drift exist)
+python3 scripts/sync_dvrk_sites.py --check
+```
+
+---
+
 ### `bib_utils.py` — Shared library
 
 Internal module providing `FIELD_ORDER`, `load_bib()`, `write_bib()`, `normalize_doi()`, `normalize_title()`, `title_similarity()`, `match_sites()`, and `load_custom_tags()` so all scripts share identical parsing and formatting rules.

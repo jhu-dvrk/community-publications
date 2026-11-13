@@ -76,38 +76,732 @@
         }
     ],
     "dvrk_site": [
-        { "id": "BGUN", "name": "Ben-Gurion University of the Negev", "country": "Israel" },
-        { "id": "CMU", "name": "Carnegie Mellon University", "country": "USA" },
-        { "id": "CU", "name": "Clemson University", "country": "USA" },
-        { "id": "CUHK", "name": "Chinese University of Hong Kong", "country": "Hong Kong" },
-        { "id": "CWRU", "name": "Case Western Reserve University", "country": "USA" },
-        { "id": "ICL", "name": "Imperial College London", "country": "UK" },
-        { "id": "ISS", "name": "Intuitive Surgical", "country": "USA" },
-        { "id": "JHU", "name": "Johns Hopkins University", "country": "USA" },
-        { "id": "MPI", "name": "Max Planck Institute", "country": "Germany" },
-        { "id": "OU", "name": "Obuda University", "country": "Hungary" },
-        { "id": "POLIMI", "name": "Politecnico di Milano", "country": "Italy" },
-        { "id": "PU", "name": "Purdue University", "country": "USA" },
-        { "id": "SKCH", "name": "The Hospital for Sick Children (SickKids)", "country": "Canada" },
-        { "id": "SNU", "name": "Seoul National University", "country": "South Korea" },
-        { "id": "SSSA", "name": "Scuola Superiore Sant'Anna", "country": "Italy" },
-        { "id": "SU", "name": "Stanford University", "country": "USA" },
-        { "id": "SZIPS", "name": "Sheikh Zayed Institute for Pediatric Surgical Innovation", "country": "USA" },
-        { "id": "UA", "name": "University of Alberta", "country": "Canada"},
-        { "id": "UBC", "name": "University of British Columbia", "country": "Canada" },
-        { "id": "UCB", "name": "University of California, Berkeley", "country": "USA" },
-        { "id": "UCL", "name": "University College London", "country": "UK" },
-        { "id": "UCSD", "name": "University of California, San Diego", "country": "USA" },
-        { "id": "UIC", "name": "University of Illinois Chicago", "country": "USA" },
-        { "id": "UL", "name": "University of Leeds", "country": "UK" },
-        { "id": "UNITO", "name": "University of Turin", "country": "Italy" },
-        { "id": "UU", "name": "University of Utah", "country": "USA" },
-        { "id": "UNFII", "name": "University of Naples Federico II", "country": "Italy" },
-        { "id": "UTD", "name": "University of Texas at Dallas", "country": "USA" },
-        { "id": "UV", "name": "University of Verona", "country": "Italy" },
-        { "id": "UWO", "name": "University of Western Ontario", "country": "Canada" },
-        { "id": "VU", "name": "Vanderbilt University", "country": "USA" },
-        { "id": "WPI", "name": "Worcester Polytechnic Institute", "country": "USA" },
-        { "id": "WSU", "name": "Wayne State University", "country": "USA" }
+        {
+            "id": "BGUN",
+            "name": "Ben-Gurion University of the Negev",
+            "country": "Israel",
+            "aliases": [
+                "Ben-Gurion University",
+                "Ben Gurion University",
+                "Ben-Gurion",
+                "Ben Gurion"
+            ],
+            "year_added": 2016,
+            "years": [
+                2016
+            ],
+            "url": "http://bioroblab.weebly.com"
+        },
+        {
+            "id": "CCF",
+            "name": "Cleveland Clinic",
+            "country": "USA",
+            "aliases": [
+                "Cleveland Clinic"
+            ],
+            "year_added": 2016,
+            "years": [
+                2016
+            ]
+        },
+        {
+            "id": "CMU",
+            "name": "Carnegie Mellon University",
+            "country": "USA",
+            "aliases": [
+                "Carnegie Mellon"
+            ],
+            "year_added": 2013,
+            "years": [
+                2013
+            ],
+            "url": "http://biorobotics.ri.cmu.edu/robots/daVinci.php"
+        },
+        {
+            "id": "CU",
+            "name": "Clemson University",
+            "country": "USA",
+            "aliases": [
+                "Clemson University",
+                "Clemson"
+            ],
+            "year_added": 2013,
+            "years": [
+                2013
+            ]
+        },
+        {
+            "id": "CUHK",
+            "name": "Chinese University of Hong Kong",
+            "country": "Hong Kong",
+            "aliases": [
+                "Chinese University of Hong Kong",
+                "CUHK"
+            ],
+            "year_added": 2016,
+            "years": [
+                2016,
+                2017
+            ]
+        },
+        {
+            "id": "CWRU",
+            "name": "Case Western Reserve University",
+            "country": "USA",
+            "aliases": [
+                "Case Western Reserve",
+                "Case Western"
+            ],
+            "year_added": 2016,
+            "years": [
+                2016
+            ]
+        },
+        {
+            "id": "DGIST",
+            "name": "DGIST",
+            "country": "South Korea",
+            "aliases": [
+                "Daegu Gyeongbuk Institute of Science",
+                "DGIST"
+            ],
+            "year_added": 2025,
+            "years": [
+                2025
+            ]
+        },
+        {
+            "id": "GT",
+            "name": "Georgia Institute of Technology",
+            "country": "USA",
+            "aliases": [
+                "Georgia Institute of Technology",
+                "Georgia Tech"
+            ],
+            "year_added": 2025,
+            "years": [
+                2025
+            ]
+        },
+        {
+            "id": "HIAE",
+            "name": "Albert Einstein Hospital (Brazil)",
+            "country": "Brazil",
+            "aliases": [
+                "Hospital Israelita Albert Einstein",
+                "Albert Einstein Hospital"
+            ],
+            "year_added": 2026,
+            "years": [
+                2026
+            ]
+        },
+        {
+            "id": "HMRI",
+            "name": "Houston Methodist",
+            "country": "USA",
+            "aliases": [
+                "Houston Methodist"
+            ],
+            "year_added": 2026,
+            "years": [
+                2026
+            ]
+        },
+        {
+            "id": "HR",
+            "name": "Hochschule Reutlingen",
+            "country": "Germany",
+            "aliases": [
+                "Hochschule Reutlingen",
+                "Reutlingen University"
+            ],
+            "year_added": 2017,
+            "years": [
+                2017
+            ]
+        },
+        {
+            "id": "ICL",
+            "name": "Imperial College London",
+            "country": "UK",
+            "aliases": [
+                "Imperial College London",
+                "Imperial College",
+                "The Hamlyn Centre",
+                "Hamlyn Centre",
+                "Hamlyn Center"
+            ],
+            "year_added": 2014,
+            "years": [
+                2014,
+                2016
+            ],
+            "url": "https://www.imperial.ac.uk/hamlyn-centre/about-us"
+        },
+        {
+            "id": "IIT",
+            "name": "Italian Institute of Technology",
+            "country": "Italy",
+            "aliases": [
+                "Italian Institute of Technology",
+                "Istituto Italiano di Tecnologia"
+            ],
+            "year_added": 2025,
+            "years": [
+                2025
+            ]
+        },
+        {
+            "id": "ISS",
+            "name": "Intuitive Surgical",
+            "country": "USA",
+            "aliases": [
+                "Intuitive Surgical"
+            ],
+            "year_added": 2013,
+            "years": [
+                2013
+            ]
+        },
+        {
+            "id": "JHU",
+            "name": "Johns Hopkins University",
+            "country": "USA",
+            "aliases": [
+                "Johns Hopkins"
+            ],
+            "year_added": 2004,
+            "years": [
+                2004,
+                2014,
+                2022
+            ],
+            "url": "https://lcsr.jhu.edu"
+        },
+        {
+            "id": "KU",
+            "name": "Korea University",
+            "country": "South Korea",
+            "aliases": [
+                "Korea University"
+            ],
+            "year_added": 2025,
+            "years": [
+                2025
+            ]
+        },
+        {
+            "id": "MCI",
+            "name": "Management Center Innsbruck",
+            "country": "Austria",
+            "aliases": [
+                "Management Center Innsbruck",
+                "MCI, University of Applied Science"
+            ],
+            "year_added": 2016,
+            "years": [
+                2016
+            ]
+        },
+        {
+            "id": "MPI",
+            "name": "Max Planck Institute",
+            "country": "Germany",
+            "aliases": [
+                "Max Planck",
+                "Max-Planck",
+                "MPI-IS"
+            ],
+            "year_added": 2023,
+            "years": [
+                2023
+            ],
+            "url": "https://hi.is.mpg.de"
+        },
+        {
+            "id": "NIH",
+            "name": "National Institutes of Health",
+            "country": "USA",
+            "aliases": [
+                "National Institutes of Health",
+                "NIH Clinical Center"
+            ],
+            "year_added": 2015,
+            "years": [
+                2015
+            ]
+        },
+        {
+            "id": "NYU",
+            "name": "New York University",
+            "country": "USA",
+            "aliases": [
+                "New York University",
+                "NYU Tandon"
+            ],
+            "year_added": 2022,
+            "years": [
+                2022
+            ],
+            "url": "https://wp.nyu.edu/meriit/"
+        },
+        {
+            "id": "OU",
+            "name": "Obuda University",
+            "country": "Hungary",
+            "aliases": [
+                "Óbuda University",
+                "Obuda University",
+                "Óbuda",
+                "Obuda",
+                "Antal Bejczy Center"
+            ],
+            "year_added": 2014,
+            "years": [
+                2014
+            ],
+            "url": "http://irob.uni-obuda.hu/?q=en"
+        },
+        {
+            "id": "POLIMI",
+            "name": "Politecnico di Milano",
+            "country": "Italy",
+            "aliases": [
+                "Politecnico di Milano",
+                "PoliMi"
+            ],
+            "year_added": 2016,
+            "years": [
+                2016
+            ],
+            "url": "https://nearlab.polimi.it/medical/"
+        },
+        {
+            "id": "PU",
+            "name": "Purdue University",
+            "country": "USA",
+            "aliases": [
+                "Purdue University",
+                "Purdue"
+            ],
+            "year_added": 2019,
+            "years": [
+                2019
+            ]
+        },
+        {
+            "id": "SDU",
+            "name": "University of Southern Denmark",
+            "country": "Denmark",
+            "aliases": [
+                "University of Southern Denmark",
+                "Syddansk Universitet"
+            ],
+            "year_added": 2024,
+            "years": [
+                2024
+            ]
+        },
+        {
+            "id": "SKCH",
+            "name": "The Hospital for Sick Children (SickKids)",
+            "country": "Canada",
+            "aliases": [
+                "SickKids",
+                "Hospital for Sick Children",
+                "Hospital for Sick Kids"
+            ],
+            "year_added": 2013,
+            "years": [
+                2013
+            ]
+        },
+        {
+            "id": "SNU",
+            "name": "Seoul National University",
+            "country": "South Korea",
+            "aliases": [
+                "Seoul National University"
+            ],
+            "year_added": 2014,
+            "years": [
+                2014
+            ]
+        },
+        {
+            "id": "SSSA",
+            "name": "Scuola Superiore Sant'Anna",
+            "country": "Italy",
+            "aliases": [
+                "Scuola Superiore Sant'Anna",
+                "Sant'Anna School",
+                "BioRobotics Institute",
+                "Biorobotics Institute",
+                "Istituto di BioRobotica"
+            ],
+            "year_added": 2014,
+            "years": [
+                2014
+            ],
+            "url": "https://www.santannapisa.it/en/institute/biorobotics/surgical-robotics-and-allied-technologies-area"
+        },
+        {
+            "id": "SU",
+            "name": "Stanford University",
+            "country": "USA",
+            "aliases": [
+                "Stanford University",
+                "Stanford Medicine",
+                "Stanford"
+            ],
+            "year_added": 2012,
+            "years": [
+                2012,
+                2024
+            ],
+            "url": "http://charm.stanford.edu"
+        },
+        {
+            "id": "SURGNOVA",
+            "name": "SurgNova",
+            "country": "China",
+            "aliases": [
+                "surgnova"
+            ],
+            "year_added": 2019,
+            "years": [
+                2019
+            ]
+        },
+        {
+            "id": "SZIPS",
+            "name": "Sheikh Zayed Institute for Pediatric Surgical Innovation",
+            "country": "USA",
+            "year_added": 2015,
+            "aliases": [
+                "Sheikh Zayed Institute",
+                "Children's National"
+            ]
+        },
+        {
+            "id": "UA",
+            "name": "University of Alberta",
+            "country": "Canada",
+            "aliases": [
+                "University of Alberta"
+            ],
+            "year_added": 2019,
+            "years": [
+                2019
+            ],
+            "url": "http://www.ece.ualberta.ca/~tbs/pmwiki/"
+        },
+        {
+            "id": "UBC",
+            "name": "University of British Columbia",
+            "country": "Canada",
+            "aliases": [
+                "University of British Columbia"
+            ],
+            "year_added": 2012,
+            "years": [
+                2012
+            ]
+        },
+        {
+            "id": "UCB",
+            "name": "University of California, Berkeley",
+            "country": "USA",
+            "aliases": [
+                "UC Berkeley",
+                "University of California, Berkeley",
+                "University of California Berkeley",
+                "U.C. Berkeley"
+            ],
+            "year_added": 2013,
+            "years": [
+                2013
+            ],
+            "url": "http://bair.berkeley.edu/blog/2017/10/17/lfd-surgical-robots/"
+        },
+        {
+            "id": "UCL",
+            "name": "University College London",
+            "country": "UK",
+            "aliases": [
+                "University College London",
+                "University College, London"
+            ],
+            "year_added": 2014,
+            "years": [
+                2014,
+                2019
+            ]
+        },
+        {
+            "id": "UCSD",
+            "name": "University of California, San Diego",
+            "country": "USA",
+            "aliases": [
+                "University of California San Diego",
+                "University of California, San Diego",
+                "UC San Diego",
+                "U.C. San Diego",
+                "UCSD"
+            ],
+            "year_added": 2016,
+            "years": [
+                2016,
+                2021
+            ],
+            "url": "https://www.ucsdarclab.com"
+        },
+        {
+            "id": "UIC",
+            "name": "University of Illinois Chicago",
+            "country": "USA",
+            "aliases": [
+                "University of Illinois Chicago",
+                "University of Illinois at Chicago",
+                "University of Illinois, Chicago"
+            ],
+            "year_added": 2021,
+            "years": [
+                2021
+            ]
+        },
+        {
+            "id": "UL",
+            "name": "University of Leeds",
+            "country": "UK",
+            "aliases": [
+                "University of Leeds"
+            ],
+            "year_added": 2017,
+            "years": [
+                2017
+            ],
+            "url": "https://www.stormlabuk.com"
+        },
+        {
+            "id": "UMD",
+            "name": "University of Maryland",
+            "country": "USA",
+            "aliases": [
+                "University of Maryland"
+            ],
+            "year_added": 2019,
+            "years": [
+                2019
+            ]
+        },
+        {
+            "id": "UNFII",
+            "name": "University of Naples Federico II",
+            "country": "Italy",
+            "aliases": [
+                "University of Naples Federico II",
+                "Università degli Studi di Napoli Federico II",
+                "Università di Napoli Federico II",
+                "Universita di Napoli Federico II"
+            ],
+            "year_added": 2016,
+            "years": [
+                2016
+            ]
+        },
+        {
+            "id": "UNITO",
+            "name": "University of Turin",
+            "country": "Italy",
+            "aliases": [
+                "University of Turin",
+                "University of Torino",
+                "Università degli Studi di Torino",
+                "Universita degli Studi di Torino"
+            ],
+            "year_added": 2021,
+            "years": [
+                2021
+            ]
+        },
+        {
+            "id": "UR",
+            "name": "University of Rennes",
+            "country": "France",
+            "aliases": [
+                "University of Rennes",
+                "Université de Rennes",
+                "Universite de Rennes"
+            ],
+            "year_added": 2026,
+            "years": [
+                2026
+            ]
+        },
+        {
+            "id": "UTA",
+            "name": "University of Texas at Austin",
+            "country": "USA",
+            "aliases": [
+                "University of Texas at Austin",
+                "University of Texas Austin",
+                "UT Austin"
+            ],
+            "year_added": 2015,
+            "years": [
+                2015,
+                2017
+            ],
+            "url": "http://sites.utexas.edu/arts-lab/"
+        },
+        {
+            "id": "UTD",
+            "name": "University of Texas at Dallas",
+            "country": "USA",
+            "year_added": 2017,
+            "aliases": [
+                "University of Texas at Dallas",
+                "UT Dallas"
+            ]
+        },
+        {
+            "id": "UTOR",
+            "name": "University of Toronto",
+            "country": "Canada",
+            "aliases": [
+                "University of Toronto"
+            ],
+            "year_added": 2025,
+            "years": [
+                2025
+            ]
+        },
+        {
+            "id": "UTW",
+            "name": "University of Twente",
+            "country": "Netherlands",
+            "aliases": [
+                "University of Twente",
+                "Universiteit Twente"
+            ],
+            "year_added": 2021,
+            "years": [
+                2021
+            ]
+        },
+        {
+            "id": "UU",
+            "name": "University of Utah",
+            "country": "USA",
+            "aliases": [
+                "University of Utah",
+                "Univ. of Utah"
+            ],
+            "year_added": 2022,
+            "years": [
+                2022
+            ],
+            "url": "https://arm.cs.utah.edu"
+        },
+        {
+            "id": "UV",
+            "name": "University of Verona",
+            "country": "Italy",
+            "aliases": [
+                "University of Verona",
+                "Università degli Studi di Verona",
+                "Università di Verona",
+                "Universita di Verona"
+            ],
+            "year_added": 2015,
+            "years": [
+                2015
+            ],
+            "url": "https://metropolis.scienze.univr.it"
+        },
+        {
+            "id": "UWO",
+            "name": "University of Western Ontario",
+            "country": "Canada",
+            "aliases": [
+                "University of Western Ontario",
+                "Western University",
+                "University W. Ontario CSTAR"
+            ],
+            "year_added": 2013,
+            "years": [
+                2013
+            ],
+            "url": "https://www.eng.uwo.ca/cstar/about_us/index.html"
+        },
+        {
+            "id": "VU",
+            "name": "Vanderbilt University",
+            "country": "USA",
+            "aliases": [
+                "Vanderbilt University",
+                "Vanderbilt"
+            ],
+            "year_added": 2013,
+            "years": [
+                2013,
+                2022
+            ],
+            "url": "http://arma.vuse.vanderbilt.edu/index.php"
+        },
+        {
+            "id": "WFU",
+            "name": "Wake Forest University",
+            "country": "USA",
+            "aliases": [
+                "Wake Forest"
+            ],
+            "year_added": 2019,
+            "years": [
+                2019
+            ]
+        },
+        {
+            "id": "WPI",
+            "name": "Worcester Polytechnic Institute",
+            "country": "USA",
+            "aliases": [
+                "Worcester Polytechnic Institute",
+                "Worcester Polytechnic",
+                "WPI"
+            ],
+            "year_added": 2012,
+            "years": [
+                2012
+            ],
+            "url": "http://aimlab.wpi.edu/research/projects/daVinci_Robot_Research_System"
+        },
+        {
+            "id": "WSU",
+            "name": "Wayne State University",
+            "country": "USA",
+            "aliases": [
+                "Wayne State University",
+                "Wayne State"
+            ],
+            "year_added": 2015,
+            "years": [
+                2015
+            ]
+        },
+        {
+            "id": "YU",
+            "name": "Yonsei University",
+            "country": "South Korea",
+            "aliases": [
+                "Yonsei University"
+            ],
+            "year_added": 2025,
+            "years": [
+                2025
+            ]
+        }
     ]
 }

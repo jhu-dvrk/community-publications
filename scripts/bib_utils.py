@@ -111,106 +111,60 @@ MASTHEAD_RE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 
-# Institution substring -> dVRK site acronym mapping (ordered specific -> general)
-INSTITUTION_TO_SITE = {
-    # USA
-    "Johns Hopkins":                          "JHU",
-    "Carnegie Mellon":                        "CMU",
-    "Clemson University":                     "CU",
-    "Clemson":                                "CU",
-    "Case Western Reserve":                   "CWRU",
-    "Case Western":                           "CWRU",
-    "Intuitive Surgical":                     "ISS",
-    "Stanford University":                    "SU",
-    "Stanford":                               "SU",
-    "Sheikh Zayed Institute":                 "SZIPS",
-    "Children's National":                    "SZIPS",
-    "SickKids":                               "SKCH",
-    "Hospital for Sick Children":             "SKCH",
-    "Purdue University":                      "PU",
-    "Purdue":                                 "PU",
-    "University of Utah":                     "UU",
-    "Univ. of Utah":                          "UU",
-    "University of Texas at Dallas":          "UTD",
-    "UT Dallas":                              "UTD",
-    "Wayne State University":                 "WSU",
-    "Wayne State":                            "WSU",
-    "Worcester Polytechnic Institute":        "WPI",
-    "Worcester Polytechnic":                  "WPI",
-    "WPI":                                    "WPI",
-    "Vanderbilt University":                  "VU",
-    "Vanderbilt":                             "VU",
-    "UC Berkeley":                            "UCB",
-    "University of California, Berkeley":     "UCB",
-    "University of California Berkeley":      "UCB",
-    "University of California San Diego":     "UCSD",
-    "University of California, San Diego":    "UCSD",
-    "UC San Diego":                           "UCSD",
-    "UCSD":                                   "UCSD",
-    "University of Illinois Chicago":         "UIC",
-    "University of Illinois at Chicago":      "UIC",
-    # Canada
-    "University of Alberta":                  "UA",
-    "University of British Columbia":         "UBC",
-    "University of Western Ontario":          "UWO",
-    "Western University":                     "UWO",
-    # UK
-    "Imperial College":                       "ICL",
-    "The Hamlyn Centre":                      "ICL",
-    "Hamlyn Centre":                          "ICL",
-    "Hamlyn Center":                          "ICL",
-    "University College London":              "UCL",
-    "University of Leeds":                    "UL",
-    # Hong Kong
-    "Chinese University of Hong Kong":        "CUHK",
-    "CUHK":                                   "CUHK",
-    # Italy
-    "Politecnico di Milano":                  "POLIMI",
-    "PoliMi":                                 "POLIMI",
-    "University of Turin":                    "UNITO",
-    "University of Torino":                   "UNITO",
-    "Università degli Studi di Torino":       "UNITO",
-    "Universita degli Studi di Torino":       "UNITO",
-    "Scuola Superiore Sant'Anna":             "SSSA",
-    "Sant'Anna School":                       "SSSA",
-    "BioRobotics Institute":                  "SSSA",
-    "Biorobotics Institute":                  "SSSA",
-    "Istituto di BioRobotica":                "SSSA",
-    "University of Verona":                   "UV",
-    "Università degli Studi di Verona":       "UV",
-    "Università di Verona":                   "UV",
-    "Universita di Verona":                   "UV",
-    "University of Naples Federico II":       "UNFII",
-    "Università degli Studi di Napoli Federico II": "UNFII",
-    "Università di Napoli Federico II":       "UNFII",
-    "Universita di Napoli Federico II":       "UNFII",
-    # Hungary
-    "Óbuda University":                       "OU",
-    "Obuda University":                       "OU",
-    "Óbuda":                                  "OU",
-    "Obuda":                                  "OU",
-    "Antal Bejczy Center":                    "OU",
-    # Israel
-    "Ben-Gurion University":                  "BGUN",
-    "Ben Gurion University":                  "BGUN",
-    "Ben-Gurion":                             "BGUN",
-    "Ben Gurion":                             "BGUN",
-    # South Korea
-    "Seoul National University":              "SNU",
-    # Germany
-    "Max Planck":                             "MPI",
-    "Max-Planck":                             "MPI",
-    "MPI-IS":                                 "MPI",
+# Minimal fallback alias mapping when custom_tags.json has no `aliases` fields
+_FALLBACK_SITE_ALIASES = {
+    "Johns Hopkins": "JHU",
+    "Worcester Polytechnic": "WPI",
+    "Stanford": "SU",
+    "Imperial College": "ICL",
 }
+_SITE_RULE_CACHE: tuple[str, int, list[tuple[str, str]]] | None = None
 
 
-def match_sites(institution_names: list[str]) -> set[str]:
+def load_site_match_rules(path: str = CUSTOM_TAGS_PATH) -> list[tuple[str, str]]:
+    """Return `(pattern_lower, site_id)` rules loaded from custom_tags.json, longest-first."""
+    global _SITE_RULE_CACHE
+    try:
+        mtime = os.stat(path).st_mtime_ns
+    except OSError:
+        mtime = -1
+
+    if _SITE_RULE_CACHE and _SITE_RULE_CACHE[0] == path and _SITE_RULE_CACHE[1] == mtime:
+        return _SITE_RULE_CACHE[2]
+
+    pairs: list[tuple[str, str]] = []
+    if mtime >= 0:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            for site in data.get("dvrk_site", []):
+                sid = site.get("id", "")
+                for alias in site.get("aliases") or []:
+                    if sid and alias:
+                        pairs.append((alias.lower(), sid))
+        except Exception:
+            pairs = []
+
+    if not pairs:
+        pairs = [(pat.lower(), sid) for pat, sid in _FALLBACK_SITE_ALIASES.items()]
+
+    pairs.sort(key=lambda item: len(item[0]), reverse=True)
+    _SITE_RULE_CACHE = (path, mtime, pairs)
+    return pairs
+
+
+# Institution substring -> dVRK site acronym mapping (longest/most-specific first)
+INSTITUTION_TO_SITE: dict[str, str] = {pat: sid for pat, sid in load_site_match_rules()}
+
+
+def match_sites(institution_names: list[str], tags_path: str = CUSTOM_TAGS_PATH) -> set[str]:
     """Map a list of raw affiliation strings to known dVRK site acronyms."""
+    rules = load_site_match_rules(tags_path)
     matched: set[str] = set()
     for inst_name in institution_names or []:
         inst_lower = inst_name.lower()
-        for pattern, site_id in INSTITUTION_TO_SITE.items():
-            if pattern.lower() in inst_lower:
+        for pattern, site_id in rules:
+            if pattern in inst_lower:
                 matched.add(site_id)
                 break
     return matched
