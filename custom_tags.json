@@ -90,7 +90,9 @@
             "years": [
                 2016
             ],
-            "url": "http://bioroblab.weebly.com"
+            "url": "http://bioroblab.weebly.com",
+            "lat": 31.2518,
+            "lon": 34.7913
         },
         {
             "id": "CCF",
@@ -102,7 +104,9 @@
             "year_added": 2016,
             "years": [
                 2016
-            ]
+            ],
+            "lat": 41.5022,
+            "lon": -81.6198
         },
         {
             "id": "CMU",
@@ -115,7 +119,9 @@
             "years": [
                 2013
             ],
-            "url": "http://biorobotics.ri.cmu.edu/robots/daVinci.php"
+            "url": "http://biorobotics.ri.cmu.edu/robots/daVinci.php",
+            "lat": 40.4406,
+            "lon": -79.9959
         },
         {
             "id": "CU",
@@ -128,7 +134,9 @@
             "year_added": 2013,
             "years": [
                 2013
-            ]
+            ],
+            "lat": 34.6834,
+            "lon": -82.8374
         },
         {
             "id": "CUHK",
@@ -142,7 +150,9 @@
             "years": [
                 2016,
                 2017
-            ]
+            ],
+            "lat": 22.4196,
+            "lon": 114.2068
         },
         {
             "id": "CWRU",
@@ -155,7 +165,9 @@
             "year_added": 2016,
             "years": [
                 2016
-            ]
+            ],
+            "lat": 41.5014,
+            "lon": -81.6007
         },
         {
             "id": "DGIST",
@@ -168,7 +180,9 @@
             "year_added": 2025,
             "years": [
                 2025
-            ]
+            ],
+            "lat": 35.8703,
+            "lon": 128.5911
         },
         {
             "id": "GT",
@@ -181,7 +195,9 @@
             "year_added": 2025,
             "years": [
                 2025
-            ]
+            ],
+            "lat": 33.749,
+            "lon": -84.388
         },
         {
             "id": "HIAE",
@@ -194,7 +210,9 @@
             "year_added": 2026,
             "years": [
                 2026
-            ]
+            ],
+            "lat": -23.5996,
+            "lon": -46.7149
         },
         {
             "id": "HMRI",
@@ -206,7 +224,9 @@
             "year_added": 2026,
             "years": [
                 2026
-            ]
+            ],
+            "lat": 29.7633,
+            "lon": -95.3633
         },
         {
             "id": "HR",
@@ -219,7 +239,9 @@
             "year_added": 2017,
             "years": [
                 2017
-            ]
+            ],
+            "lat": 48.4914,
+            "lon": 9.2043
         },
         {
             "id": "ICL",
@@ -237,7 +259,9 @@
                 2014,
                 2016
             ],
-            "url": "https://www.imperial.ac.uk/hamlyn-centre/about-us"
+            "url": "https://www.imperial.ac.uk/hamlyn-centre/about-us",
+            "lat": 51.499,
+            "lon": -0.1756
         },
         {
             "id": "IIT",
@@ -250,7 +274,9 @@
             "year_added": 2025,
             "years": [
                 2025
-            ]
+            ],
+            "lat": 44.4048,
+            "lon": 8.9444
         },
         {
             "id": "ISS",
@@ -262,7 +288,9 @@
             "year_added": 2013,
             "years": [
                 2013
-            ]
+            ],
+            "lat": 37.3688,
+            "lon": -122.0363
         },
         {
             "id": "JHU",
@@ -277,7 +305,9 @@
                 2014,
                 2022
             ],
-            "url": "https://lcsr.jhu.edu"
+            "url": "https://lcsr.jhu.edu",
+            "lat": 39.3299,
+            "lon": -76.6205
         },
         {
             "id": "KU",
@@ -289,7 +319,9 @@
             "year_added": 2025,
             "years": [
                 2025
-            ]
+            ],
+            "lat": 37.588,
+            "lon": 127.0324
         },
         {
             "id": "MCI",
@@ -302,7 +334,9 @@
             "year_added": 2016,
             "years": [
                 2016
-            ]
+            ],
+            "lat": 47.2627,
+            "lon": 11.3945
         },
         {
             "id": "MPI",
@@ -317,7 +351,9 @@
             "years": [
                 2023
             ],
-            "url": "https://hi.is.mpg.de"
+            "url": "https://hi.is.mpg.de",
+            "lat": 48.747,
+            "lon": 9.0806
         },
         {
             "id": "NIH",
@@ -330,7 +366,9 @@
             "year_added": 2015,
             "years": [
                 2015
-            ]
+            ],
+            "lat": 38.9807,
+            "lon": -77.1003
         },
         {
             "id": "NYU",
@@ -344,7 +382,9 @@
             "years": [
                 2022
             ],
-            "url": "https://wp.nyu.edu/meriit/"
+            "url": "https://wp.nyu.edu/meriit/",
+            "lat": 40.7143,
+            "lon": -74.006
         },
         {
             "id": "OU",
@@ -361,7 +401,9 @@
             "years": [
                 2014
             ],
-            "url": "http://irob.uni-obuda.hu/?q=en"
+            "url": "http://irob.uni-obuda.hu/?q=en",
+            "lat": 47.4984,
+            "lon": 19.0404
         },
         {
             "id": "POLIMI",
@@ -375,7 +417,9 @@
             "years": [
                 2016
             ],
-            "url": "https://nearlab.polimi.it/medical/"
+            "url": "https://nearlab.polimi.it/medical/",
+            "lat": 45.4781,
+            "lon": 9.2273
         },
         {
             "id": "PU",
@@ -388,7 +432,9 @@
             "year_added": 2019,
             "years": [
                 2019
-            ]
+            ],
+            "lat": 40.4259,
+            "lon": -86.9081
         },
         {
             "id": "SDU",
@@ -401,7 +447,9 @@
             "year_added": 2024,
             "years": [
                 2024
-            ]
+            ],
+            "lat": 55.3959,
+            "lon": 10.3883
         },
         {
             "id": "SKCH",
@@ -415,7 +463,9 @@
             "year_added": 2013,
             "years": [
                 2013
-            ]
+            ],
+            "lat": 43.6573,
+            "lon": -79.3876
         },
         {
             "id": "SNU",
@@ -427,7 +477,9 @@
             "year_added": 2014,
             "years": [
                 2014
-            ]
+            ],
+            "lat": 37.4668,
+            "lon": 126.9478
         },
         {
             "id": "SSSA",
@@ -444,7 +496,9 @@
             "years": [
                 2014
             ],
-            "url": "https://www.santannapisa.it/en/institute/biorobotics/surgical-robotics-and-allied-technologies-area"
+            "url": "https://www.santannapisa.it/en/institute/biorobotics/surgical-robotics-and-allied-technologies-area",
+            "lat": 43.7085,
+            "lon": 10.4036
         },
         {
             "id": "SU",
@@ -460,7 +514,9 @@
                 2012,
                 2024
             ],
-            "url": "http://charm.stanford.edu"
+            "url": "http://charm.stanford.edu",
+            "lat": 37.4241,
+            "lon": -122.1661
         },
         {
             "id": "SURGNOVA",
@@ -472,7 +528,9 @@
             "year_added": 2019,
             "years": [
                 2019
-            ]
+            ],
+            "lat": 39.9075,
+            "lon": 116.3972
         },
         {
             "id": "SZIPS",
@@ -482,7 +540,9 @@
             "aliases": [
                 "Sheikh Zayed Institute",
                 "Children's National"
-            ]
+            ],
+            "lat": 38.9277,
+            "lon": -77.0144
         },
         {
             "id": "UA",
@@ -495,7 +555,9 @@
             "years": [
                 2019
             ],
-            "url": "http://www.ece.ualberta.ca/~tbs/pmwiki/"
+            "url": "http://www.ece.ualberta.ca/~tbs/pmwiki/",
+            "lat": 53.5501,
+            "lon": -113.4687
         },
         {
             "id": "UBC",
@@ -507,7 +569,9 @@
             "year_added": 2012,
             "years": [
                 2012
-            ]
+            ],
+            "lat": 49.2497,
+            "lon": -123.1193
         },
         {
             "id": "UCB",
@@ -523,7 +587,9 @@
             "years": [
                 2013
             ],
-            "url": "http://bair.berkeley.edu/blog/2017/10/17/lfd-surgical-robots/"
+            "url": "http://bair.berkeley.edu/blog/2017/10/17/lfd-surgical-robots/",
+            "lat": 37.8716,
+            "lon": -122.2728
         },
         {
             "id": "UCL",
@@ -537,7 +603,9 @@
             "years": [
                 2014,
                 2019
-            ]
+            ],
+            "lat": 51.5242,
+            "lon": -0.133
         },
         {
             "id": "UCSD",
@@ -555,7 +623,9 @@
                 2016,
                 2021
             ],
-            "url": "https://www.ucsdarclab.com"
+            "url": "https://www.ucsdarclab.com",
+            "lat": 32.8801,
+            "lon": -117.234
         },
         {
             "id": "UIC",
@@ -569,7 +639,9 @@
             "year_added": 2021,
             "years": [
                 2021
-            ]
+            ],
+            "lat": 41.8686,
+            "lon": -87.6484
         },
         {
             "id": "UL",
@@ -582,7 +654,9 @@
             "years": [
                 2017
             ],
-            "url": "https://www.stormlabuk.com"
+            "url": "https://www.stormlabuk.com",
+            "lat": 53.8067,
+            "lon": -1.555
         },
         {
             "id": "UMD",
@@ -594,7 +668,9 @@
             "year_added": 2019,
             "years": [
                 2019
-            ]
+            ],
+            "lat": 38.9869,
+            "lon": -76.9426
         },
         {
             "id": "UNFII",
@@ -609,7 +685,9 @@
             "year_added": 2016,
             "years": [
                 2016
-            ]
+            ],
+            "lat": 40.8522,
+            "lon": 14.2681
         },
         {
             "id": "UNITO",
@@ -624,7 +702,9 @@
             "year_added": 2021,
             "years": [
                 2021
-            ]
+            ],
+            "lat": 45.0705,
+            "lon": 7.6868
         },
         {
             "id": "UR",
@@ -638,7 +718,9 @@
             "year_added": 2026,
             "years": [
                 2026
-            ]
+            ],
+            "lat": 48.1111,
+            "lon": -1.6743
         },
         {
             "id": "UTA",
@@ -654,7 +736,9 @@
                 2015,
                 2017
             ],
-            "url": "http://sites.utexas.edu/arts-lab/"
+            "url": "http://sites.utexas.edu/arts-lab/",
+            "lat": 30.2849,
+            "lon": -97.7341
         },
         {
             "id": "UTD",
@@ -664,7 +748,9 @@
             "aliases": [
                 "University of Texas at Dallas",
                 "UT Dallas"
-            ]
+            ],
+            "lat": 32.9858,
+            "lon": -96.7501
         },
         {
             "id": "UTOR",
@@ -676,7 +762,9 @@
             "year_added": 2025,
             "years": [
                 2025
-            ]
+            ],
+            "lat": 43.5502,
+            "lon": -79.6627
         },
         {
             "id": "UTW",
@@ -689,7 +777,9 @@
             "year_added": 2021,
             "years": [
                 2021
-            ]
+            ],
+            "lat": 52.2389,
+            "lon": 6.8562
         },
         {
             "id": "UU",
@@ -703,7 +793,9 @@
             "years": [
                 2022
             ],
-            "url": "https://arm.cs.utah.edu"
+            "url": "https://arm.cs.utah.edu",
+            "lat": 40.7649,
+            "lon": -111.8421
         },
         {
             "id": "UV",
@@ -719,7 +811,9 @@
             "years": [
                 2015
             ],
-            "url": "https://metropolis.scienze.univr.it"
+            "url": "https://metropolis.scienze.univr.it",
+            "lat": 45.4385,
+            "lon": 10.9938
         },
         {
             "id": "UWO",
@@ -734,7 +828,9 @@
             "years": [
                 2013
             ],
-            "url": "https://www.eng.uwo.ca/cstar/about_us/index.html"
+            "url": "https://www.eng.uwo.ca/cstar/about_us/index.html",
+            "lat": 43.0096,
+            "lon": -81.2737
         },
         {
             "id": "VU",
@@ -749,7 +845,9 @@
                 2013,
                 2022
             ],
-            "url": "http://arma.vuse.vanderbilt.edu/index.php"
+            "url": "http://arma.vuse.vanderbilt.edu/index.php",
+            "lat": 36.1447,
+            "lon": -86.8027
         },
         {
             "id": "WFU",
@@ -761,7 +859,9 @@
             "year_added": 2019,
             "years": [
                 2019
-            ]
+            ],
+            "lat": 36.1335,
+            "lon": -80.2768
         },
         {
             "id": "WPI",
@@ -776,7 +876,9 @@
             "years": [
                 2012
             ],
-            "url": "http://aimlab.wpi.edu/research/projects/daVinci_Robot_Research_System"
+            "url": "http://aimlab.wpi.edu/research/projects/daVinci_Robot_Research_System",
+            "lat": 42.2746,
+            "lon": -71.8063
         },
         {
             "id": "WSU",
@@ -789,7 +891,9 @@
             "year_added": 2015,
             "years": [
                 2015
-            ]
+            ],
+            "lat": 42.3591,
+            "lon": -83.0665
         },
         {
             "id": "YU",
@@ -801,7 +905,9 @@
             "year_added": 2025,
             "years": [
                 2025
-            ]
+            ],
+            "lat": 37.56,
+            "lon": 126.9354
         }
     ]
 }

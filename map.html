@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S1ZSJQ3NE3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-S1ZSJQ3NE3');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sites Map - dVRK Community Publications</title>
+    <meta name="description" content="Interactive world map of da Vinci Research Kit (dVRK) research sites, adoption timeline, and publications over time.">
+    <link rel="canonical" href="https://jhu-dvrk.github.io/community-publications/map.html">
+    <link rel="icon" type="image/png" href="dvrk-logo.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jhu-dvrk.github.io/community-publications/map.html">
+    <meta property="og:title" content="Sites Map - dVRK Community Publications">
+    <meta property="og:description" content="Interactive world map of da Vinci Research Kit (dVRK) research sites, adoption timeline, and publications over time.">
+    <meta property="og:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://jhu-dvrk.github.io/community-publications/map.html">
+    <meta name="twitter:title" content="Sites Map - dVRK Community Publications">
+    <meta name="twitter:description" content="Interactive world map of da Vinci Research Kit (dVRK) research sites, adoption timeline, and publications over time.">
+    <meta name="twitter:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
+
+    <script>
+        (function() {
+            const stored = localStorage.getItem('dvrk_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', stored || (prefersDark ? 'dark' : 'light'));
+        })();
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
+    <script src="config.js?v=9"></script>
+    <link rel="stylesheet" href="styles.css?v=9">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
+                    <h1>Community Publications</h1>
+                </div>
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} publications • {{ totalAuthors }} authors •
+                    Contribute
+                    <a href="https://github.com/jhu-dvrk/community-publications" target="_blank" rel="noopener noreferrer">https://github.com/jhu-dvrk/community-publications</a>
+                </p>
+                <div class="header-nav">
+                    <a href="index.html" class="nav-btn">Publications</a>
+                    <a href="analytics.html" class="nav-btn">Analytics</a>
+                    <a href="map.html" class="nav-btn active">Map</a>
+                    <a href="graph.html" class="nav-btn">Cross References</a>
+                    <button class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+                        <span class="theme-toggle-icon">🌙</span>
+                        <span class="theme-toggle-text">Dark</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <div v-if="loading" class="loading">
+                <p>Loading dVRK sites map...</p>
+            </div>
+
+            <div v-else class="analytics-content">
+                <!-- KPI Cards for Current Timeline Frame -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ selectedYear }}</div>
+                        <div class="stat-label">{{ mode === 'cumulative' ? 'Through Year' : 'Selected Year' }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ frameKPIs.publications }}</div>
+                        <div class="stat-label">{{ mode === 'cumulative' ? 'Cumulative Publications' : 'Annual Publications' }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ frameKPIs.activeSites }}</div>
+                        <div class="stat-label">Publishing Sites</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ frameKPIs.joinedSites }}</div>
+                        <div class="stat-label">Registered dVRK Sites</div>
+                    </div>
+                </div>
+
+                <!-- Timeline & Map Controls -->
+                <div class="graph-toolbar map-toolbar">
+                    <div class="toolbar-group map-playback-group">
+                        <button @click="togglePlay" class="map-play-btn" :class="{ playing: isPlaying }" :title="isPlaying ? 'Pause animation' : 'Animate timeline'">
+                            <span v-if="isPlaying">⏸ Pause</span>
+                            <span v-else>▶ Play</span>
+                        </button>
+                        <button @click="stepYear(-1)" :disabled="selectedYear <= minYear" class="map-step-btn" title="Previous year">◀</button>
+                        <button @click="stepYear(1)" :disabled="selectedYear >= maxYear" class="map-step-btn" title="Next year">▶</button>
+                        <button @click="resetToStart" class="map-step-btn" title="Jump to earliest year">⏮</button>
+                    </div>
+
+                    <div class="toolbar-group map-slider-group">
+                        <span class="map-year-badge">{{ selectedYear }}</span>
+                        <input type="range"
+                               id="map-year-slider"
+                               name="mapYear"
+                               class="map-year-slider"
+                               :min="minYear"
+                               :max="maxYear"
+                               v-model.number="selectedYear"
+                               @input="pausePlay"
+                               aria-label="Publication year">
+                        <span class="map-year-bounds">{{ minYear }}–{{ maxYear }}</span>
+                    </div>
+
+                    <div class="toolbar-group">
+                        <span class="toolbar-label">Mode:</span>
+                        <div class="btn-group">
+                            <button class="pill-btn" :class="{ active: mode === 'cumulative' }" @click="mode = 'cumulative'">Cumulative</button>
+                            <button class="pill-btn" :class="{ active: mode === 'annual' }" @click="mode = 'annual'">Per Year</button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-group">
+                        <span class="toolbar-label">Speed:</span>
+                        <select id="map-speed-select" name="playSpeedMs" v-model.number="playSpeedMs" class="toolbar-select" aria-label="Playback speed">
+                            <option :value="1400">Slow</option>
+                            <option :value="900">Normal</option>
+                            <option :value="450">Fast</option>
+                        </select>
+                    </div>
+
+                    <div class="toolbar-group map-toggles">
+                        <button @click="resetMapView" class="map-reset-view-btn" title="Reset map zoom and pan">🌐 Reset View</button>
+                    </div>
+                </div>
+
+                <!-- Map Card -->
+                <div class="map-card">
+                    <div id="dvrk-map" class="dvrk-map-canvas"></div>
+                    <div class="map-legend-bar">
+                        <div class="map-legend-items">
+                            <span class="map-legend-item">
+                                <span class="map-dot map-dot-active"></span>
+                                Publishing site (size = publications)
+                            </span>
+                            <span class="map-legend-item">
+                                <span class="map-dot map-dot-new"></span>
+                                Published in {{ selectedYear }}
+                            </span>
+                            <span class="map-legend-item">
+                                <span class="map-dot map-dot-joined"></span>
+                                Registered site (0 papers in scope) • Pops in join year
+                            </span>
+                        </div>
+                        <div class="map-legend-hint">
+                            Click any site marker or row below to view publications • Zoom in for dense clusters
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Site Leaderboard for Selected Year -->
+                <div class="chart-container full-width-chart map-leaderboard-card">
+                    <div class="map-leaderboard-header">
+                        <h2>Publications by Site ({{ mode === 'cumulative' ? 'Cumulative through ' + selectedYear : 'In ' + selectedYear }})</h2>
+                        <input id="map-site-search" name="siteFilter" v-model="siteFilter" type="text" class="graph-search-input map-site-search" placeholder="Filter site, institution, or country...">
+                    </div>
+                    <div class="map-site-grid">
+                        <button v-for="entry in rankedSites"
+                                :key="entry.id"
+                                class="map-site-chip"
+                                :class="{ 'has-new-in-year': entry.annualCount > 0, 'is-joined-only': entry.displayCount === 0, 'is-joined-this-year': entry.yearAdded === selectedYear }"
+                                @click="openSiteModal(entry.id)">
+                            <div class="map-site-chip-top">
+                                <span class="map-site-code">{{ entry.id }}</span>
+                                <span class="map-site-count">{{ entry.displayCount }}</span>
+                            </div>
+                            <div class="map-site-chip-name">{{ entry.name }}</div>
+                            <div class="map-site-chip-meta">
+                                <span>{{ entry.country || 'Unknown' }}</span>
+                                <span v-if="entry.yearAdded">• Joined {{ entry.yearAdded }}</span>
+                                <span v-if="mode === 'cumulative' && entry.annualCount > 0" class="map-site-delta">+{{ entry.annualCount }} in {{ selectedYear }}</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Drill-down Modal for Site Papers -->
+                <div v-if="selectedModal" class="modal-overlay" @click.self="closeModal">
+                    <div class="modal-card">
+                        <div class="modal-header">
+                            <div>
+                                <h3 class="modal-title">
+                                    🏛️ {{ selectedModal.siteId }} — {{ selectedModal.papers.length }} Publication{{ selectedModal.papers.length === 1 ? '' : 's' }}
+                                    <span class="modal-scope-tag">({{ mode === 'cumulative' ? '≤ ' + selectedYear : selectedYear }})</span>
+                                </h3>
+                                <p class="modal-subtitle">
+                                    {{ getSiteFullName(selectedModal.siteId) }}<span v-if="getSiteCountry(selectedModal.siteId)"> • {{ getSiteCountry(selectedModal.siteId) }}</span><span v-if="getSiteYearAdded(selectedModal.siteId)"> • dVRK member since {{ getSiteYearAdded(selectedModal.siteId) }}</span>
+                                </p>
+                            </div>
+                            <button class="modal-close-btn" @click="closeModal" title="Close (Esc)">✕</button>
+                        </div>
+                        <div class="modal-body">
+                            <div v-if="selectedModal.papers.length === 0" class="empty-citations">
+                                No recorded publications for this site {{ mode === 'cumulative' ? 'through ' + selectedYear : 'in ' + selectedYear }}.
+                            </div>
+                            <div v-for="pub in selectedModal.papers" :key="pub.id" class="modal-pub-item">
+                                <div class="modal-pub-title">
+                                    <a :href="'index.html#' + pub.id" target="_blank" title="View publication in database">
+                                        {{ pub.title }} ↗
+                                    </a>
+                                </div>
+                                <div class="modal-pub-author">{{ pub.formattedAuthors || pub.author }}</div>
+                                <div class="modal-pub-meta">
+                                    <span class="modal-pub-year">{{ pub.year }}</span>
+                                    <span v-if="pub.venueDisplay || pub.journal" class="modal-pub-venue">• {{ pub.venueDisplay || pub.journal }}</span>
+                                    <span class="modal-pub-sites">• Sites: {{ pub.dvrk_site }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="modal-footer-links">
+                                <a :href="'index.html?site=' + selectedModal.siteId" class="modal-action-link" target="_blank">
+                                    🔍 View all in Publications Search ({{ selectedModal.siteId }})
+                                </a>
+                                <a v-if="getSiteUrl(selectedModal.siteId)" :href="getSiteUrl(selectedModal.siteId)" class="modal-action-link" target="_blank" rel="noopener noreferrer">
+                                    🌐 Lab Website ↗
+                                </a>
+                            </div>
+                            <button class="modal-btn" @click="closeModal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>dVRK Publications Database | {{ publications.length }} total publications</p>
+                <p>Data source: <a href="https://github.com/jhu-dvrk" target="_blank">dVRK Project</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="map.js?v=1"></script>
+</body>
+
+</html>
+

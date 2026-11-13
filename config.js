@@ -7,6 +7,9 @@ const CONFIG = {
     DATA_TYPE_MAP: {},
     SITE_MAP: {},
     SITE_COUNTRY_MAP: {},
+    SITE_COORDS_MAP: {},
+    SITE_YEAR_ADDED_MAP: {},
+    SITE_URL_MAP: {},
     PEER_REVIEW_MAP: {},
     FIELD_DESCRIPTIONS: {},
     DATA_TYPE_DESCRIPTIONS: {},
@@ -40,6 +43,15 @@ const CONFIG = {
                     this.SITE_MAP[site.id] = site.name;
                     if (site.country) {
                         this.SITE_COUNTRY_MAP[site.id] = site.country;
+                    }
+                    if (typeof site.lat === 'number' && typeof site.lon === 'number') {
+                        this.SITE_COORDS_MAP[site.id] = [site.lat, site.lon];
+                    }
+                    if (typeof site.year_added === 'number') {
+                        this.SITE_YEAR_ADDED_MAP[site.id] = site.year_added;
+                    }
+                    if (site.url) {
+                        this.SITE_URL_MAP[site.id] = site.url;
                     }
                 });
             }
