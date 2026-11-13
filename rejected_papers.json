@@ -106,5 +106,49 @@
   {
     "doi": "10.3390/jpm16020071",
     "title": "Artificial Intelligence in Minimally Invasive and Robotic Gastrointestinal Surgery: Major Applications and Recent Advances"
+  },
+  {
+    "doi": "10.48550/arxiv.2611.15135",
+    "title": "ARTS: An Open-Source, Accessible Robotics Teleoperation System for Surgical Automation"
+  },
+  {
+    "doi": "10.48550/arxiv.2610.34128",
+    "title": "A Semantic-Coupled Perception Framework for Autonomous Laparoscope Control"
+  },
+  {
+    "doi": "10.48550/arxiv.2611.15125",
+    "title": "Toward Cross-Rubric Surgical Skill Assessment via Joint Embedding Prediction"
+  },
+  {
+    "doi": "10.48550/arxiv.2611.05443",
+    "title": "SurgTransfer: Multi-Step Latent Action Modeling for Action Transfer in Surgical World Model"
+  },
+  {
+    "doi": "10.48550/arxiv.2611.10917",
+    "title": "Remembering to Reason: Surgical Phase Recognition via Long-Horizon Spatial Memory and Tool-Tissue Reasoning"
+  },
+  {
+    "doi": "10.20944/preprints202609.1149.v1",
+    "title": "Structural Conformance Is Not Semantic Conformance: An Error Model and Black-Box Test Suite for CRTK/ROS Interfaces in Surgical Robotics"
+  },
+  {
+    "doi": "10.48550/arxiv.2608.13103",
+    "title": "S2-HWM: Sparse Event-Structured Hierarchical World Model for Long-Horizon Surgical Robot Manipulation"
+  },
+  {
+    "doi": "10.1109/lra.2026.3699185",
+    "title": "DIRA: Diffusion-Based Imitation-to-Reinforcement Adaptation for Task Automation of Surgical Robots"
+  },
+  {
+    "doi": "10.1007/978-981-92-3441-7_11",
+    "title": "MS-LSDT: Multi-Scale Long–Short Goal-Conditioned Decision Transformers for Offline Surgical Robot Learning in SurRoL"
+  },
+  {
+    "doi": "10.1109/ascc70886.2026.11702222",
+    "title": "Analyzing Reward Design Effects in PPO for Surgical Needle Picking in SurRoL"
+  },
+  {
+    "doi": "10.1007/978-3-032-38470-6_30",
+    "title": "SurgVLA-Bench: Towards Evaluating Vision-Language-Action Models for Laparoscopic Surgical Robotics"
   }
 ]

@@ -84,6 +84,8 @@ PREPRINT_HOSTS = (
     "21203/rs",
     "ssrn",
     "chemrxiv",
+    "preprints.org",
+    "10.20944/preprints",
     "10.1101/",
     "corr",
 )
