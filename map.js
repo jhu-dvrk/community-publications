@@ -223,6 +223,7 @@ const mapApp = createApp({
                 zoom: 2,
                 minZoom: 2,
                 maxZoom: 14,
+                zoomSnap: 0.25,
                 worldCopyJump: true
             });
 
@@ -235,17 +236,33 @@ const mapApp = createApp({
             this.markerLayerGroup = L.layerGroup().addTo(this.map);
 
             setTimeout(() => {
-                if (this.map) this.map.invalidateSize();
+                if (this.map) {
+                    this.map.invalidateSize();
+                    this.fitToSites(false);
+                }
             }, 50);
+        },
+        getSiteBounds() {
+            const latLngs = this.knownSiteIds
+                .map(sid => CONFIG.SITE_COORDS_MAP[sid])
+                .filter(Boolean);
+            return latLngs.length > 0 ? L.latLngBounds(latLngs) : null;
+        },
+        fitToSites(animate = true) {
+            if (!this.map) return;
+            const bounds = this.getSiteBounds();
+            if (bounds) {
+                this.map.fitBounds(bounds, { padding: [24, 24], animate });
+            } else {
+                this.map.setView([24, 12], 2, { animate });
+            }
         },
         updateTileTheme() {
             if (!this.map) return;
             this.renderMap();
         },
         resetMapView() {
-            if (this.map) {
-                this.map.setView([24, 12], 2, { animate: true });
-            }
+            this.fitToSites(true);
         },
         computeRadius(count) {
             if (count <= 0) return 5;
