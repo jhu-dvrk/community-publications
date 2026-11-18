@@ -15,7 +15,6 @@ const mapApp = createApp({
             isPlaying: true,
             playSpeedMs: 1400,
             playTimer: null,
-            siteFilter: '',
             selectedModal: null,
             map: null,
             tileLayer: null,
@@ -128,47 +127,6 @@ const mapApp = createApp({
                 activeSites,
                 joinedSites
             };
-        },
-        rankedSites() {
-            const { cumulativeCounts, annualCounts } = this.frameStats;
-            const query = this.siteFilter.trim().toLowerCase();
-
-            const list = [];
-            this.knownSiteIds.forEach(id => {
-                const cum = cumulativeCounts[id] || 0;
-                const ann = annualCounts[id] || 0;
-                const displayCount = this.mode === 'cumulative' ? cum : ann;
-                const yearAdded = CONFIG.SITE_YEAR_ADDED_MAP[id] || null;
-                const isJoined = !yearAdded || yearAdded <= this.selectedYear;
-
-                if (displayCount === 0 && !isJoined) {
-                    return;
-                }
-
-                const name = CONFIG.SITE_MAP[id] || id;
-                const country = CONFIG.SITE_COUNTRY_MAP[id] || '';
-                if (query) {
-                    const hay = `${id} ${name} ${country}`.toLowerCase();
-                    if (!hay.includes(query)) return;
-                }
-
-                list.push({
-                    id,
-                    name,
-                    country,
-                    yearAdded,
-                    cumCount: cum,
-                    annualCount: ann,
-                    displayCount
-                });
-            });
-
-            list.sort((a, b) => {
-                if (b.displayCount !== a.displayCount) return b.displayCount - a.displayCount;
-                if (b.annualCount !== a.annualCount) return b.annualCount - a.annualCount;
-                return a.id.localeCompare(b.id);
-            });
-            return list;
         }
     },
     watch: {

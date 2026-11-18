@@ -181,34 +181,8 @@
                             </span>
                         </div>
                         <div class="map-legend-hint">
-                            Click any site marker or row below to view publications • Zoom in for dense clusters
+                            Click any site marker to view publications • Zoom in for dense clusters
                         </div>
-                    </div>
-                </div>
-
-                <!-- Site Leaderboard for Selected Year -->
-                <div class="chart-container full-width-chart map-leaderboard-card">
-                    <div class="map-leaderboard-header">
-                        <h2>Publications by Site ({{ mode === 'cumulative' ? 'Cumulative through ' + selectedYear : 'In ' + selectedYear }})</h2>
-                        <input id="map-site-search" name="siteFilter" v-model="siteFilter" type="text" class="graph-search-input map-site-search" placeholder="Filter site, institution, or country...">
-                    </div>
-                    <div class="map-site-grid">
-                        <button v-for="entry in rankedSites"
-                                :key="entry.id"
-                                class="map-site-chip"
-                                :class="{ 'has-new-in-year': entry.annualCount > 0, 'is-joined-only': entry.displayCount === 0, 'is-joined-this-year': entry.yearAdded === selectedYear }"
-                                @click="openSiteModal(entry.id)">
-                            <div class="map-site-chip-top">
-                                <span class="map-site-code">{{ entry.id }}</span>
-                                <span class="map-site-count">{{ entry.displayCount }}</span>
-                            </div>
-                            <div class="map-site-chip-name">{{ entry.name }}</div>
-                            <div class="map-site-chip-meta">
-                                <span>{{ entry.country || 'Unknown' }}</span>
-                                <span v-if="entry.yearAdded">• Joined {{ entry.yearAdded }}</span>
-                                <span v-if="mode === 'cumulative' && entry.annualCount > 0" class="map-site-delta">+{{ entry.annualCount }} in {{ selectedYear }}</span>
-                            </div>
-                        </button>
                     </div>
                 </div>
 
