@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S1ZSJQ3NE3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-S1ZSJQ3NE3');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Publications - dVRK Community Publications</title>
+    <meta name="description" content="Publications enabled by shared da Vinci Research Kit (dVRK) datasets.">
+    <link rel="canonical" href="https://jhu-dvrk.github.io/community-publications/datasets.html">
+    <link rel="icon" type="image/png" href="dvrk-logo.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jhu-dvrk.github.io/community-publications/datasets.html">
+    <meta property="og:title" content="Dataset Publications - dVRK Community Publications">
+    <meta property="og:description" content="Publications enabled by shared da Vinci Research Kit (dVRK) datasets.">
+    <meta property="og:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://jhu-dvrk.github.io/community-publications/datasets.html">
+    <meta name="twitter:title" content="Dataset Publications - dVRK Community Publications">
+    <meta name="twitter:description" content="Publications enabled by shared da Vinci Research Kit (dVRK) datasets.">
+    <meta name="twitter:image" content="https://jhu-dvrk.github.io/community-publications/dvrk-logo.png">
+
+    <script>
+        (function() {
+            const stored = localStorage.getItem('dvrk_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', stored || (prefersDark ? 'dark' : 'light'));
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bibtex-parse-js@0.0.24/bibtexParse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.5.42/dist/vue.global.prod.js"></script>
+    <script src="config.js?v=10"></script>
+    <link rel="stylesheet" href="styles.css?v=18">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <img src="dvrk-logo.png" alt="dVRK Logo" class="logo">
+                    <h1>Community Publications</h1>
+                </div>
+                <p class="subtitle">da Vinci Research Kit • {{ publications.length }} dataset-enabled publications • {{ datasetCatalog.length }} shared datasets •
+                    Contribute
+                    <a href="https://github.com/jhu-dvrk/community-publications" target="_blank" rel="noopener noreferrer">https://github.com/jhu-dvrk/community-publications</a>
+                </p>
+                <div class="header-nav">
+                    <a href="index.html" class="nav-btn">Publications</a>
+                    <a href="analytics.html" class="nav-btn">Analytics</a>
+                    <a href="map.html" class="nav-btn">Map</a>
+                    <a href="collaborations.html" class="nav-btn">Collaborations</a>
+                    <a href="graph.html" class="nav-btn">Cross References</a>
+                    <span class="nav-divider" aria-hidden="true"></span>
+                    <a href="datasets.html" class="nav-btn nav-btn-dataset active">Dataset Publications</a>
+                    <button class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+                        <span class="theme-toggle-icon">🌙</span>
+                        <span class="theme-toggle-text">Dark</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <div v-if="loading" class="loading">
+                <p>Loading dataset publications...</p>
+            </div>
+
+            <div v-else>
+                <!-- Search and Filter Section -->
+                <div class="controls">
+                    <div class="search-box">
+                        <div class="search-input-wrapper">
+                            <input id="pub-search-input" name="searchQuery" v-model="searchQuery" type="text"
+                                placeholder="Search publications by title, author, venue, or keywords..." class="search-input" aria-label="Search dataset publications">
+                            <button v-if="searchQuery" @click="searchQuery = ''" class="search-clear-btn" title="Clear search">✕</button>
+                        </div>
+                        <label class="search-abstract-label" title="Search inside publication abstracts">
+                            <input id="search-in-abstract" name="searchInAbstract" type="checkbox" v-model="searchInAbstract">
+                            <span>Search in abstracts</span>
+                        </label>
+                    </div>
+
+                    <div class="filters">
+                        <select id="sort-select" name="sortBy" v-model="sortBy" class="filter-select sort-select" title="Sort order" aria-label="Sort publications">
+                            <option value="year_desc">📅 Published (Newest)</option>
+                            <option value="year_asc">📅 Published (Oldest)</option>
+                            <option value="date_added_desc">✨ Recently Added</option>
+                            <option value="title_asc">🔤 Title (A–Z)</option>
+                            <option value="author_asc">👤 Author (A–Z)</option>
+                        </select>
+
+                        <select id="start-year-select" name="startYear" v-model="startYear" class="filter-select year-select" aria-label="Start year">
+                            <option v-for="year in availableStartYears" :key="year" :value="year">
+                                From {{ year }}
+                            </option>
+                        </select>
+
+                        <select id="end-year-select" name="endYear" v-model="endYear" class="filter-select year-select" aria-label="End year">
+                            <option v-for="year in availableEndYears" :key="year" :value="year">
+                                To {{ year }}
+                            </option>
+                        </select>
+
+                        <select id="type-select" name="selectedType" v-model="selectedType" class="filter-select" aria-label="Filter by publication type">
+                            <option value="">All Types</option>
+                            <option value="article">Journal Articles</option>
+                            <option value="inproceedings">Conference Papers</option>
+                            <option value="incollection">Book Chapters</option>
+                            <option value="phdthesis">Theses</option>
+                            <option value="misc">Other</option>
+                        </select>
+
+                        <select id="peer-reviewed-select" name="selectedPeerReviewed" v-model="selectedPeerReviewed" class="filter-select" aria-label="Filter by review status">
+                            <option value="">All Review Statuses</option>
+                            <option value="yes">Peer-Reviewed Only</option>
+                            <option value="no">Preprints / Unreviewed</option>
+                            <option value="thesis">Theses / Dissertations</option>
+                        </select>
+
+                        <select id="dataset-select" name="selectedDataset" v-model="selectedDataset" class="filter-select" aria-label="Filter by dVRK dataset">
+                            <option value="">All Datasets</option>
+                            <option v-for="ds in availableDatasets" :key="ds.id" :value="ds.id">
+                                {{ ds.name }} ({{ ds.count }})
+                            </option>
+                        </select>
+
+                        <button @click="resetFilters" class="reset-btn">Reset Filters</button>
+                        <button @click="downloadFilteredBibtex" class="download-btn" :disabled="filteredPublications.length === 0">⬇ BibTeX ({{ filteredPublications.length }})</button>
+                        <button @click="downloadFilteredRis" class="download-btn ris-download-btn" :disabled="filteredPublications.length === 0" title="Download RIS file for Zotero, Mendeley, or EndNote">⬇ RIS ({{ filteredPublications.length }})</button>
+                    </div>
+
+                    <div v-if="activeFilterChips.length > 0" class="active-filters-bar">
+                        <span class="active-filters-label">Active filters:</span>
+                        <div class="active-filters-list">
+                            <button v-for="chip in activeFilterChips" :key="chip.key" type="button"
+                                class="active-filter-chip" :class="'chip-' + chip.kind"
+                                @click="chip.clear()"
+                                :title="'Remove ' + chip.prefix + ' filter'">
+                                <span class="chip-prefix">{{ chip.prefix }}:</span>
+                                <span class="chip-value">{{ chip.value }}</span>
+                                <span class="chip-remove" aria-hidden="true">✕</span>
+                            </button>
+                        </div>
+                        <button type="button" class="copy-filter-link-btn" :class="{ copied: filterLinkCopied }"
+                            @click="copyShareableFilterUrl" title="Copy shareable URL for the current filtered view">
+                            {{ filterLinkCopied ? '✓ Link Copied' : '🔗 Copy View Link' }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Selected Dataset Origin Card -->
+                <div v-if="selectedDatasetInfo" class="active-filters-bar" style="margin-bottom: 1rem;">
+                    <span class="active-filters-label">Dataset Origin:</span>
+                    <span class="active-filter-chip chip-type" style="cursor: default;">
+                        <span class="chip-value">{{ selectedDatasetInfo.name }}</span>
+                    </span>
+                    <a :href="'index.html?id=' + encodeURIComponent(selectedDatasetInfo.id)" class="pub-link">
+                        📄 {{ selectedDatasetInfo.title }} ({{ selectedDatasetInfo.year }}) ↗
+                    </a>
+                </div>
+
+                <!-- Statistics -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ filteredPublications.length }}</span>
+                        <span class="stat-label">Publications</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">{{ totalAuthors }}</span>
+                        <span class="stat-label">Authors</span>
+                    </div>
+                </div>
+
+                <!-- Publications List -->
+                <div class="publications-list">
+                    <publication-card
+                        v-for="pub in filteredPublications"
+                        :key="pub.id"
+                        :pub="pub"
+                        :selected-author="selectedAuthor"
+                        :selected-peer-reviewed="selectedPeerReviewed"
+                        :selected-dataset="selectedDataset"
+                        :dataset-creator-map="datasetCreatorMap"
+                        :get-dataset-name="getDatasetName"
+                        :show-share="true"
+                        :show-citations="false"
+                        @toggle-author="toggleAuthorFilter"
+                        @toggle-peer-reviewed="togglePeerReviewedFilter"
+                        @toggle-dataset="toggleDatasetFilter">
+                    </publication-card>
+
+                    <div v-if="filteredPublications.length === 0" class="no-results">
+                        <p>No dataset publications found matching your criteria.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>dVRK Community Publications • Built with Vue.js • Data from dataset_publications.bib &amp; publications.bib</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="datasets.js"></script>
+</body>
+
+</html>

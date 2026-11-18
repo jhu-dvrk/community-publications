@@ -572,6 +572,25 @@ main {
     box-shadow: 0 1px 3px rgba(126, 34, 206, 0.35);
 }
 
+.tag-dataset {
+    background: #ccfbf1;
+    color: #0f766e;
+    border: 1px solid #99f6e4;
+    text-decoration: none;
+}
+
+.tag-dataset.tag-interactive:hover {
+    background: #99f6e4;
+    border-color: #5eead4;
+}
+
+.tag-dataset.tag-interactive.active {
+    background: #0f766e;
+    color: #ffffff;
+    border-color: #115e59;
+    box-shadow: 0 1px 3px rgba(15, 118, 110, 0.35);
+}
+
 .tag-preprint {
     background: #fef3c7;
     color: #b45309;
@@ -1013,6 +1032,30 @@ footer a:hover {
     font-weight: 600;
     border-color: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.nav-divider {
+    display: inline-block;
+    width: 1px;
+    height: 1.5rem;
+    background: rgba(255, 255, 255, 0.35);
+    margin: 0 0.25rem;
+}
+
+.nav-btn-dataset {
+    background: rgba(20, 184, 166, 0.22);
+    border-color: rgba(153, 246, 228, 0.45);
+}
+
+.nav-btn-dataset:hover {
+    background: rgba(20, 184, 166, 0.38);
+    border-color: rgba(153, 246, 228, 0.75);
+}
+
+.nav-btn-dataset.active {
+    background: #ccfbf1;
+    color: #0f766e;
+    border-color: #99f6e4;
 }
 
 /* Theme Toggle Button */
@@ -2151,6 +2194,25 @@ div.vis-tooltip {
     box-shadow: 0 0 0 1px rgba(192, 132, 252, 0.4);
 }
 
+[data-theme="dark"] .tag-dataset {
+    background: rgba(20, 184, 166, 0.18);
+    color: #5eead4;
+    border: 1px solid rgba(20, 184, 166, 0.32);
+    text-decoration: none;
+}
+
+[data-theme="dark"] .tag-dataset.tag-interactive:hover {
+    background: rgba(20, 184, 166, 0.3);
+    border-color: rgba(94, 234, 212, 0.55);
+}
+
+[data-theme="dark"] .tag-dataset.tag-interactive.active {
+    background: #0f766e;
+    color: #ffffff;
+    border-color: #2dd4bf;
+    box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.4);
+}
+
 [data-theme="dark"] .tag-preprint {
     background: rgba(245, 158, 11, 0.18);
     color: #fcd34d;
@@ -2341,6 +2403,12 @@ div.vis-tooltip {
     background: var(--card-bg);
     color: var(--accent-color);
     border-color: var(--accent-color);
+}
+
+[data-theme="dark"] .nav-btn-dataset.active {
+    background: #0f766e;
+    color: #ffffff;
+    border-color: #5eead4;
 }
 
 [data-theme="dark"] .network-tooltip {

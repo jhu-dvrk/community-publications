@@ -23,6 +23,7 @@ from bibtexparser.bwriter import BibTexWriter
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DEFAULT_BIB_PATH = os.path.join(REPO_ROOT, "publications.bib")
+DEFAULT_DATASET_BIB_PATH = os.path.join(REPO_ROOT, "dataset_publications.bib")
 CUSTOM_TAGS_PATH = os.path.join(REPO_ROOT, "custom_tags.json")
 PEER_REVIEW_OVERRIDES_PATH = os.path.join(REPO_ROOT, "peer_review_overrides.json")
 CACHE_DIR = os.path.join(REPO_ROOT, "cache")
@@ -37,7 +38,7 @@ FIELD_ORDER = [
     "semanticscholar", "arxiv", "arxivid", "archiveprefix", "primaryclass", "eprint",
     "pdf", "openaccesspdf", "howpublished", "pubstate", "date", "tppubtype",
     "copyright", "language",
-    "research_field", "data_type", "peer_reviewed", "dvrk_site", "dvrk_cites", "date_added",
+    "research_field", "data_type", "peer_reviewed", "dvrk_site", "dvrk_dataset", "datasets", "dvrk_cites", "date_added",
     "keywords", "abstract",
 ]
 

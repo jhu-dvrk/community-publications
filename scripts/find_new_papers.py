@@ -68,21 +68,41 @@ OPENALEX_MAILTO = "dvrk@jhu.edu"   # Polite-pool access for OpenAlex
 # BibTeX file helpers
 # ---------------------------------------------------------------------------
 
-def load_existing_data(bib_path):
-    """Return (set of normalized DOIs, set of normalized titles) already in the bib file."""
+def load_existing_data(bib_path, extra_bib_paths=None):
+    """Return (set of normalized DOIs, set of normalized titles) across bib files."""
     dois, titles = set(), set()
+    paths = [bib_path] + list(extra_bib_paths or [])
+    for path in paths:
+        if not path or not os.path.exists(path):
+            continue
+        try:
+            db = load_bib(path)
+            for entry in db.entries:
+                norm_d = normalize_doi(entry.get("doi"))
+                if norm_d:
+                    dois.add(norm_d)
+                norm_t = normalize_title(entry.get("title"))
+                if norm_t:
+                    titles.add(norm_t)
+        except Exception as e:
+            print(f"Error reading bib file '{path}': {e}")
+    return dois, titles
+
+
+def load_dataset_creators(bib_path):
+    """Return sorted list of (bib_id, dataset_name) for entries with dvrk_dataset."""
+    creators = []
+    if not bib_path or not os.path.exists(bib_path):
+        return creators
     try:
         db = load_bib(bib_path)
         for entry in db.entries:
-            norm_d = normalize_doi(entry.get("doi"))
-            if norm_d:
-                dois.add(norm_d)
-            norm_t = normalize_title(entry.get("title"))
-            if norm_t:
-                titles.add(norm_t)
+            ds_name = (entry.get("dvrk_dataset") or "").strip()
+            if entry.get("ID") and ds_name:
+                creators.append((entry["ID"], ds_name))
     except Exception as e:
-        print(f"Error reading bib file: {e}")
-    return dois, titles
+        print(f"Error loading dataset creators from '{bib_path}': {e}")
+    return sorted(creators, key=lambda x: x[1].lower())
 
 
 def load_rejected_dois(rejected_path):
@@ -116,8 +136,8 @@ def save_rejected(paper, rejected_path):
         json.dump(lst, f, indent=2)
 
 
-def append_to_bib(paper, bib_path):
-    """Append a paper's BibTeX block to the bib file, injecting custom fields."""
+def append_to_bib(paper, bib_path, datasets=None):
+    """Append a paper's BibTeX block to publications.bib or dataset_publications.bib."""
     if not paper.get("bibtex"):
         print("  Cannot add: no BibTeX available.")
         return False
@@ -135,7 +155,10 @@ def append_to_bib(paper, bib_path):
                 bib_block += f",\n  ieeexplore = {{{paper['ieeexplore']}}}"
             if paper.get("arxiv") and "arxiv =" not in block_lower:
                 bib_block += f",\n  arxiv = {{{paper['arxiv']}}}"
-            if paper.get("dvrk_site") and "dvrk_site =" not in block_lower:
+            if datasets:
+                if "datasets =" not in block_lower and "datasets=" not in block_lower:
+                    bib_block += f",\n  datasets = {{{' and '.join(datasets)}}}"
+            elif paper.get("dvrk_site") and "dvrk_site =" not in block_lower:
                 bib_block += f",\n  dvrk_site = {{{paper['dvrk_site']}}}"
             pr = paper.get("peer_reviewed")
             if not pr:
@@ -699,7 +722,13 @@ def main():
     )
     parser.add_argument("--start-year", type=int, default=2021, help="Start year (default: 2021)")
     parser.add_argument("--end-year",   type=int, default=2025, help="End year   (default: 2025)")
-    parser.add_argument("--bib",        default="publications.bib", help="Path to bib file")
+    parser.add_argument("--bib",        default="publications.bib", help="Path to primary publications.bib")
+    parser.add_argument("--dataset-bib", default="dataset_publications.bib", help="Path to dataset_publications.bib")
+    parser.add_argument(
+        "--no-dataset-queries",
+        action="store_true",
+        help="Skip searching OpenAlex/arXiv by known dVRK dataset names",
+    )
     parser.add_argument(
         "--sources",
         nargs="+",
@@ -714,12 +743,23 @@ def main():
     )
     args = parser.parse_args()
 
-    existing_dois, existing_titles = load_existing_data(args.bib)
+    existing_dois, existing_titles = load_existing_data(args.bib, [args.dataset_bib])
+    dataset_creators = load_dataset_creators(args.bib)
     rejected_dois = load_rejected_dois(REJECTED_FILE)
     print(f"Loaded {len(existing_dois)} existing DOIs, {len(existing_titles)} existing titles, "
-          f"{len(rejected_dois)} rejected items.\n")
+          f"{len(dataset_creators)} dataset creators, {len(rejected_dois)} rejected items.\n")
 
     queries = ["dVRK", "da Vinci Research Kit"]
+    dataset_queries = []
+    if not args.no_dataset_queries:
+        for _, ds_name in dataset_creators:
+            for tok in re.split(r"\s*/\s*", ds_name):
+                tok = tok.strip()
+                # Query specific dataset names (>= 5 chars or hyphenated, skipping ambiguous short acronyms)
+                if len(tok) >= 5 and tok.lower() not in {"drends"}:
+                    dataset_queries.append(tok)
+        dataset_queries = list(dict.fromkeys(dataset_queries))
+
     years   = list(range(args.start_year, args.end_year + 1))
     sources_to_run = [s.lower() for s in args.sources]
 
@@ -735,7 +775,7 @@ def main():
 
     # --- OpenAlex (broadest open index, polite pool, includes abstracts & affiliations) ---
     if "openalex" in sources_to_run:
-        for q in queries:
+        for q in queries + dataset_queries:
             add_results(search_openalex(q, args.start_year, args.end_year,
                                         existing_dois, existing_titles, rejected_dois))
             time.sleep(0.2)
@@ -749,7 +789,7 @@ def main():
 
     # --- arXiv (good for preprints, no key needed) ---
     if "arxiv" in sources_to_run:
-        for q in queries:
+        for q in queries + dataset_queries:
             add_results(search_arxiv(q, args.start_year, args.end_year,
                                      existing_dois, existing_titles, rejected_dois))
             time.sleep(1)
@@ -837,7 +877,9 @@ def main():
 
         # Prompt
         while True:
-            choice = input("\n  Add? [y]es / [n]o (reject) / [s]kip / [q]uit: ").lower().strip()
+            choice = input(
+                "\n  Add? [y]es (publications.bib) / [d]ataset-only (dataset_publications.bib) / [n]o (reject) / [s]kip / [q]uit: "
+            ).lower().strip()
             if choice in ("y", "yes"):
                 if append_to_bib(paper, args.bib):
                     added_count += 1
@@ -845,6 +887,34 @@ def main():
                     if paper.get("doi"):
                         existing_dois.add(normalize_doi(paper["doi"]))
                 break
+            elif choice in ("d", "dataset"):
+                if not dataset_creators:
+                    print("  ⚠️  No dvrk_dataset creators found in publications.bib.")
+                    continue
+                print("\n  Available dVRK datasets:")
+                for idx_ds, (ds_id, ds_name) in enumerate(dataset_creators, 1):
+                    print(f"    {idx_ds:2d}. {ds_name} ({ds_id})")
+                raw_sel = input("  Enter dataset number(s) or BibTeX ID(s) (comma-separated, blank to cancel): ").strip()
+                if not raw_sel:
+                    continue
+                chosen_ids = []
+                creator_id_set = {cid for cid, _ in dataset_creators}
+                for tok in [t.strip() for t in re.split(r"[\s,]+", raw_sel) if t.strip()]:
+                    if tok.isdigit() and 1 <= int(tok) <= len(dataset_creators):
+                        chosen_ids.append(dataset_creators[int(tok) - 1][0])
+                    elif tok in creator_id_set:
+                        chosen_ids.append(tok)
+                    else:
+                        print(f"  ⚠️  Unrecognized dataset selection '{tok}'.")
+                        chosen_ids = []
+                        break
+                chosen_ids = list(dict.fromkeys(chosen_ids))
+                if chosen_ids and append_to_bib(paper, args.dataset_bib, datasets=chosen_ids):
+                    added_count += 1
+                    existing_titles.add(normalize_title(paper["title"]))
+                    if paper.get("doi"):
+                        existing_dois.add(normalize_doi(paper["doi"]))
+                    break
             elif choice in ("n", "no"):
                 save_rejected(paper, REJECTED_FILE)
                 print("  ❌ Rejected.")
@@ -856,7 +926,7 @@ def main():
                 stop_requested = True
                 break
             else:
-                print("  Please type y, n, s, or q.")
+                print("  Please type y, d, n, s, or q.")
         if stop_requested:
             break
 

@@ -150,5 +150,61 @@
   {
     "doi": "10.1007/978-3-032-38470-6_30",
     "title": "SurgVLA-Bench: Towards Evaluating Vision-Language-Action Models for Laparoscopic Surgical Robotics"
+  },
+  {
+    "doi": "10.48550/arxiv.2611.21771",
+    "title": "An Open-Source da Vinci X/Xi Instrument Module for Laparoscopic Surgery Research"
+  },
+  {
+    "doi": "10.1109/biorob66782.2026.11681209",
+    "title": "Simulation of Surgical Suturing Using Position-Based Dynamics and the Material Point Method for Robot Reinforcement Learning"
+  },
+  {
+    "doi": "10.1109/ismr69606.2026.11536258",
+    "title": "PushCVAE: Generative Autonomous Nonprehensile Surgical Retraction from Monocular Endoscopic Images"
+  },
+  {
+    "doi": "10.1109/icra57385.2026.11695770",
+    "title": "Give me scissors: Collision-Free Dual-Arm Surgical Assistive Robot for Instrument Delivery"
+  },
+  {
+    "doi": "10.1109/icra57385.2026.11697569",
+    "title": "NeuroVLA: Surgical Scenario-Aware Learning of Debulking Skills in Endoscopic Robotic Neurosurgery via Vision-Language-Action Model"
+  },
+  {
+    "doi": "10.5281/zenodo.22141349",
+    "title": "Factsheet - Een cross-generationeel onderzoek naar de fysieke gezondheid, mentale gezondheid en leefstijl tijdens de COVID-19-pandemie in Nederland: resultaten van netwerkanalyses"
+  },
+  {
+    "doi": "10.5281/zenodo.18778219",
+    "title": "Unification Standard Level for Physical AI Oncology Trials"
+  },
+  {
+    "doi": "10.48550/arxiv.2610.31010",
+    "title": "Revisiting Distribution Matching for State-to-Vision Policy Distillation in Laparoscopic Robotic Manipulation"
+  },
+  {
+    "doi": "10.5281/zenodo.22819209",
+    "title": "Non-Invertible but Not Anonymous: A Privacy Characterization of a Deterministic Edge Decision Token, and a Decision-Bottleneck Egress Rule"
+  },
+  {
+    "doi": "10.5281/zenodo.21629152",
+    "title": "Recovering Deployment-Drift Loss in Single-Token Sensor Classifiers: An Independent-Confirmation Co-Channel, On-Device Twin Distillation, and the Error-Independence Requirement"
+  },
+  {
+    "doi": "10.5281/zenodo.21644284",
+    "title": "A Self-Validating Free Confirmation Channel for No-Harm On-Device Drift Adaptation of Single-Token Classifiers"
+  },
+  {
+    "doi": "10.5281/zenodo.21982599",
+    "title": "Decision-Bits, Not Fidelity-Bits: A Rate–Accuracy Comparison of a Task-Aware Single-Token Encoder Against General-Purpose Compression Codecs"
+  },
+  {
+    "doi": "10.5281/zenodo.22003178",
+    "title": "A Deterministic Task-Discriminant Token Ladder: When and Why Multi-Token Quantization Pays for Edge Decisions"
+  },
+  {
+    "doi": "10.5281/zenodo.22046712",
+    "title": "Composing and Hardening a Single Decision Token: A Pre-Registered Characterization of Inference-Time Channel Fusion, Its Envelope, and a Cheap Noise-Robust Head"
   }
 ]

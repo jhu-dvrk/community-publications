@@ -2,11 +2,19 @@
 
 ## Publication Inclusion Criteria (Strict Guardrail)
 
-Only add or retain a publication in `publications.bib` if the work was **made possible by the existence of the dVRK**:
+Only add or retain a publication in the repository if the work was **made possible by the existence of the dVRK**, routed into two mutually exclusive bibliographies:
+
+### Tier 1: `publications.bib` (Core dVRK Research & Dataset Creators)
 1. **dVRK / dVRK-Si Hardware**: Develops, modifies, integrates sensors/tools with, or experimentally evaluates on physical dVRK or dVRK-Si manipulators/consoles.
 2. **dVRK Software & Simulators**: Develops or evaluates algorithms using dVRK software stacks (`sawIntuitiveResearchKit`, cisst/SAW) or dVRK simulation environments (e.g., AMBF, SurRoL, dVRL, Orbit-Surgical, dVRK CoppeliaSim/Unity virtual platforms).
-3. **dVRK-Acquired Datasets**: Trains or benchmarks on datasets recorded using the dVRK (e.g., SurgRIPE, SurgPose, ROSMA, Open-H, CRCD, LUMICS, MV-dVRK).
-4. **dVRK-Focused Reviews (`RE`)**: Reviews specifically centered on the dVRK platform, its dynamics/software, or the dVRK research community (e.g., D'Ettorre et al. 2021, Zhang et al. 2026).
+3. **Dataset Creators (`dvrk_dataset`)**: Introduces/releases a public dVRK-acquired dataset. Set `dvrk_dataset = {<Readable Dataset Name>}` **if and only if** the entry documents the creation of a dataset.
+4. **Hybrid dVRK + Dataset Works**: Papers that use **both** physical dVRK/dVRK simulators and a shared dVRK dataset belong in `publications.bib` (without `dvrk_dataset`, unless creating a new dataset).
+5. **dVRK-Focused Reviews (`RE`)**: Reviews specifically centered on the dVRK platform, its dynamics/software, or the dVRK research community (e.g., D'Ettorre et al. 2021, Zhang et al. 2026).
+
+### Tier 2: `dataset_publications.bib` (Dataset-Only Downstream Research)
+- Papers that **only** train or benchmark on dVRK-acquired datasets (e.g., SurgRIPE, SurgPose, ROSMA, Open-H, CRCD, LUMICS, MV-dVRK) without using dVRK hardware, dVRK software, or dVRK simulators belong in `dataset_publications.bib`.
+- **Distinct schema**: `dataset_publications.bib` uses `datasets = {<CreatorBibID1> and <CreatorBibID2>}` referencing entries with `dvrk_dataset` in `publications.bib`, plus `peer_reviewed` and `date_added` (it does **not** use `research_field`, `data_type`, `dvrk_site`, `dvrk_cites`, or `dvrk_dataset`).
+- **Mutual exclusivity**: No paper (citation key or DOI) may appear in both `publications.bib` and `dataset_publications.bib`.
 
 ### Explicit Exclusions (Record in `rejected_papers.json`)
 - **Author-only overlap**: Do **not** include papers merely because one or more authors belong to a dVRK site or have previously published on the dVRK.

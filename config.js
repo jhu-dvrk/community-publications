@@ -785,18 +785,29 @@ const CONFIG = {
             });
         }
 
+        if (criteria.selectedDataset) {
+            const selDataset = criteria.selectedDataset;
+            filtered = filtered.filter(pub => (pub.datasets || []).includes(selDataset));
+        }
+
         return criteria.sortBy ? this.sortPublications(filtered, criteria.sortBy) : filtered;
+    },
+
+    getDatasetPageUrl(datasetId) {
+        if (!datasetId) return 'datasets.html';
+        return `datasets.html?dataset=${encodeURIComponent(datasetId)}`;
     },
 
     async loadPublications(options = {}) {
         const {
+            bibUrl = 'publications.bib',
             withBibtexText = false,
             withCitations = false,
             withUiState = false,
             sortBy = 'year_desc'
         } = options;
 
-        const response = await fetch('publications.bib');
+        const response = await fetch(bibUrl);
         const bibtexText = await response.text();
         const cleanedBibtexText = this.cleanBibtexText(bibtexText);
         const parsed = bibtexParse.toJSON(cleanedBibtexText);
@@ -844,6 +855,8 @@ const CONFIG = {
                     data_type: tags.data_type ? tags.data_type.replace(/[{}]/g, '') : '',
                     peer_reviewed: tags.peer_reviewed ? tags.peer_reviewed.replace(/[{}]/g, '').toLowerCase().trim() : '',
                     dvrk_site: tags.dvrk_site ? tags.dvrk_site.replace(/[{}]/g, '') : '',
+                    dvrk_dataset: tags.dvrk_dataset ? this.convertLatexToUnicode(tags.dvrk_dataset.replace(/[{}]/g, '').trim()) : '',
+                    datasets: this.parseTagCodes(tags.datasets ? tags.datasets.replace(/[{}]/g, '') : ''),
                     date_added: tags.date_added ? tags.date_added.replace(/[{}]/g, '') : '',
                     cites: this.parseTagCodes(tags.dvrk_cites ? tags.dvrk_cites.replace(/[{}]/g, '') : ''),
                     cited_by: []
@@ -939,6 +952,391 @@ const CONFIG = {
                         h('div', { class: 'modal-pub-meta' }, metaChildren)
                     ]);
                 }));
+            }
+        });
+
+        app.component('publication-card', {
+            props: {
+                pub: { type: Object, required: true },
+                selectedAuthor: { type: String, default: '' },
+                selectedPeerReviewed: { type: String, default: '' },
+                selectedField: { type: String, default: '' },
+                selectedDataType: { type: String, default: '' },
+                selectedSite: { type: String, default: '' },
+                selectedDataset: { type: String, default: '' },
+                datasetReuseCount: { type: Number, default: 0 },
+                datasetCreatorMap: { type: Object, default: () => ({}) },
+                getDatasetName: { type: Function, default: null },
+                publicationMap: { type: Object, default: () => ({}) },
+                showShare: { type: Boolean, default: true },
+                showCitations: { type: Boolean, default: false }
+            },
+            emits: [
+                'toggle-author',
+                'toggle-peer-reviewed',
+                'toggle-field',
+                'toggle-data-type',
+                'toggle-site',
+                'toggle-dataset',
+                'navigate-publication'
+            ],
+            methods: {
+                closePanelsExcept(keep) {
+                    const panels = ['showAbstract', 'showBibtex', 'showRis', 'showCites', 'showCitedBy'];
+                    panels.forEach(p => {
+                        if (p !== keep) this.pub[p] = false;
+                    });
+                },
+                togglePanel(prop) {
+                    const next = !this.pub[prop];
+                    this.closePanelsExcept(prop);
+                    this.pub[prop] = next;
+                },
+                isAuthorSelected(auth) {
+                    return Boolean(this.selectedAuthor && self.authorsMatch(auth, this.selectedAuthor));
+                },
+                isSiteSelected(site) {
+                    return Boolean(
+                        this.selectedSite &&
+                        (site.acronym === this.selectedSite || site.name === this.selectedSite)
+                    );
+                },
+                async copyText(text, flagProp) {
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        this.pub[flagProp] = true;
+                        setTimeout(() => { this.pub[flagProp] = false; }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text:', err);
+                    }
+                },
+                async sharePublication() {
+                    const shareUrl = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(this.pub.id)}`;
+                    await this.copyText(shareUrl, 'copied');
+                },
+                downloadFile(content, filename, mimeType) {
+                    const blob = new Blob([content], { type: mimeType });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            },
+            render() {
+                const pub = this.pub;
+                const children = [];
+
+                children.push(h('h3', { class: 'pub-title' }, pub.title));
+
+                if (pub.authorsList && pub.authorsList.length) {
+                    const authorNodes = [];
+                    pub.authorsList.forEach((auth, aIdx) => {
+                        const active = this.isAuthorSelected(auth);
+                        authorNodes.push(h('button', {
+                            type: 'button',
+                            class: ['author-pill', { active }],
+                            'aria-pressed': active,
+                            title: active ? `Clear author filter: ${auth.full}` : `Filter by author: ${auth.full}`,
+                            onClick: () => this.$emit('toggle-author', auth.full)
+                        }, auth.full));
+                        if (aIdx < pub.authorsList.length - 2) {
+                            authorNodes.push(', ');
+                        } else if (aIdx === pub.authorsList.length - 2) {
+                            authorNodes.push(pub.authorsList.length > 2 ? ', and ' : ' and ');
+                        }
+                    });
+                    children.push(h('p', { class: 'pub-authors' }, authorNodes));
+                }
+
+                const venueText = pub.journal || pub.booktitle || pub.howpublished || pub.school;
+                if (venueText || pub.year || pub.date_added) {
+                    const venueNodes = [];
+                    if (venueText) venueNodes.push(h('strong', venueText));
+                    if (pub.volume) venueNodes.push(h('span', ` Vol. ${pub.volume}`));
+                    if (pub.number) venueNodes.push(h('span', `, No. ${pub.number}`));
+                    if (pub.year || pub.type) {
+                        venueNodes.push(h('span', { class: 'pub-meta' }, ` (${pub.year}, ${self.formatPublicationType(pub.type)})`));
+                    }
+                    if (pub.date_added) {
+                        venueNodes.push(h('span', { class: 'pub-meta' }, ` • Added ${pub.date_added}`));
+                    }
+                    children.push(h('p', { class: 'pub-venue' }, venueNodes));
+                }
+
+                if (pub.peer_reviewed === 'no' || pub.peer_reviewed === 'thesis') {
+                    const prNodes = [];
+                    if (pub.peer_reviewed === 'no') {
+                        const active = this.selectedPeerReviewed === 'no';
+                        prNodes.push(h('button', {
+                            type: 'button',
+                            class: ['tag', 'tag-interactive', 'tag-preprint', { active }],
+                            'aria-pressed': active,
+                            title: active ? 'Preprint / Working Paper — Click to clear filter' : 'Preprint / Working Paper — Click to filter preprints',
+                            onClick: () => this.$emit('toggle-peer-reviewed', 'no')
+                        }, 'Preprint'));
+                    }
+                    if (pub.peer_reviewed === 'thesis') {
+                        const active = this.selectedPeerReviewed === 'thesis';
+                        prNodes.push(h('button', {
+                            type: 'button',
+                            class: ['tag', 'tag-interactive', 'tag-thesis', { active }],
+                            'aria-pressed': active,
+                            title: active ? 'Thesis / Dissertation — Click to clear filter' : 'Thesis / Dissertation — Click to filter theses',
+                            onClick: () => this.$emit('toggle-peer-reviewed', 'thesis')
+                        }, 'Thesis'));
+                    }
+                    children.push(h('div', { class: 'pub-tags' }, prNodes));
+                }
+
+                if (pub.research_field) {
+                    const fields = self.parseTagCodes(pub.research_field).map(c => self.FIELD_MAP[c] || c);
+                    children.push(h('div', { class: 'pub-tags' }, fields.map(field => {
+                        const active = this.selectedField === field;
+                        const desc = self.FIELD_DESCRIPTIONS[field] || '';
+                        return h('button', {
+                            key: field,
+                            type: 'button',
+                            class: ['tag', 'tag-interactive', { active }],
+                            'aria-pressed': active,
+                            title: (desc ? `${desc} — ` : '') + (active ? 'Click to clear filter' : `Click to filter by ${field}`),
+                            onClick: () => this.$emit('toggle-field', field)
+                        }, field);
+                    })));
+                }
+
+                if (pub.data_type) {
+                    const dtypes = self.parseTagCodes(pub.data_type).map(c => self.DATA_TYPE_MAP[c] || c);
+                    children.push(h('div', { class: 'pub-tags' }, dtypes.map(dt => {
+                        const active = this.selectedDataType === dt;
+                        const desc = self.DATA_TYPE_DESCRIPTIONS[dt] || '';
+                        return h('button', {
+                            key: dt,
+                            type: 'button',
+                            class: ['tag', 'tag-interactive', 'tag-data', { active }],
+                            'aria-pressed': active,
+                            title: (desc ? `${desc} — ` : '') + (active ? 'Click to clear filter' : `Click to filter by ${dt}`),
+                            onClick: () => this.$emit('toggle-data-type', dt)
+                        }, dt);
+                    })));
+                }
+
+                if (pub.dvrk_site) {
+                    const sites = self.parseSites(pub.dvrk_site);
+                    children.push(h('div', { class: 'pub-tags' }, sites.map(site => {
+                        const active = this.isSiteSelected(site);
+                        return h('button', {
+                            key: site.acronym,
+                            type: 'button',
+                            class: ['tag', 'tag-interactive', 'tag-site', { active }],
+                            'aria-pressed': active,
+                            title: active ? `Click to clear site filter: ${site.name}` : `Click to filter by site: ${site.name} (${site.acronym})`,
+                            onClick: () => this.$emit('toggle-site', site.acronym)
+                        }, site.name);
+                    })));
+                }
+
+                if (pub.dvrk_dataset) {
+                    children.push(h('div', { class: 'pub-tags' }, [
+                        h('a', {
+                            href: self.getDatasetPageUrl(pub.id),
+                            class: 'tag tag-interactive tag-dataset',
+                            title: `View ${this.datasetReuseCount} publication(s) using the ${pub.dvrk_dataset} dataset`
+                        }, `Dataset: ${pub.dvrk_dataset} (${this.datasetReuseCount}) ↗`)
+                    ]));
+                }
+
+                if (pub.datasets && pub.datasets.length > 0) {
+                    const dsNodes = [];
+                    pub.datasets.forEach(dsId => {
+                        const dsName = this.getDatasetName ? this.getDatasetName(dsId) : dsId;
+                        const active = this.selectedDataset === dsId;
+                        const creator = this.datasetCreatorMap[dsId];
+                        dsNodes.push(h('button', {
+                            key: dsId,
+                            type: 'button',
+                            class: ['tag', 'tag-interactive', 'tag-dataset', { active }],
+                            'aria-pressed': active,
+                            title: active ? 'Click to clear dataset filter' : `Click to filter by dataset: ${dsName}`,
+                            onClick: () => this.$emit('toggle-dataset', dsId)
+                        }, `Dataset: ${dsName}`));
+                        dsNodes.push(h('a', {
+                            key: `${dsId}-origin`,
+                            href: self.getPublicationUrl(dsId),
+                            class: 'tag tag-interactive tag-dataset',
+                            title: creator
+                                ? `View originating paper: ${creator.title} (${creator.year})`
+                                : `View originating paper (${dsId}) in Publications`
+                        }, '↗'));
+                    });
+                    children.push(h('div', { class: 'pub-tags' }, dsNodes));
+                }
+
+                const footerNodes = [];
+                if (pub.url) footerNodes.push(h('a', { href: pub.url, target: '_blank', class: 'pub-link' }, '📄 URL'));
+                if (pub.doi) footerNodes.push(h('a', { href: `https://doi.org/${pub.doi}`, target: '_blank', class: 'pub-link' }, '🔗 DOI'));
+                if (pub.ieeexplore) footerNodes.push(h('a', { href: pub.ieeexplore, target: '_blank', class: 'pub-link' }, '📚 IEEE Xplore'));
+                if (pub.semanticscholar) footerNodes.push(h('a', { href: pub.semanticscholar, target: '_blank', class: 'pub-link' }, '🔍 Semantic Scholar'));
+                if (pub.arxiv) footerNodes.push(h('a', { href: pub.arxiv, target: '_blank', class: 'pub-link', style: 'background-color: #4f46e5;' }, 'arXiv'));
+                if (pub.openaccesspdf) footerNodes.push(h('a', { href: pub.openaccesspdf, target: '_blank', class: 'pub-link', style: 'background-color: #dc2626;' }, '🔓 PDF'));
+                if (this.showShare) {
+                    footerNodes.push(h('button', {
+                        class: ['pub-link', 'share-btn', { copied: pub.copied }],
+                        title: `Share link to ${pub.title}`,
+                        onClick: () => this.sharePublication()
+                    }, pub.copied ? '✓ Copied' : '🔗 Share'));
+                }
+                if (pub.abstract) {
+                    footerNodes.push(h('button', {
+                        class: 'bibtex-btn',
+                        onClick: () => this.togglePanel('showAbstract')
+                    }, pub.showAbstract ? '✕ Hide Abstract' : '📝 Abstract'));
+                }
+                footerNodes.push(h('button', {
+                    class: ['bibtex-btn', { active: pub.showBibtex }],
+                    onClick: () => this.togglePanel('showBibtex')
+                }, pub.showBibtex ? '✕ Hide BibTeX' : '📋 BibTeX'));
+                footerNodes.push(h('button', {
+                    class: ['bibtex-btn', { active: pub.showRis }],
+                    title: 'View inline RIS citation and download .ris',
+                    onClick: () => this.togglePanel('showRis')
+                }, pub.showRis ? '✕ Hide RIS' : '📄 RIS'));
+
+                if (this.showCitations && pub.cites && pub.cites.length > 0) {
+                    footerNodes.push(h('button', {
+                        class: ['pub-link', 'cite-btn', { active: pub.showCites }],
+                        title: `View ${pub.cites.length} dVRK papers referenced by this work`,
+                        onClick: () => this.togglePanel('showCites')
+                    }, pub.showCites ? '✕ Hide Refs' : `📚 Refs (${pub.cites.length})`));
+                }
+                if (this.showCitations && pub.cited_by && pub.cited_by.length > 0) {
+                    footerNodes.push(h('button', {
+                        class: ['pub-link', 'cited-by-btn', { active: pub.showCitedBy }],
+                        title: `View ${pub.cited_by.length} dVRK papers citing this work`,
+                        onClick: () => this.togglePanel('showCitedBy')
+                    }, pub.showCitedBy ? '✕ Hide Cited By' : `🌟 Cited by (${pub.cited_by.length})`));
+                }
+                children.push(h('div', { class: 'pub-footer' }, footerNodes));
+
+                if (pub.showAbstract) {
+                    children.push(h('div', { class: 'bibtex-container abstract-container' }, [
+                        h('div', { class: 'code-container-header' }, [
+                            h('span', { class: 'code-format-label' }, 'Abstract')
+                        ]),
+                        h('p', { class: 'abstract-text' }, pub.abstract)
+                    ]));
+                }
+
+                if (pub.showBibtex) {
+                    children.push(h('div', { class: 'bibtex-container' }, [
+                        h('div', { class: 'code-container-header' }, [
+                            h('span', { class: 'code-format-label' }, 'BibTeX Entry'),
+                            h('div', { class: 'code-actions' }, [
+                                h('button', {
+                                    class: 'code-action-btn',
+                                    title: 'Copy BibTeX to clipboard',
+                                    onClick: () => this.copyText(pub.bibtexText || '', 'bibCopied')
+                                }, pub.bibCopied ? '✓ Copied!' : '📋 Copy'),
+                                h('a', {
+                                    href: '#',
+                                    class: 'inline-download-link',
+                                    title: 'Download .bib file',
+                                    onClick: e => {
+                                        e.preventDefault();
+                                        this.downloadFile(pub.bibtexText || '', `${pub.id}.bib`, 'application/x-bibtex');
+                                    }
+                                }, '⬇ Download .bib')
+                            ])
+                        ]),
+                        h('pre', { class: 'bibtex-text' }, pub.bibtexText)
+                    ]));
+                }
+
+                if (pub.showRis) {
+                    const risText = self.generateRis(pub);
+                    children.push(h('div', { class: 'bibtex-container' }, [
+                        h('div', { class: 'code-container-header' }, [
+                            h('span', { class: 'code-format-label' }, 'RIS Citation (EndNote / Zotero / Mendeley)'),
+                            h('div', { class: 'code-actions' }, [
+                                h('button', {
+                                    class: 'code-action-btn',
+                                    title: 'Copy RIS to clipboard',
+                                    onClick: () => this.copyText(risText, 'risCopied')
+                                }, pub.risCopied ? '✓ Copied!' : '📋 Copy'),
+                                h('a', {
+                                    href: '#',
+                                    class: 'inline-download-link',
+                                    title: 'Download .ris file',
+                                    onClick: e => {
+                                        e.preventDefault();
+                                        this.downloadFile(risText, `${pub.id}.ris`, 'application/x-research-info-systems');
+                                    }
+                                }, '⬇ Download .ris')
+                            ])
+                        ]),
+                        h('pre', { class: 'bibtex-text' }, risText)
+                    ]));
+                }
+
+                if (this.showCitations && pub.showCites) {
+                    children.push(h('div', { class: 'citation-container' }, [
+                        h('div', { class: 'citation-header' }, [
+                            h('strong', `📚 dVRK Community Papers Referenced (${pub.cites.length}):`)
+                        ]),
+                        h('ul', { class: 'citation-list' }, pub.cites.map(citeId => {
+                            const target = this.publicationMap[citeId];
+                            return h('li', {
+                                key: citeId,
+                                class: 'citation-item',
+                                onClick: () => this.$emit('navigate-publication', citeId)
+                            }, [
+                                target
+                                    ? h('div', { class: 'citation-info' }, [
+                                        h('span', { class: 'citation-link-title' }, target.title),
+                                        h('span', { class: 'citation-meta' }, `${target.year} • ${self.formatAuthors(target.author)}`)
+                                    ])
+                                    : h('div', { class: 'citation-info' }, [
+                                        h('span', { class: 'citation-link-title' }, citeId)
+                                    ]),
+                                h('span', { class: 'jump-arrow' }, '➔')
+                            ]);
+                        }))
+                    ]));
+                }
+
+                if (this.showCitations && pub.showCitedBy) {
+                    children.push(h('div', { class: 'citation-container' }, [
+                        h('div', { class: 'citation-header' }, [
+                            h('strong', `🌟 dVRK Community Papers Citing This Work (${pub.cited_by.length}):`)
+                        ]),
+                        h('ul', { class: 'citation-list' }, pub.cited_by.map(citingId => {
+                            const target = this.publicationMap[citingId];
+                            return h('li', {
+                                key: citingId,
+                                class: 'citation-item',
+                                onClick: () => this.$emit('navigate-publication', citingId)
+                            }, [
+                                target
+                                    ? h('div', { class: 'citation-info' }, [
+                                        h('span', { class: 'citation-link-title' }, target.title),
+                                        h('span', { class: 'citation-meta' }, `${target.year} • ${self.formatAuthors(target.author)}`)
+                                    ])
+                                    : h('div', { class: 'citation-info' }, [
+                                        h('span', { class: 'citation-link-title' }, citingId)
+                                    ]),
+                                h('span', { class: 'jump-arrow' }, '➔')
+                            ]);
+                        }))
+                    ]));
+                }
+
+                return h('div', {
+                    id: pub.id,
+                    class: ['publication-card', { 'pub-highlight': pub.isHighlighted }]
+                }, children);
             }
         });
     },

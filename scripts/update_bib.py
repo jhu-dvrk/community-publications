@@ -39,6 +39,7 @@ from bib_utils import (
     CONTAINER_WORK_TYPES,
     CUSTOM_TAGS_PATH,
     DEFAULT_BIB_PATH,
+    DEFAULT_DATASET_BIB_PATH,
     MASTHEAD_RE,
     MONTH_MAP,
     PEER_REVIEW_OVERRIDES_PATH,
@@ -589,27 +590,47 @@ def validate_bib(
     strict_format: bool = False,
     raw_file_text: str | None = None,
     formatted_text: str | None = None,
+    is_dataset_bib: bool = False,
+    primary_entries: list[dict] | None = None,
 ) -> tuple[list[str], list[str]]:
     """
-    Validate bibliography entries.
+    Validate bibliography entries for publications.bib or dataset_publications.bib.
     Returns (errors, advisories). Errors fail CI (--check); advisories inform PR authors.
     """
     errors: list[str] = []
     advisories: list[str] = []
+    bib_label = "dataset_publications.bib" if is_dataset_bib else "publications.bib"
 
     seen_ids: set[str] = set()
     doi_map: dict[str, list[dict]] = collections.defaultdict(list)
     valid_ids = {e.get("ID", "") for e in entries if e.get("ID")}
 
+    primary_ids: set[str] = set()
+    primary_dois: set[str] = set()
+    dataset_creator_ids: set[str] = set()
+    if primary_entries is not None:
+        for pe in primary_entries:
+            pid = (pe.get("ID") or "").strip()
+            if pid:
+                primary_ids.add(pid)
+                if (pe.get("dvrk_dataset") or "").strip():
+                    dataset_creator_ids.add(pid)
+            pdoi = normalize_doi(pe.get("doi"))
+            if pdoi:
+                primary_dois.add(pdoi)
+
     for idx, e in enumerate(entries, 1):
         eid = (e.get("ID") or "").strip()
         if not eid:
-            errors.append(f"Entry #{idx} is missing a citation key (ID).")
+            errors.append(f"[{bib_label}] Entry #{idx} is missing a citation key (ID).")
             continue
 
         if eid in seen_ids:
-            errors.append(f"Duplicate citation key '{eid}'.")
+            errors.append(f"[{bib_label}] Duplicate citation key '{eid}'.")
         seen_ids.add(eid)
+
+        if is_dataset_bib and eid in primary_ids:
+            errors.append(f"[{eid}] Appears in both publications.bib and dataset_publications.bib (must be mutually exclusive).")
 
         # Required core bibliographic fields
         for req in ("author", "title", "year"):
@@ -629,38 +650,74 @@ def validate_bib(
         ndoi = normalize_doi(e.get("doi"))
         if ndoi:
             doi_map[ndoi].append(e)
+            if is_dataset_bib and ndoi in primary_dois:
+                errors.append(f"[{eid}] DOI '{ndoi}' already exists in publications.bib (files must be mutually exclusive).")
 
-        # Custom tag code validation against custom_tags.json
-        for tag_field, allowed_codes in custom_tags.items():
-            raw_val = (e.get(tag_field) or "").strip()
-            if not raw_val:
-                if tag_field == "peer_reviewed":
-                    if strict_format:
-                        errors.append(f"[{eid}] Missing 'peer_reviewed' field.")
-                    else:
-                        advisories.append(f"[{eid}] Missing 'peer_reviewed' (will be auto-assigned by update_bib.py).")
-                continue
-            tokens = [raw_val] if tag_field == "peer_reviewed" else [t.strip() for t in raw_val.split(" and ") if t.strip()]
-            for tok in tokens:
-                if tok not in allowed_codes:
-                    errors.append(
-                        f"[{eid}] Unknown {tag_field} code '{tok}' (valid: {', '.join(sorted(allowed_codes))})."
-                    )
+        if is_dataset_bib:
+            # dataset_publications.bib schema: only peer_reviewed from custom_tags; disallow publications.bib-only fields
+            for forbidden in ("dvrk_dataset", "dvrk_cites", "dvrk_site", "data_type", "research_field"):
+                if forbidden in e:
+                    errors.append(f"[{eid}] Field '{forbidden}' is not used in dataset_publications.bib.")
+            pr_val = (e.get("peer_reviewed") or "").strip()
+            if not pr_val:
+                if strict_format:
+                    errors.append(f"[{eid}] Missing 'peer_reviewed' field.")
+                else:
+                    advisories.append(f"[{eid}] Missing 'peer_reviewed' (will be auto-assigned by update_bib.py).")
+            elif pr_val not in custom_tags.get("peer_reviewed", set()):
+                errors.append(f"[{eid}] Unknown peer_reviewed code '{pr_val}'.")
+
+            raw_datasets = (e.get("datasets") or "").strip()
+            if not raw_datasets:
+                errors.append(f"[{eid}] Missing required 'datasets' field in dataset_publications.bib.")
+            else:
+                ds_tokens = [t.strip() for t in raw_datasets.split(" and ") if t.strip()]
+                if not ds_tokens:
+                    errors.append(f"[{eid}] Empty 'datasets' field in dataset_publications.bib.")
+                elif primary_entries is not None:
+                    for ds_key in ds_tokens:
+                        if ds_key not in dataset_creator_ids:
+                            errors.append(
+                                f"[{eid}] Dataset key '{ds_key}' in 'datasets' does not reference an entry in publications.bib with 'dvrk_dataset'."
+                            )
+        else:
+            # publications.bib schema
+            if "datasets" in e:
+                errors.append(f"[{eid}] Field 'datasets' belongs in dataset_publications.bib, not publications.bib.")
+            if "dvrk_dataset" in e and not (e.get("dvrk_dataset") or "").strip():
+                errors.append(f"[{eid}] Field 'dvrk_dataset' must be a non-empty dataset name.")
+
+            # Custom tag code validation against custom_tags.json
+            for tag_field, allowed_codes in custom_tags.items():
+                raw_val = (e.get(tag_field) or "").strip()
+                if not raw_val:
+                    if tag_field == "peer_reviewed":
+                        if strict_format:
+                            errors.append(f"[{eid}] Missing 'peer_reviewed' field.")
+                        else:
+                            advisories.append(f"[{eid}] Missing 'peer_reviewed' (will be auto-assigned by update_bib.py).")
+                    continue
+                tokens = [raw_val] if tag_field == "peer_reviewed" else [t.strip() for t in raw_val.split(" and ") if t.strip()]
+                for tok in tokens:
+                    if tok not in allowed_codes:
+                        errors.append(
+                            f"[{eid}] Unknown {tag_field} code '{tok}' (valid: {', '.join(sorted(allowed_codes))})."
+                        )
+
+            # dvrk_cites referential integrity
+            raw_cites = (e.get("dvrk_cites") or "").strip()
+            if raw_cites:
+                for c in [x.strip() for x in raw_cites.split(" and ") if x.strip()]:
+                    if c == eid:
+                        errors.append(f"[{eid}] Self-citation in dvrk_cites ('{c}').")
+                    elif c not in valid_ids:
+                        errors.append(f"[{eid}] Dangling dvrk_cites reference '{c}' not found in publications.bib.")
 
         if not (e.get("date_added") or "").strip():
             if strict_format:
                 errors.append(f"[{eid}] Missing 'date_added' field.")
             else:
                 advisories.append(f"[{eid}] Missing 'date_added' (will be auto-assigned by update_bib.py).")
-
-        # dvrk_cites referential integrity
-        raw_cites = (e.get("dvrk_cites") or "").strip()
-        if raw_cites:
-            for c in [x.strip() for x in raw_cites.split(" and ") if x.strip()]:
-                if c == eid:
-                    errors.append(f"[{eid}] Self-citation in dvrk_cites ('{c}').")
-                elif c not in valid_ids:
-                    errors.append(f"[{eid}] Dangling dvrk_cites reference '{c}' not found in publications.bib.")
 
         # Abstract masthead check
         cur_abs = (e.get("abstract") or "").strip()
@@ -676,12 +733,12 @@ def validate_bib(
             )
             if not all_chapters:
                 keys = ", ".join(g["ID"] for g in group)
-                errors.append(f"Duplicate DOI '{ndoi}' shared across entries: {keys}.")
+                errors.append(f"[{bib_label}] Duplicate DOI '{ndoi}' shared across entries: {keys}.")
 
     if strict_format and raw_file_text is not None and formatted_text is not None:
         if raw_file_text != formatted_text:
             errors.append(
-                "publications.bib is not canonically sorted/formatted. Run 'python3 scripts/update_bib.py --offline'."
+                f"{bib_label} is not canonically sorted/formatted. Run 'python3 scripts/update_bib.py --offline'."
             )
 
     return errors, advisories
@@ -691,62 +748,25 @@ def validate_bib(
 # Unified Pipeline
 # ---------------------------------------------------------------------------
 
-def run_pipeline(
-    bib_path: str = DEFAULT_BIB_PATH,
-    dry_run: bool = False,
-    offline: bool = False,
-    check_only: bool = False,
-    strict_format: bool = False,
-    refresh_misses: bool = False,
-    write_citations_json: bool = False,
-) -> int:
-    with open(bib_path, "r", encoding="utf-8") as f:
-        raw_file_text = f.read()
-
-    bib_db = load_bib(bib_path)
-    entries = bib_db.entries
-    custom_tags = load_custom_tags(CUSTOM_TAGS_PATH)
-    print(f"Loaded {len(entries)} entries from {bib_path}")
-
-    if check_only:
-        formatted = format_bib_string(bib_db, sort=True) if strict_format else None
-        errors, advisories = validate_bib(
-            entries,
-            custom_tags,
-            strict_format=strict_format,
-            raw_file_text=raw_file_text,
-            formatted_text=formatted,
-        )
-        for adv in advisories:
-            print(f"  [ADVISORY] {adv}")
-        if errors:
-            print(f"\nValidation FAILED with {len(errors)} error(s):")
-            for err in errors:
-                print(f"  ✗ {err}")
-            return 1
-        print(f"Validation PASSED ({len(entries)} entries, {len(advisories)} advisories). ✅")
-        return 0
-
-    overrides = load_peer_review_overrides(PEER_REVIEW_OVERRIDES_PATH)
-    key_overrides = overrides.get("keys", {})
-    venue_overrides = overrides.get("venues", {})
-    today_iso = datetime.date.today().isoformat()
-
+def _clean_and_classify_entries(
+    entries: list[dict],
+    key_overrides: dict[str, str],
+    venue_overrides: dict[str, str],
+    today_iso: str,
+    offline: bool,
+) -> tuple[list[tuple[str, str, str, str]], int, int]:
+    """Run field hygiene, date_added assignment, peer_reviewed classification, and preprint promotions."""
     promotions: list[tuple[str, str, str, str]] = []
     sites_tagged = 0
-    abstracts_filled = 0
     venues_filled = 0
 
-    # --- Stage 1 & 2: Field Hygiene, Peer-Review Tagging & Preprint Promotion ---
     for e in entries:
         eid = e["ID"]
         etype = (e.get("ENTRYTYPE") or "").lower()
 
-        # Normalize DOI format (strip https://doi.org/ prefix if pasted in raw BibTeX)
         if e.get("doi"):
             e["doi"] = clean_doi_preserve_case(e["doi"])
 
-        # Unescape HTML entities in venues and strip leading 'Abstract:' prefix
         for vf in ("journal", "booktitle"):
             if e.get(vf):
                 e[vf] = " ".join(html.unescape(e[vf]).split())
@@ -758,7 +778,6 @@ def run_pipeline(
         if not (e.get("date_added") or "").strip():
             e["date_added"] = today_iso
 
-        # Classify peer_reviewed
         if eid in key_overrides:
             e["peer_reviewed"] = key_overrides[eid]
         elif is_thesis(e) or e.get("peer_reviewed") == "thesis":
@@ -821,7 +840,6 @@ def run_pipeline(
                     break
             e["peer_reviewed"] = matched_ov or "yes"
 
-        # Standardize theses & preprint venue fallbacks
         etype = (e.get("ENTRYTYPE") or "").lower()
         if e.get("peer_reviewed") == "thesis":
             if etype not in ("phdthesis", "mastersthesis"):
@@ -843,6 +861,82 @@ def run_pipeline(
                 elif "21203/rs" in (e.get("doi") or "").lower() or "researchsquare" in (e.get("url") or "").lower():
                     e["howpublished"] = "Research Square preprint"
                     venues_filled += 1
+
+    return promotions, sites_tagged, venues_filled
+
+
+def run_pipeline(
+    bib_path: str = DEFAULT_BIB_PATH,
+    dry_run: bool = False,
+    offline: bool = False,
+    check_only: bool = False,
+    strict_format: bool = False,
+    refresh_misses: bool = False,
+    write_citations_json: bool = False,
+) -> int:
+    with open(bib_path, "r", encoding="utf-8") as f:
+        raw_file_text = f.read()
+
+    bib_db = load_bib(bib_path)
+    entries = bib_db.entries
+    custom_tags = load_custom_tags(CUSTOM_TAGS_PATH)
+    print(f"Loaded {len(entries)} entries from {bib_path}")
+
+    check_dataset_bib = (
+        os.path.abspath(bib_path) == os.path.abspath(DEFAULT_BIB_PATH)
+        and os.path.exists(DEFAULT_DATASET_BIB_PATH)
+    )
+
+    if check_only:
+        formatted = format_bib_string(bib_db, sort=True) if strict_format else None
+        errors, advisories = validate_bib(
+            entries,
+            custom_tags,
+            strict_format=strict_format,
+            raw_file_text=raw_file_text,
+            formatted_text=formatted,
+        )
+        ds_count = 0
+        if check_dataset_bib:
+            with open(DEFAULT_DATASET_BIB_PATH, "r", encoding="utf-8") as f:
+                ds_raw = f.read()
+            ds_db = load_bib(DEFAULT_DATASET_BIB_PATH)
+            ds_count = len(ds_db.entries)
+            ds_fmt = format_bib_string(ds_db, sort=True) if strict_format else None
+            ds_err, ds_adv = validate_bib(
+                ds_db.entries,
+                custom_tags,
+                strict_format=strict_format,
+                raw_file_text=ds_raw,
+                formatted_text=ds_fmt,
+                is_dataset_bib=True,
+                primary_entries=entries,
+            )
+            errors.extend(ds_err)
+            advisories.extend(ds_adv)
+
+        for adv in advisories:
+            print(f"  [ADVISORY] {adv}")
+        if errors:
+            print(f"\nValidation FAILED with {len(errors)} error(s):")
+            for err in errors:
+                print(f"  ✗ {err}")
+            return 1
+        ds_msg = f" + {ds_count} dataset entries" if check_dataset_bib else ""
+        print(f"Validation PASSED ({len(entries)} entries{ds_msg}, {len(advisories)} advisories). ✅")
+        return 0
+
+    overrides = load_peer_review_overrides(PEER_REVIEW_OVERRIDES_PATH)
+    key_overrides = overrides.get("keys", {})
+    venue_overrides = overrides.get("venues", {})
+    today_iso = datetime.date.today().isoformat()
+
+    abstracts_filled = 0
+
+    # --- Stage 1 & 2: Field Hygiene, Peer-Review Tagging & Preprint Promotion ---
+    promotions, sites_tagged, venues_filled = _clean_and_classify_entries(
+        entries, key_overrides, venue_overrides, today_iso, offline=offline
+    )
 
     # --- Stage 3: Incremental Affiliation, Venue & Abstract Backfill ---
     if not offline:
@@ -1166,10 +1260,29 @@ def run_pipeline(
 
     # --- Stage 5: Validation & Canonical Write ---
     errors, _ = validate_bib(entries, custom_tags, strict_format=False)
+    ds_db = None
+    if check_dataset_bib:
+        ds_db = load_bib(DEFAULT_DATASET_BIB_PATH)
+        ds_promos, _, ds_venues = _clean_and_classify_entries(
+            ds_db.entries, key_overrides, venue_overrides, today_iso, offline=offline
+        )
+        promotions.extend(ds_promos)
+        venues_filled += ds_venues
+        ds_errors, _ = validate_bib(
+            ds_db.entries,
+            custom_tags,
+            strict_format=False,
+            is_dataset_bib=True,
+            primary_entries=entries,
+        )
+        errors.extend(ds_errors)
+
     pr_counts = collections.Counter(e.get("peer_reviewed", "") for e in entries)
 
     print("\n--- Pipeline Summary ---")
     print(f"Total publications:    {len(entries)} (peer-reviewed: {pr_counts['yes']}, preprints: {pr_counts['no']}, theses: {pr_counts['thesis']})")
+    if ds_db is not None:
+        print(f"Dataset publications:  {len(ds_db.entries)}")
     print(f"Preprints promoted:    {len(promotions)}")
     print(f"Sites backfilled:      {sites_tagged}")
     print(f"Venues backfilled:     {venues_filled}")
@@ -1190,6 +1303,9 @@ def run_pipeline(
     if not dry_run:
         write_bib(bib_path, bib_db, sort=True)
         print(f"\nSuccessfully updated and formatted {bib_path}. ✅")
+        if ds_db is not None:
+            write_bib(DEFAULT_DATASET_BIB_PATH, ds_db, sort=True)
+            print(f"Successfully updated and formatted {DEFAULT_DATASET_BIB_PATH}. ✅")
     else:
         print("\n[Dry Run] No files were modified.")
 

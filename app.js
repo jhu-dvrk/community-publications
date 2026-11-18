@@ -1,6 +1,6 @@
 const { createApp } = Vue;
 
-createApp({
+const app = createApp({
     data() {
         return {
             publications: [],
@@ -21,7 +21,8 @@ createApp({
             isApplyingUrl: false,
             isNavigatingToPublication: false,
             filterLinkCopied: false,
-            publicationMap: {}
+            publicationMap: {},
+            datasetReuseCounts: {}
         };
     },
     computed: {
@@ -214,14 +215,28 @@ createApp({
     methods: {
         async loadPublications() {
             try {
-                const { publications, publicationMap } = await CONFIG.loadPublications({
-                    withBibtexText: true,
-                    withCitations: true,
-                    withUiState: true,
-                    sortBy: 'year_desc'
-                });
+                const [{ publications, publicationMap }, datasetResult] = await Promise.all([
+                    CONFIG.loadPublications({
+                        withBibtexText: true,
+                        withCitations: true,
+                        withUiState: true,
+                        sortBy: 'year_desc'
+                    }),
+                    CONFIG.loadPublications({
+                        bibUrl: 'dataset_publications.bib',
+                        sortBy: 'year_desc'
+                    }).catch(() => ({ publications: [] }))
+                ]);
                 this.publications = publications;
                 this.publicationMap = publicationMap;
+
+                const counts = {};
+                (datasetResult.publications || []).forEach(dsPub => {
+                    (dsPub.datasets || []).forEach(dsId => {
+                        counts[dsId] = (counts[dsId] || 0) + 1;
+                    });
+                });
+                this.datasetReuseCounts = counts;
 
                 if (this.publications.length > 0 && this.availableYears.length > 0) {
                     if (!this.startYear) this.startYear = this.availableYears[this.availableYears.length - 1];
@@ -231,6 +246,12 @@ createApp({
             } catch (error) {
                 console.error('Error loading publications:', error);
             }
+        },
+        getDatasetReuseCount(pubId) {
+            return this.datasetReuseCounts[pubId] || 0;
+        },
+        getDatasetPageUrl(pubId) {
+            return CONFIG.getDatasetPageUrl(pubId);
         },
         toggleBibtex(pub) {
             pub.showBibtex = !pub.showBibtex;
@@ -739,5 +760,8 @@ createApp({
             }
         });
     }
-}).mount('#app');
+});
+
+CONFIG.registerSharedComponents(app);
+app.mount('#app');
 
